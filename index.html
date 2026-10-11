@@ -13,10 +13,9 @@ select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-
 .artistRecipient{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:9px;background:#303137}.artistRecipient>div{display:flex;flex-direction:column;gap:4px}.artistRecipientLabel{font-size:11px;color:#bfc0d2}.artistRecipient strong{font-size:19px}.artistRecipient button{padding:9px 11px;white-space:nowrap}.shareInstructions{line-height:1.65;font-size:12px;color:#d5d5df}
 #bookingOverlay .bookingActions button:first-child{background:#b0b0ff;color:#16161d}#bookingOverlay .bookingFallback{display:block;width:100%;margin-top:9px;background:#373841;color:#f4f4f7;border:1px solid #777985;border-radius:8px;padding:10px;font-size:12px}
 
-.wrapSetting{margin-top:10px}.wrapSetting label{font-size:12px;color:#bfc0d2;margin:0 0 5px}.wrapSetting select{padding:8px;font-size:12px}
-/* V4.8.2 — customer-first mobile controls. No changes to the mesh wrapping algorithm. */
+/* V4.9.4 — Classic wrapping, booking language and approximate size. */
 main{height:100dvh}aside{padding:15px 17px 16px}aside>label{margin:12px 0 6px}aside .buttons{margin-top:10px}#viewer{background:radial-gradient(ellipse at 50% 44%,#35373e 0%,#23242a 48%,#17181b 100%)}
-#preview[hidden],#debug[hidden],#bodyInfo[hidden],#dimensions[hidden],.colorline[hidden]{display:none!important}
+#preview[hidden],#debug[hidden],#bodyInfo[hidden],.colorline[hidden]{display:none!important}
 #message{font-size:11px;margin-top:10px}#overlay:empty{display:none}#hint{bottom:12px}
 .testUpload{margin:8px 0 10px}.testUpload label{margin:0 0 6px;font-size:12px;color:#bfc0d2}.testUpload input{font-size:11px;width:100%}.testTag{font-size:9px;letter-spacing:.08em;color:#b0b0ff;border:1px solid #6a688b;border-radius:4px;padding:2px 4px;margin-left:5px}
 .skinpresets{margin:7px 0 3px;gap:12px}.skinpresets button{width:30px;height:30px;border:1px solid #777}.skinpresets button.selected{outline:2px solid #b0b0ff;outline-offset:2px}
@@ -29,29 +28,30 @@ main{height:100dvh}aside{padding:15px 17px 16px}aside>label{margin:12px 0 6px}as
  #hint{font-size:11px;padding:6px 10px}#overlay{top:9px;left:10px;font-size:11px}
 }
 @media(max-width:380px){.mirrorrow button{font-size:11px;gap:4px}.skinpresets{gap:9px}}
-/* V4.8.2: retain cool-blue accent, refine dark surfaces */
+/* Cool-blue accent, refined dark surfaces */
 body{background:#17181b}aside,.bookingDialog{background:#24252a}button{background:#34363d}button.active{background:#b0c5ff;color:#161b28}input[type=range]{accent-color:#a9c4ff}.value,.testTag{color:#b7d0ff}.skinpresets button.selected{outline-color:#b7d0ff}#confirmPlacement{background:#b7d0ff!important;color:#141b28!important;box-shadow:0 -8px 18px #24252aee}.bookingActions button:first-child{background:#b7d0ff!important;color:#141b28!important}
 #rotationDeg{width:65px;flex:none}.mirrorline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}.mirroricons{display:flex;gap:8px}.mirroricons button{width:45px;height:38px;padding:6px;display:grid;place-items:center;border:1px solid #505463;border-radius:8px}.mirroricons button.active{border-color:#b7d0ff}.skinLabel{margin-top:9px}
-/* V4.8.2: compact controls and camera actions inside 3D viewport */
+/* Compact controls and camera actions inside 3D viewport */
 .viewerActions{position:absolute;right:12px;top:12px;z-index:8;display:flex;gap:7px;pointer-events:auto}
 .viewerActions button{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:9px;background:#24272de8;border:1px solid #5a6373;color:#e3edff;font-size:11px;box-shadow:0 3px 12px #0005;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 .viewerActions button:disabled{opacity:.5}.viewerActions button svg{flex:none}
 .skinline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;min-height:38px}.skinline>span{white-space:nowrap}.skinline .skinpresets{display:flex;align-items:center;gap:9px;margin:0}.skinline .skinpresets button{width:28px;height:28px;flex:0 0 28px}
 .mirroricons button{color:#dce9ff}.mirroricons svg{width:25px;height:25px}
 @media(max-width:380px){.skinline .skinpresets{gap:6px}.skinline .skinpresets button{width:25px;height:25px;flex-basis:25px}.viewerActions{right:8px;top:8px}.viewerActions button{padding:8px 9px}}
+.bookingApprox{font-size:11px;color:#aeb8c9;margin:10px 0 3px;line-height:1.4}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
 <body>
 
 <main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span>Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span>Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
-<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 18.0 cm</div><div class="wrapSetting"><label for="wrapMethod">Wrapping <span class="testTag">BETA</span></label><select id="wrapMethod" aria-label="Wrapping algorithm"><option value="classic">Classic (V4.9.1)</option><option value="surface">Surface Mesh (Test)</option></select></div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 18.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
   <div class="bookingTop"><strong>New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
   <img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
-  <div class="bookingDetails"><span>Tattoo size (estimated)</span><strong id="bookingSize"></strong></div>
+  <div class="bookingDetails"><span>Approximate size</span><strong id="bookingSize"></strong></div>
   <label for="bookingRegionSelect">Placement (suggested, editable)</label>
   <select id="bookingRegionSelect">
    <option value="Chest">Chest</option><option value="Left chest">Left chest</option><option value="Right chest">Right chest</option>
@@ -64,8 +64,11 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
   </select>
   <label for="bookingGender">Gender (optional)</label>
   <select id="bookingGender"><option value="">Prefer not to say</option><option>Female</option><option>Male</option><option>Non-binary</option><option>Self-described / other</option></select>
+  <label for="bookingLanguage">Preferred language / Bevorzugte Sprache</label>
+  <select id="bookingLanguage"><option value="English">English</option><option value="Deutsch">Deutsch</option></select>
   <label for="bookingBudget">Maximum budget</label>
   <select id="bookingBudget"><option value="">Flexible / not sure</option><option>Under €200</option><option>€200–300</option><option>€300–500</option><option>€500–800</option><option>€800–1,200</option><option>€1,200+</option></select>
+  <p class="bookingApprox">Placement and size are approximate and may differ on your body.</p>
   <label for="bookingNote">Message to artist (optional)</label>
   <textarea id="bookingNote" rows="3" maxlength="800" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
   <div class="artistRecipient">
@@ -282,7 +285,6 @@ $('moveMode').onclick=()=>{if(anchor)setMode('move')};$('orbitMode').onclick=()=
 // Each face gets three 2D coordinates. Propagation follows mesh connectivity, not camera rays.
 function wrap(preview=false){
  if(!anchor||!tex)return;
- if($('wrapMethod').value==='surface'){wrapSurface(preview);return;}
  const data=cache.get(anchor.object);if(!data)return;
  // The model is calibrated to a 175 cm reference height. The uploaded
  // artwork is cropped to its visible alpha bounds before this measurement.
@@ -378,83 +380,6 @@ function wrap(preview=false){
  tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);$('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
  debug.textContent=`Surface faces used: ${used}\nUnfolded faces: ${visited.size}\nBody triangles: ${data.triCount}\nRemote faces blocked: ${skipped}\nOverlapping surface faces blocked: ${overlapBlocked}\nWrapping: classic BFS\nMode: ${preview?'live preview':'full resolution'}\nSkin: opaque · depth tested`;
 }
-// Experimental surface-conforming tattoo grid. Independent of triangle unfolding.
-// Cast from the local tangent plane onto the selected body mesh, rejecting distant
-// and back-facing hits. Invalid grid cells are omitted rather than bridged.
-function wrapSurface(preview=false){
- if(!anchor||!tex)return;
- const width=bodyHeight*(Number($('size').value)/175),height=width/imgAspect;
- const angle=THREE.MathUtils.degToRad(Number($('rotation').value));
- const ca=Math.cos(angle),sa=Math.sin(angle);
- const nx=preview?Math.max(22,Math.min(60,Math.ceil(width/(bodyHeight*.0045)))):Math.max(38,Math.min(115,Math.ceil(width/(bodyHeight*.0028))));
- const ny=Math.max(12,Math.min(preview?105:190,Math.ceil(nx*height/width)));
- const normal=anchor.normal.clone().normalize();
- const axisX=anchor.basis.x.clone().multiplyScalar(ca).addScaledVector(anchor.basis.y,sa).normalize();
- const axisY=anchor.basis.y.clone().multiplyScalar(ca).addScaledVector(anchor.basis.x,-sa).normalize();
- const cast=new THREE.Raycaster();cast.near=0;
- // The projection rays start outside the local surface, pointing toward it.
- const reach=Math.max(width,height)*.70+bodyHeight*.075;
- const depth=Math.max(width,height)*.46+bodyHeight*.065;
- cast.far=depth+reach;
- const nodes=new Array((nx+1)*(ny+1));
- const offset=Math.max(bodyDiag*.00010,Math.min(width,height)*.0004);
- const maxDrift=Math.max(width,height)*.55+bodyHeight*.055;
- let valid=0;
- for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){
-   const u=i/nx,v=j/ny;
-   const plane=anchor.point.clone().addScaledVector(axisX,(u-.5)*width).addScaledVector(axisY,(.5-v)*height);
-   const origin=plane.clone().addScaledVector(normal,depth);
-   cast.set(origin,normal.clone().negate());
-   // Cast only against the body mesh that owns the original anchor.
-   const hits=cast.intersectObject(anchor.object,false);
-   let picked=null;
-   for(const hit of hits){
-     const hn=worldNormal(hit);
-     if(hn.dot(normal)<.16)continue;
-     if(hit.point.distanceTo(plane)>maxDrift)continue;
-     // Prefer a hit close to the original tangent plane, not a distant limb.
-     if(!picked||hit.point.distanceTo(plane)<picked.point.distanceTo(plane))picked={point:hit.point.clone(),normal:hn};
-   }
-   if(picked){picked.point.addScaledVector(picked.normal,offset);valid++}
-   nodes[j*(nx+1)+i]=picked;
- }
- const positions=[],uvs=[],indices=[];
- const dx=width/nx,dy=height/ny;
- // Don't connect across missing hits or folds where the grid jumps sharply.
- const maxEdge=Math.hypot(dx,dy)*3.6+bodyHeight*.0015;
- let cells=0;
- function appendTri(ids,coords){
-   const base=positions.length/3;
-   for(let k=0;k<3;k++){
-     const node=nodes[ids[k]];
-     positions.push(node.point.x,node.point.y,node.point.z);
-     const [u,v]=coords[k];uvs.push(flipHorizontal?1-u:u,flipVertical?1-v:v);
-   }
-   indices.push(base,base+1,base+2);
- }
- for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
-   const a=j*(nx+1)+i,b=a+1,c=a+(nx+1),d=c+1;
-   const pts=[nodes[a],nodes[b],nodes[c],nodes[d]];
-   if(pts.some(p=>!p))continue;
-   if(pts[0].point.distanceTo(pts[1].point)>maxEdge||pts[0].point.distanceTo(pts[2].point)>maxEdge||pts[1].point.distanceTo(pts[3].point)>maxEdge||pts[2].point.distanceTo(pts[3].point)>maxEdge)continue;
-   if(pts.some(p=>p.normal.dot(normal)<.16))continue;
-   // Exclude folded cells with nearly opposite vertex normals.
-   if(pts[0].normal.dot(pts[3].normal)<-.15||pts[1].normal.dot(pts[2].normal)<-.15)continue;
-   const u=i/nx,v=j/ny,U=(i+1)/nx,V=(j+1)/ny;
-   appendTri([a,c,b],[[u,1-v],[u,1-V],[U,1-v]]);
-   appendTri([b,c,d],[[U,1-v],[u,1-V],[U,1-V]]);
-   cells++;
- }
- if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}
- if(!indices.length){status('Surface mesh could not project here. Try Classic or another position.');return}
- const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeVertexNormals();
- const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.03,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
- m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>`)};
- tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);
- $('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
- debug.textContent=`Surface mesh grid: ${nx} x ${ny}\nProjected points: ${valid}/${nodes.length}\nRendered cells: ${cells}/${nx*ny}\nMode: ${preview?'preview':'full'}`;
-}
-
 // Crop transparent padding so the requested width measures the *visible* motif.
 // Otherwise a 40 cm PNG canvas containing a tiny design looks like a 10 cm tattoo.
 function cropArtwork(img){
@@ -490,7 +415,6 @@ $('rotation').addEventListener('input',()=>{$('rotationValue').textContent=$('ro
 $('rotationDeg').addEventListener('change',()=>{const n=Math.max(-180,Math.min(180,Math.round(Number($('rotationDeg').value)||0)));$('rotationDeg').value=n;$('rotation').value=n;$('rotationValue').textContent=n+'°';if(anchor&&tex)wrap(false)});
 for(const [id,key] of [['flipH','horizontal'],['flipV','vertical']]){ $(id).addEventListener('click',()=>{if(key==='horizontal')flipHorizontal=!flipHorizontal;else flipVertical=!flipVertical;const active=key==='horizontal'?flipHorizontal:flipVertical;$(id).classList.toggle('active',active);$(id).setAttribute('aria-pressed',String(active));if(anchor&&tex)wrap(false)}); }
 updateDimensions();
-$('wrapMethod').addEventListener('change',()=>{if(anchor&&tex)wrap(false)});
 const presetButtons=[...document.querySelectorAll('#skinpresets button')];function updateSkinSelection(){presetButtons.forEach(b=>b.classList.toggle('selected',b.dataset.color.toLowerCase()===$('skin').value.toLowerCase()))}
 presetButtons.forEach(b=>b.addEventListener('click',()=>{$('skin').value=b.dataset.color;meshes.forEach(m=>m.material.color.set(b.dataset.color));updateSkinSelection()}));
 $('skin').addEventListener('input',updateSkinSelection);
@@ -549,7 +473,7 @@ renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.add
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
 window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
 
-// V4.8.2 booking UI / export; 3D wrapping implementation is unchanged.
+// Booking UI / export; Classic wrapping implementation remains unchanged.
 let bookingPNG=null,bookingCardPNG=null;
 function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
 const bookingOverlay=$('bookingOverlay');
@@ -611,6 +535,7 @@ async function createBookingCard(){
  const W=900,margin=56,inner=W-2*margin;
  const budget=$('bookingBudget').value||'Flexible / not sure';
  const gender=$('bookingGender').value||'Not specified';
+ const language=$('bookingLanguage').value;
  const region=$('bookingRegionSelect').value;
  const note=$('bookingNote').value.trim()||'Hey! I’m interested in this tattoo. Let me know about your availability.';
  const artist='craykrow';
@@ -619,7 +544,7 @@ async function createBookingCard(){
  scratch.font='28px system-ui,Arial,sans-serif';
  const words=note.split(/\s+/);let lines=1,line='';
  for(const word of words){const next=line?line+' '+word:word;if(scratch.measureText(next).width>inner&&line){lines++;line=word}else line=next}
- const H=1040+Math.max(0,lines-2)*40+(artist?55:0);
+ const H=1110+Math.max(0,lines-2)*40+(artist?55:0);
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
  ctx.fillStyle='#17181b';ctx.font='bold 42px system-ui,Arial,sans-serif';ctx.fillText('PLACEYOURTATTOO',margin,85);
@@ -630,13 +555,16 @@ async function createBookingCard(){
  const dw=preview.width*scale,dh=preview.height*scale;
  ctx.drawImage(preview,margin+(inner-dw)/2,imageY+(imageH-dh)/2,dw,dh);
  let y=700;
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('TATTOO SIZE',margin,y);ctx.fillText('PLACEMENT',480,y);
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('APPROXIMATE SIZE',margin,y);ctx.fillText('PLACEMENT',480,y);
  ctx.fillStyle='#17181b';ctx.font='bold 29px system-ui,Arial,sans-serif';ctx.fillText($('bookingSize').textContent,margin,y+39);
  drawWrapped(ctx,region,480,y+39,350,35,2);
  y+=96;
  ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MAXIMUM BUDGET',margin,y);ctx.fillText('GENDER (OPTIONAL)',480,y);
  ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(budget,margin,y+39);ctx.fillText(gender,480,y+39);
  y+=98;
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('PREFERRED LANGUAGE',margin,y);
+ ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(language,margin,y+36);
+ y+=72;
  if(artist){ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('FOR ARTIST',margin,y);ctx.fillStyle='#17181b';ctx.font='bold 26px system-ui,Arial,sans-serif';ctx.fillText('@'+artist,margin,y+36);y+=65}
  ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MESSAGE TO ARTIST',margin,y);
  ctx.fillStyle='#17181b';ctx.font='28px system-ui,Arial,sans-serif';
@@ -656,18 +584,22 @@ function bookingMessageText(){
  const region=$('bookingRegionSelect').value;
  const budget=$('bookingBudget').value||'Flexible / not sure';
  const gender=$('bookingGender').value||'Not specified';
+ const language=$('bookingLanguage').value;
  const note=$('bookingNote').value.trim()||"Hey! I'm interested in this tattoo. Let me know about your availability.";
  return `NEW TATTOO BOOKING REQUEST
 
 Hi @craykrow! I'd like to book a tattoo.
 
 Placement: ${region}
-Estimated size: ${size}
+Approximate size: ${size}
+Preferred language: ${language}
 Maximum budget: ${budget}
 Gender (optional): ${gender}
 
 Message:
 ${note}
+
+Placement and size are approximate.
 `;
 }
 $('copyBookingMessage').onclick=async()=>{
