@@ -44,7 +44,7 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 <body>
 
 <main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span>Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span>Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
-<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" hidden>Approximate width: 18 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 18.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
@@ -194,7 +194,37 @@ function prepareMesh(mesh){
   return {p,neighbors,normals:faceNormals,keys:triKeys,coords,triCount:n};
 }
 const bodyLoader=new GLTFLoader();
+const bodyAssets=new Map(); // Keep both loaded models and prepared adjacency in memory.
+const bodyPromises=new Map();
 let bodyLoadVersion=0;
+function fetchBody(kind){
+ if(bodyAssets.has(kind))return Promise.resolve(bodyAssets.get(kind));
+ if(bodyPromises.has(kind))return bodyPromises.get(kind);
+ const filename=kind==='female'?'body_female.glb':'body_male.glb';
+ const pending=new Promise((resolve,reject)=>{
+  bodyLoader.load('./'+filename,g=>{
+   try{
+    const nextModel=g.scene;
+    nextModel.updateMatrixWorld(true);
+    const box=new THREE.Box3().setFromObject(nextModel),center=box.getCenter(new THREE.Vector3()),dim=box.getSize(new THREE.Vector3());
+    if(box.isEmpty()||dim.y<=0)throw new Error('Empty or incorrectly oriented body model: '+filename);
+    const nextMeshes=[];
+    nextModel.traverse(o=>{if(!o.isMesh)return;
+     o.material=new THREE.MeshStandardMaterial({color:$('skin').value,roughness:.92,metalness:0,side:THREE.FrontSide,transparent:false,opacity:1,depthTest:true,depthWrite:true});
+     nextMeshes.push(o);
+    });
+    if(!nextMeshes.length)throw new Error('No meshes in '+filename);
+    const nextCache=new Map();
+    for(const m of nextMeshes)nextCache.set(m,prepareMeshForBody(m,dim.length()));
+    const asset={model:nextModel,meshes:nextMeshes,adjacency:nextCache,box,center,dim};
+    bodyAssets.set(kind,asset);resolve(asset);
+   }catch(err){reject(err)}
+  },undefined,reject);
+ });
+ bodyPromises.set(kind,pending);
+ pending.catch(()=>bodyPromises.delete(kind));
+ return pending;
+}
 function loadBody(kind){
  const version=++bodyLoadVersion;
  const filename=kind==='female'?'body_female.glb':'body_male.glb';
@@ -202,27 +232,15 @@ function loadBody(kind){
  $('bodyInfo').textContent=`Loading ${kind} body…`;
  overlay.textContent=`Loading ${filename}…`;
  status(`Loading ${filename}…`);
- // Retain the selected flash and its settings, but reset placement on body change.
  cancelTattooDrag();
  anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;updatePlacementHint();
- bodyLoader.load('./'+filename,g=>{
+ fetchBody(kind).then(asset=>{
   if(version!==bodyLoadVersion)return;
-  const nextModel=g.scene;
-  nextModel.updateMatrixWorld(true);
-  const box=new THREE.Box3().setFromObject(nextModel),center=box.getCenter(new THREE.Vector3()),dim=box.getSize(new THREE.Vector3());
-  if(box.isEmpty()||dim.y<=0){$('bodySelect').disabled=false;overlay.textContent='Invalid body model';status(`Could not use ${filename}: empty model.`);return}
-  const nextMeshes=[];
-  nextModel.traverse(o=>{if(!o.isMesh)return;
-   o.material=new THREE.MeshStandardMaterial({color:$('skin').value,roughness:.92,metalness:0,side:THREE.FrontSide,transparent:false,opacity:1,depthTest:true,depthWrite:true});
-   nextMeshes.push(o);
-  });
-  if(!nextMeshes.length){$('bodySelect').disabled=false;overlay.textContent='Invalid body model';status(`No meshes in ${filename}.`);return}
-  // Build new adjacency before replacing the previous body.
-  const nextCache=new Map();
-  try{for(const m of nextMeshes)nextCache.set(m,prepareMeshForBody(m,dim.length()));}
-  catch(err){console.error(err);$('bodySelect').disabled=false;overlay.textContent='Model preparation failed';status(String(err));return}
-  if(model){scene.remove(model);model.traverse(o=>{if(o.isMesh){if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose();}})}
-  model=nextModel;scene.add(model);meshes=nextMeshes;cache.clear();for(const [m,data] of nextCache)cache.set(m,data);
+  if(model)scene.remove(model); // Do not dispose: cached models are reused.
+  model=asset.model;scene.add(model);meshes=asset.meshes;
+  for(const m of meshes)m.material.color.set($('skin').value);
+  cache.clear();for(const [m,data] of asset.adjacency)cache.set(m,data);
+  const {box,center,dim}=asset;
   bodyHeight=dim.y;bodyDiag=dim.length();regionBox=box.clone();updateRegion();
   controls.target.copy(center);
   const vf=2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
@@ -231,7 +249,14 @@ function loadBody(kind){
   initialView={position:camera.position.clone(),target:controls.target.clone()};
   $('bodySelect').disabled=false;$('bodyInfo').textContent=kind==='female'?'Female Body selected':'Male Body selected';overlay.textContent='';
   status(tex?'Body loaded. Click or tap on the body to place your tattoo.':'Body loaded. Choose a PNG to begin.');updatePlacementHint();
- },undefined,e=>{
+  // Prepare the other model in the background, once, without interrupting interaction.
+  const other=kind==='female'?'male':'female';
+  if(!bodyPromises.has(other)&&!bodyAssets.has(other)){
+   const preload=()=>fetchBody(other).catch(e=>console.warn('Background model preload failed:',e));
+   if('requestIdleCallback' in window)window.requestIdleCallback(preload,{timeout:3000});
+   else setTimeout(preload,400);
+  }
+ }).catch(e=>{
   if(version!==bodyLoadVersion)return;
   console.error(e);$('bodySelect').disabled=false;
   overlay.textContent=`Could not load ${filename}`;
@@ -239,7 +264,6 @@ function loadBody(kind){
   status(`Could not load ${filename}. Check that it is in the same folder as index.html.`);
  });
 }
-// prepareMesh relies on the current body's diagonal for welding precision.
 function prepareMeshForBody(mesh,diagonal){const previous=bodyDiag;bodyDiag=diagonal;try{return prepareMesh(mesh)}finally{bodyDiag=previous}}
 $('bodySelect').addEventListener('change',e=>loadBody(e.target.value));
 loadBody('male');
@@ -379,7 +403,7 @@ $('upload').addEventListener('change',()=>{const file=$('upload').files[0];if(!f
    if(anchor)wrap();URL.revokeObjectURL(url)
  };img.onerror=()=>{URL.revokeObjectURL(url);status('Could not load PNG')};img.src=url;
 });
-function updateDimensions(){const cm=Number($('size').value);$('sizeValue').textContent=cm+' cm';$('sizeCm').value=cm;$('dimensions').textContent=`Estimated design: ${cm.toFixed(1)} cm wide × ${(cm/imgAspect).toFixed(1)} cm tall (reference body 175 cm; not a body measurement)`}
+function updateDimensions(){const cm=Number($('size').value);$('sizeValue').textContent=cm+' cm';$('sizeCm').value=cm;$('dimensions').textContent=`Estimated height: ${(cm/imgAspect).toFixed(1)} cm`;}
 $('size').addEventListener('input',()=>{updateDimensions();if(anchor&&tex)wrap(true)});
 $('sizeCm').addEventListener('change',()=>{const n=Math.min(65,Math.max(2,Number($('sizeCm').value)||18));$('size').value=n;updateDimensions();if(anchor&&tex)wrap(false)});
 $('rotation').addEventListener('input',()=>{$('rotationValue').textContent=$('rotation').value+'°';$('rotationDeg').value=$('rotation').value;if(anchor&&tex)wrap(true)});
