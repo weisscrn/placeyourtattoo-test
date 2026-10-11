@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>placeyourtattoo — V4.7.1</title>
+<title>placeyourtattoo — V4.7.2</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
 .skinpresets{display:flex;gap:7px;margin:6px 0 8px}.skinpresets button{width:38px;height:38px;padding:0;border:2px solid #666;border-radius:50%;flex:none}.skinpresets button.selected{outline:2px solid #c2baff;outline-offset:2px}.measurement{font-size:12px;color:#bfc0d2;margin-top:5px}.focusrow{display:flex;gap:8px;margin-top:13px}.focusrow button{flex:1}input[type=number]{width:80px;background:#303137;color:#fff;border:1px solid #62636c;border-radius:6px;padding:7px}.inputrow{display:flex;align-items:center;gap:8px}.inputrow input[type=range]{flex:1;min-width:0}#sizeCm{width:70px}#skin{flex:none}
 select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-radius:7px;padding:11px;font:inherit}p{color:#aeb0bc;line-height:1.55;font-size:12px}.colorline{display:flex;align-items:center;justify-content:space-between}input[type=color]{width:58px;height:35px;border:0;background:none;cursor:pointer}@media(max-width:720px){main{flex-direction:column}#viewer{height:62dvh;flex:none}aside{width:100%;height:38dvh}header small{display:none}}
 
-#bookingOverlay[hidden]{display:none!important}#bookingOverlay{position:fixed;inset:0;z-index:30;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px}.bookingDialog{background:#222329;color:#eee;border:1px solid #55565e;border-radius:13px;padding:18px;width:min(440px,100%);max-height:92dvh;overflow:auto}.bookingTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.bookingTop button{padding:7px 12px}.bookingDialog img{width:100%;max-height:53dvh;object-fit:contain;background:#292a2e;border-radius:8px}.bookingDetails{display:flex;justify-content:space-between;gap:12px;margin-top:10px}.bookingDetails span{color:#bfc0d2}.bookingActions{display:flex;gap:10px;margin-top:15px}.bookingActions button{flex:1}.bookingActions button:last-child{background:#b0b0ff;color:#16161d}
+#bookingOverlay[hidden]{display:none!important}#bookingOverlay{position:fixed;inset:0;z-index:30;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px}.bookingDialog{background:#222329;color:#eee;border:1px solid #55565e;border-radius:13px;padding:18px;width:min(440px,100%);max-height:92dvh;overflow:auto}.bookingTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.bookingTop button{padding:7px 12px}.bookingDialog img{width:100%;max-height:53dvh;object-fit:contain;background:#292a2e;border-radius:8px}.bookingDetails{display:flex;justify-content:space-between;gap:12px;margin-top:10px}.bookingDetails span{color:#bfc0d2}.bookingActions{display:flex;gap:10px;margin-top:15px}.bookingActions button{flex:1}.bookingActions button:first-child{background:#b0b0ff;color:#16161d}
 #bookingOverlay .bookingDialog label{margin:12px 0 5px}#bookingOverlay .bookingDialog input,#bookingOverlay .bookingDialog textarea{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-radius:7px;padding:10px;font:inherit}#bookingOverlay .bookingDialog textarea{resize:vertical}#bookingOverlay .bookingDialog img{max-height:28dvh}#bookingOverlay .bookingActions button{font-size:12px;padding:12px 6px}
 .artistRecipient{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:9px;background:#303137}.artistRecipient>div{display:flex;flex-direction:column;gap:4px}.artistRecipientLabel{font-size:11px;color:#bfc0d2}.artistRecipient strong{font-size:19px}.artistRecipient button{padding:9px 11px;white-space:nowrap}.shareInstructions{line-height:1.65;font-size:12px;color:#d5d5df}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
 <body>
-<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.7.1 · Booking Request</small></header>
+<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.7.2 · Booking Request</small></header>
 <main><div id="viewer"><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
 <aside><h2>Tattoo placement test</h2><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo">Loading male body…</div><label for="upload">Upload transparent PNG</label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview"><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions">Approximate width: 18 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><input id="rotation" type="range" min="-180" max="180" value="0"><label>Mirror tattoo</label><div class="buttons mirrorrow"><button type="button" id="flipH" aria-pressed="false">↔ Horizontal</button><button type="button" id="flipV" aria-pressed="false">↕ Vertical</button></div><label>Skin tone presets</label><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div><div class="colorline"><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><div class="focusrow"><button id="focusTattoo" disabled>Focus Tattoo</button><button id="resetView">Full Body</button></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug"></div><p>V4.4.1: clear placement guidance and a conservative breast-curvature overlap adjustment. V4.5: estimated body region from tattoo center, kept for future booking. V4.6: confirmation preview, PNG export and native share test. V4.3.1: wider edge zones, stronger continuous auto-rotation on desktop and mobile. V4 unfolds neighboring body triangles into a local stencil map. It follows surface curvature instead of projecting a flat plane. The body is opaque. V4.2.2: adds a guard against overlapping surface unfoldings and clarifies the cm measurement; focus and dragging retained. Surface wrapping remains experimental.</p></aside>
 </main>
@@ -44,8 +44,8 @@ select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-
     <div><span class="artistRecipientLabel">YOUR ARTIST</span><strong id="bookingArtist">@craykrow</strong></div>
     <button id="copyArtist" type="button">Copy username</button>
   </div>
-  <p class="shareInstructions"><strong>How to send:</strong><br>1. Copy the artist's username.<br>2. Tap <strong>Share Booking via Instagram</strong>.<br>3. Choose <strong>Instagram → Message</strong> and paste the username into the recipient search.</p>
-  <div class="bookingActions"><button id="downloadBooking" type="button">Save Booking PNG</button><button id="shareBooking" type="button">Share Booking via Instagram</button></div>
+  <p class="shareInstructions"><strong>How to send:</strong><br>1. Copy your booking message.<br>2. Copy the artist username and find <strong>@craykrow</strong> on Instagram.<br>3. Paste the message into a DM. You can send the saved PNG after the artist accepts your message request.</p>
+  <div class="bookingActions"><button id="copyBookingMessage" type="button">Copy Booking Message</button><button id="downloadBooking" type="button">Save PNG</button></div>
   <p id="shareMessage" role="status" style="margin:8px 0 0"></p>
  </div>
 </div>
@@ -415,7 +415,7 @@ renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.add
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
 window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
 
-// V4.7.1 booking UI / export; 3D wrapping implementation is unchanged.
+// V4.7.2 booking UI / export; 3D wrapping implementation is unchanged.
 let bookingPNG=null,bookingCardPNG=null;
 function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
 const bookingOverlay=$('bookingOverlay');
@@ -517,16 +517,35 @@ $('downloadBooking').onclick=async()=>{
  try{const file=await bookingFile();downloadBlob(file,file.name)}
  catch(err){console.error(err);$('shareMessage').textContent='Could not create booking PNG.'}
 };
-$('shareBooking').onclick=async()=>{
- // Generate the file before invoking native share; the share call itself remains in the click handler.
+function bookingMessageText(){
+ const size=$('bookingSize').textContent.trim();
+ const region=$('bookingRegionSelect').value;
+ const budget=$('bookingBudget').value||'Flexible / not sure';
+ const gender=$('bookingGender').value||'Not specified';
+ const note=$('bookingNote').value.trim()||"Hey! I'm interested in this tattoo. Let me know about your availability.";
+ return `NEW TATTOO BOOKING REQUEST
+
+Hi @craykrow! I'd like to book a tattoo.
+
+Placement: ${region}
+Estimated size: ${size}
+Maximum budget: ${budget}
+Gender (optional): ${gender}
+
+Message:
+${note}
+
+I can send you the tattoo placement PNG once you accept my message request.`;
+}
+$('copyBookingMessage').onclick=async()=>{
+ const message=bookingMessageText();
  try{
-  const file=await bookingFile();
-  if(!window.isSecureContext){$('shareMessage').textContent='Sharing requires HTTPS.';return}
-  if(navigator.share&&navigator.canShare?.({files:[file]})){
-   try{await navigator.share({files:[file],title:'New Tattoo Booking Request'});$('shareMessage').textContent='Sharing menu opened.'}
-   catch(err){if(err.name!=='AbortError'){$('shareMessage').textContent='Sharing failed. Save the PNG and attach it manually.';console.error(err)}}
-  }else $('shareMessage').textContent='File sharing is unavailable here. Save the PNG instead.';
- }catch(err){console.error(err);$('shareMessage').textContent='Could not create booking PNG.'}
+  await navigator.clipboard.writeText(message);
+  $('shareMessage').textContent='Booking message copied! Paste it into your Instagram DM to @craykrow.';
+ }catch(err){
+  // Allows manual copying if Clipboard API is not available.
+  window.prompt('Copy your booking message:',message);
+ }
 };
 function render(){requestAnimationFrame(render);
  const now=performance.now(),dt=Math.min(.05,(now-edgeClock)/1000);edgeClock=now;
