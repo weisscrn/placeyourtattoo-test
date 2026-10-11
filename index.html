@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>placeyourtattoo — V4.7.3</title>
+<title>placeyourtattoo — V4.7.4</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
 .skinpresets{display:flex;gap:7px;margin:6px 0 8px}.skinpresets button{width:38px;height:38px;padding:0;border:2px solid #666;border-radius:50%;flex:none}.skinpresets button.selected{outline:2px solid #c2baff;outline-offset:2px}.measurement{font-size:12px;color:#bfc0d2;margin-top:5px}.focusrow{display:flex;gap:8px;margin-top:13px}.focusrow button{flex:1}input[type=number]{width:80px;background:#303137;color:#fff;border:1px solid #62636c;border-radius:6px;padding:7px}.inputrow{display:flex;align-items:center;gap:8px}.inputrow input[type=range]{flex:1;min-width:0}#sizeCm{width:70px}#skin{flex:none}
@@ -16,7 +16,7 @@ select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
 <body>
-<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.7.3 · Booking Request</small></header>
+<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.7.4 · Booking Request</small></header>
 <main><div id="viewer"><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
 <aside><h2>Tattoo placement test</h2><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo">Loading male body…</div><label for="upload">Upload transparent PNG</label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview"><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions">Approximate width: 18 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><input id="rotation" type="range" min="-180" max="180" value="0"><label>Mirror tattoo</label><div class="buttons mirrorrow"><button type="button" id="flipH" aria-pressed="false">↔ Horizontal</button><button type="button" id="flipV" aria-pressed="false">↕ Vertical</button></div><label>Skin tone presets</label><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div><div class="colorline"><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><div class="focusrow"><button id="focusTattoo" disabled>Focus Tattoo</button><button id="resetView">Full Body</button></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug"></div><p>V4.4.1: clear placement guidance and a conservative breast-curvature overlap adjustment. V4.5: estimated body region from tattoo center, kept for future booking. V4.6: confirmation preview, PNG export and native share test. V4.3.1: wider edge zones, stronger continuous auto-rotation on desktop and mobile. V4 unfolds neighboring body triangles into a local stencil map. It follows surface curvature instead of projecting a flat plane. The body is opaque. V4.2.2: adds a guard against overlapping surface unfoldings and clarifies the cm measurement; focus and dragging retained. Surface wrapping remains experimental.</p></aside>
 </main>
@@ -45,9 +45,9 @@ select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-
     <div><span class="artistRecipientLabel">YOUR ARTIST</span><strong id="bookingArtist">@craykrow</strong></div>
     <button id="copyArtist" type="button">Copy username</button>
   </div>
-  <p class="shareInstructions"><strong>How to send:</strong><br>1. Tap <strong>Share Booking Request</strong> and select Instagram → Message.<br>2. Choose <strong>@craykrow</strong> as recipient (copy the username above if needed).<br>3. If Instagram doesn't transfer the text, use <strong>Copy Booking Message</strong> and paste it manually.<br>4. Save your PNG and send it after the artist accepts your message request.</p>
-  <div class="bookingActions"><button id="shareBookingText" type="button">Share Booking Request</button><button id="downloadBooking" type="button">Save PNG</button></div>
-  <button id="copyBookingMessage" class="bookingFallback" type="button">Copy Booking Message</button>
+  <p class="shareInstructions"><strong>How to send:</strong><br>1. Tap <strong>Copy Booking Message</strong>.<br>2. Return to the artist's Instagram profile (<strong>@craykrow</strong>), open a message and paste your booking request.<br>3. Tap <strong>Save PNG</strong> to keep your tattoo placement. Your artist may ask you to send it after accepting your message request.</p>
+  <div class="bookingActions"><button id="copyBookingMessage" type="button">Copy Booking Message</button><button id="downloadBooking" type="button">Save PNG</button></div>
+  <p class="shareInstructions"><strong>Save your tattoo placement for later.</strong> You can send the saved PNG after the artist accepts your Instagram message request.</p>
   <p id="shareMessage" role="status" style="margin:8px 0 0"></p>
  </div>
 </div>
@@ -417,7 +417,7 @@ renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.add
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
 window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
 
-// V4.7.3 booking UI / export; 3D wrapping implementation is unchanged.
+// V4.7.4 booking UI / export; 3D wrapping implementation is unchanged.
 let bookingPNG=null,bookingCardPNG=null;
 function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
 const bookingOverlay=$('bookingOverlay');
@@ -536,22 +536,8 @@ Gender (optional): ${gender}
 
 Message:
 ${note}
-
-I can send you the tattoo placement PNG once you accept my message request.`;
+`;
 }
-$('shareBookingText').onclick=async()=>{
- const message=bookingMessageText();
- const status=$('shareMessage');
- if(!navigator.share){status.textContent='Text sharing is not available on this device. Use Copy Booking Message instead.';return;}
- try{
-  await navigator.share({text:message});
-  status.textContent='Share sheet closed. Check that Instagram included your booking text before sending.';
- }catch(err){
-  if(err.name==='AbortError')return;
-  console.error(err);
-  status.textContent='Could not share the message. Use Copy Booking Message instead.';
- }
-};
 $('copyBookingMessage').onclick=async()=>{
  const message=bookingMessageText();
  try{
