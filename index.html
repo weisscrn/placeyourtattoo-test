@@ -2,29 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>placeyourtattoo — V4.6.1</title>
+<title>placeyourtattoo — V4.7</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
 .skinpresets{display:flex;gap:7px;margin:6px 0 8px}.skinpresets button{width:38px;height:38px;padding:0;border:2px solid #666;border-radius:50%;flex:none}.skinpresets button.selected{outline:2px solid #c2baff;outline-offset:2px}.measurement{font-size:12px;color:#bfc0d2;margin-top:5px}.focusrow{display:flex;gap:8px;margin-top:13px}.focusrow button{flex:1}input[type=number]{width:80px;background:#303137;color:#fff;border:1px solid #62636c;border-radius:6px;padding:7px}.inputrow{display:flex;align-items:center;gap:8px}.inputrow input[type=range]{flex:1;min-width:0}#sizeCm{width:70px}#skin{flex:none}
 select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-radius:7px;padding:11px;font:inherit}p{color:#aeb0bc;line-height:1.55;font-size:12px}.colorline{display:flex;align-items:center;justify-content:space-between}input[type=color]{width:58px;height:35px;border:0;background:none;cursor:pointer}@media(max-width:720px){main{flex-direction:column}#viewer{height:62dvh;flex:none}aside{width:100%;height:38dvh}header small{display:none}}
 
 #bookingOverlay[hidden]{display:none!important}#bookingOverlay{position:fixed;inset:0;z-index:30;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px}.bookingDialog{background:#222329;color:#eee;border:1px solid #55565e;border-radius:13px;padding:18px;width:min(440px,100%);max-height:92dvh;overflow:auto}.bookingTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.bookingTop button{padding:7px 12px}.bookingDialog img{width:100%;max-height:53dvh;object-fit:contain;background:#292a2e;border-radius:8px}.bookingDetails{display:flex;justify-content:space-between;gap:12px;margin-top:10px}.bookingDetails span{color:#bfc0d2}.bookingActions{display:flex;gap:10px;margin-top:15px}.bookingActions button{flex:1}.bookingActions button:last-child{background:#b0b0ff;color:#16161d}
+#bookingOverlay .bookingDialog label{margin:12px 0 5px}#bookingOverlay .bookingDialog input,#bookingOverlay .bookingDialog textarea{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-radius:7px;padding:10px;font:inherit}#bookingOverlay .bookingDialog textarea{resize:vertical}#bookingOverlay .bookingDialog img{max-height:28dvh}#bookingOverlay .bookingActions button{font-size:12px;padding:12px 6px}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
 <body>
-<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.6 · Confirm Placement</small></header>
+<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.7 · Booking Request</small></header>
 <main><div id="viewer"><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
 <aside><h2>Tattoo placement test</h2><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo">Loading male body…</div><label for="upload">Upload transparent PNG</label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview"><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions">Approximate width: 18 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><input id="rotation" type="range" min="-180" max="180" value="0"><label>Mirror tattoo</label><div class="buttons mirrorrow"><button type="button" id="flipH" aria-pressed="false">↔ Horizontal</button><button type="button" id="flipV" aria-pressed="false">↕ Vertical</button></div><label>Skin tone presets</label><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div><div class="colorline"><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><div class="focusrow"><button id="focusTattoo" disabled>Focus Tattoo</button><button id="resetView">Full Body</button></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug"></div><p>V4.4.1: clear placement guidance and a conservative breast-curvature overlap adjustment. V4.5: estimated body region from tattoo center, kept for future booking. V4.6: confirmation preview, PNG export and native share test. V4.3.1: wider edge zones, stronger continuous auto-rotation on desktop and mobile. V4 unfolds neighboring body triangles into a local stencil map. It follows surface curvature instead of projecting a flat plane. The body is opaque. V4.2.2: adds a guard against overlapping surface unfoldings and clarifies the cm measurement; focus and dragging retained. Surface wrapping remains experimental.</p></aside>
 </main>
-<div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Placement preview">
+<div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
-  <div class="bookingTop"><strong>Placement confirmed</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
-  <img id="bookingScreenshot" alt="Screenshot of your tattoo placement">
-  <div class="bookingDetails"><span>Tattoo size</span><strong id="bookingSize"></strong></div>
-  <div class="bookingDetails"><span>Suggested placement</span><strong id="bookingRegion"></strong></div>
-  <p style="margin:8px 0">This is a preview. In the next version, the booking card will include your selected flash and sharing options.</p>
-  <div class="bookingActions"><button id="downloadBooking" type="button">Save PNG</button><button id="shareBooking" type="button">Share PNG</button></div>
+  <div class="bookingTop"><strong>New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
+  <img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
+  <div class="bookingDetails"><span>Tattoo size (estimated)</span><strong id="bookingSize"></strong></div>
+  <label for="bookingRegionSelect">Placement (suggested, editable)</label>
+  <select id="bookingRegionSelect">
+   <option value="Chest">Chest</option><option value="Left chest">Left chest</option><option value="Right chest">Right chest</option>
+   <option value="Abdomen">Abdomen</option><option value="Ribs / side">Ribs / side</option>
+   <option value="Upper back">Upper back</option><option value="Lower back">Lower back</option>
+   <option value="Shoulder">Shoulder</option><option value="Upper arm">Upper arm</option>
+   <option value="Forearm">Forearm</option><option value="Hand">Hand</option>
+   <option value="Thigh">Thigh</option><option value="Calf">Calf</option><option value="Foot">Foot</option>
+   <option value="Neck">Neck</option><option value="Other / not sure">Other / not sure</option>
+  </select>
+  <label for="bookingGender">Gender (optional)</label>
+  <select id="bookingGender"><option value="">Prefer not to say</option><option>Female</option><option>Male</option><option>Non-binary</option><option>Self-described / other</option></select>
+  <label for="bookingBudget">Maximum budget</label>
+  <select id="bookingBudget"><option value="">Flexible / not sure</option><option>Under €200</option><option>€200–300</option><option>€300–500</option><option>€500–800</option><option>€800–1,200</option><option>€1,200+</option></select>
+  <label for="bookingNote">Message to artist (optional)</label>
+  <textarea id="bookingNote" rows="3" maxlength="800" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
+  <label for="bookingArtist">Artist Instagram (optional, for this test)</label>
+  <input id="bookingArtist" type="text" maxlength="60" placeholder="@artistname">
+  <p>The shared PNG contains your tattoo screenshot and the booking details below. Instagram will still ask you to choose the recipient.</p>
+  <div class="bookingActions"><button id="downloadBooking" type="button">Save Booking PNG</button><button id="shareBooking" type="button">Share Booking PNG</button></div>
   <p id="shareMessage" role="status" style="margin:8px 0 0"></p>
  </div>
 </div>
@@ -394,41 +412,108 @@ renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.add
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
 window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
 
-// V4.6: confirmation is an isolated UI layer. Surface wrapping is unchanged.
-let bookingPNG=null;
+// V4.7 booking UI / export; 3D wrapping implementation is unchanged.
+let bookingPNG=null,bookingCardPNG=null;
 function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
 const bookingOverlay=$('bookingOverlay');
 $('closeBooking').onclick=()=>{bookingOverlay.hidden=true};
 bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)bookingOverlay.hidden=true});
 window.addEventListener('keydown',e=>{if(e.key==='Escape')bookingOverlay.hidden=true});
 function downloadBlob(blob,filename){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+const bookingRegions=['Chest','Left chest','Right chest','Abdomen','Ribs / side','Upper back','Lower back','Shoulder','Upper arm','Forearm','Hand','Thigh','Calf','Foot','Neck'];
+function setSuggestedRegion(){
+ const raw=$('regionValue').textContent.trim();
+ const select=$('bookingRegionSelect');
+ let match=bookingRegions.find(v=>v.toLowerCase()===raw.toLowerCase());
+ if(!match)match=bookingRegions.find(v=>raw.toLowerCase().includes(v.toLowerCase())||v.toLowerCase().includes(raw.toLowerCase()));
+ select.value=match||'Other / not sure';
+}
 $('confirmPlacement').onclick=async()=>{
  if(!anchor||!tex||!tattoo)return;
  $('confirmPlacement').disabled=true;
  focusTattoo();
- // Allow the existing smooth focus animation to finish before capturing.
  const start=performance.now();
  while(focusGoal && performance.now()-start<1600){await new Promise(resolve=>requestAnimationFrame(resolve));}
- // Finish any temporary low-resolution drag preview before taking the snapshot.
  wrap(false);
  controls.update();renderer.render(scene,camera);
  try {
   bookingPNG=renderer.domElement.toDataURL('image/png');
   $('bookingScreenshot').src=bookingPNG;
-  const w=Number($('size').value);$('bookingSize').textContent=`${w.toFixed(1)} × ${(w/imgAspect).toFixed(1)} cm (estimated)`;
-  $('bookingRegion').textContent=$('regionValue').textContent||'Not specified';
+  const w=Number($('size').value);
+  $('bookingSize').textContent=`${w.toFixed(1)} × ${(w/imgAspect).toFixed(1)} cm`;
+  setSuggestedRegion();
   $('shareMessage').textContent='';bookingOverlay.hidden=false;
  }catch(err){console.error(err);status('Could not capture the preview on this device.');}
 };
-$('downloadBooking').onclick=async()=>{if(!bookingPNG)return;const blob=await(await fetch(bookingPNG)).blob();downloadBlob(blob,'placeyourtattoo-placement.png')};
+function drawWrapped(ctx,str,x,y,maxWidth,lineHeight,maxLines=12){
+ const words=String(str).split(/\s+/);let line='',lines=0;
+ for(const word of words){
+  const candidate=line?line+' '+word:word;
+  if(ctx.measureText(candidate).width>maxWidth&&line){
+   ctx.fillText(line,x,y);y+=lineHeight;lines++;line=word;
+   if(lines>=maxLines)return y;
+  }else line=candidate;
+ }
+ if(line){ctx.fillText(line,x,y);y+=lineHeight}
+ return y;
+}
+function loadPreview(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src})}
+async function createBookingCard(){
+ if(!bookingPNG)throw Error('No screenshot available');
+ const preview=await loadPreview(bookingPNG);
+ const W=900,margin=56,inner=W-2*margin;
+ const budget=$('bookingBudget').value||'Flexible / not sure';
+ const gender=$('bookingGender').value||'Not specified';
+ const region=$('bookingRegionSelect').value;
+ const note=$('bookingNote').value.trim()||'Hey! I’m interested in this tattoo. Let me know about your availability.';
+ const artist=$('bookingArtist').value.trim().replace(/^@+/,'').slice(0,60);
+ // Measure message before allocating canvas height so no booking information is cut off.
+ const scratch=document.createElement('canvas').getContext('2d');
+ scratch.font='28px system-ui,Arial,sans-serif';
+ const words=note.split(/\s+/);let lines=1,line='';
+ for(const word of words){const next=line?line+' '+word:word;if(scratch.measureText(next).width>inner&&line){lines++;line=word}else line=next}
+ const H=1040+Math.max(0,lines-2)*40+(artist?55:0);
+ const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#17181b';ctx.font='bold 42px system-ui,Arial,sans-serif';ctx.fillText('PLACEYOURTATTOO',margin,85);
+ ctx.fillStyle='#5c5c6c';ctx.font='bold 22px system-ui,Arial,sans-serif';ctx.fillText('NEW BOOKING REQUEST',margin,128);
+ let imageY=162,imageH=490;
+ ctx.fillStyle='#292a2e';ctx.fillRect(margin,imageY,inner,imageH);
+ const scale=Math.min(inner/preview.width,imageH/preview.height);
+ const dw=preview.width*scale,dh=preview.height*scale;
+ ctx.drawImage(preview,margin+(inner-dw)/2,imageY+(imageH-dh)/2,dw,dh);
+ let y=700;
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('TATTOO SIZE',margin,y);ctx.fillText('PLACEMENT',480,y);
+ ctx.fillStyle='#17181b';ctx.font='bold 29px system-ui,Arial,sans-serif';ctx.fillText($('bookingSize').textContent,margin,y+39);
+ drawWrapped(ctx,region,480,y+39,350,35,2);
+ y+=96;
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MAXIMUM BUDGET',margin,y);ctx.fillText('GENDER (OPTIONAL)',480,y);
+ ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(budget,margin,y+39);ctx.fillText(gender,480,y+39);
+ y+=98;
+ if(artist){ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('FOR ARTIST',margin,y);ctx.fillStyle='#17181b';ctx.font='bold 26px system-ui,Arial,sans-serif';ctx.fillText('@'+artist,margin,y+36);y+=65}
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MESSAGE TO ARTIST',margin,y);
+ ctx.fillStyle='#17181b';ctx.font='28px system-ui,Arial,sans-serif';
+ drawWrapped(ctx,note,margin,y+44,inner,40,18);
+ return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('PNG export failed')),'image/png'));
+}
+async function bookingFile(){
+ const blob=await createBookingCard();
+ return new File([blob],'placeyourtattoo-booking.png',{type:'image/png'});
+}
+$('downloadBooking').onclick=async()=>{
+ try{const file=await bookingFile();downloadBlob(file,file.name)}
+ catch(err){console.error(err);$('shareMessage').textContent='Could not create booking PNG.'}
+};
 $('shareBooking').onclick=async()=>{
- if(!bookingPNG)return;
- const blob=await(await fetch(bookingPNG)).blob();const file=new File([blob],'placeyourtattoo-placement.png',{type:'image/png'});
- if(!window.isSecureContext){$('shareMessage').textContent='Sharing requires HTTPS. Open the app via an HTTPS link (not http://192.168.x.x).';return;}
- if(navigator.share&&navigator.canShare?.({files:[file]})){
-  try{await navigator.share({files:[file],title:'My tattoo placement'});$('shareMessage').textContent='Sharing menu opened.'}
-  catch(err){if(err.name!=='AbortError')$('shareMessage').textContent='Sharing unavailable. Use Save PNG instead.'}
- }else{$('shareMessage').textContent='File sharing is not supported here. Save the PNG and attach it manually in Instagram.'}
+ // Generate the file before invoking native share; the share call itself remains in the click handler.
+ try{
+  const file=await bookingFile();
+  if(!window.isSecureContext){$('shareMessage').textContent='Sharing requires HTTPS.';return}
+  if(navigator.share&&navigator.canShare?.({files:[file]})){
+   try{await navigator.share({files:[file],title:'New Tattoo Booking Request'});$('shareMessage').textContent='Sharing menu opened.'}
+   catch(err){if(err.name!=='AbortError'){$('shareMessage').textContent='Sharing failed. Save the PNG and attach it manually.';console.error(err)}}
+  }else $('shareMessage').textContent='File sharing is unavailable here. Save the PNG instead.';
+ }catch(err){console.error(err);$('shareMessage').textContent='Could not create booking PNG.'}
 };
 function render(){requestAnimationFrame(render);
  const now=performance.now(),dt=Math.min(.05,(now-edgeClock)/1000);edgeClock=now;
