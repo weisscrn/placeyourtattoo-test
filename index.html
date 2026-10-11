@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>placeyourtattoo — V4.9.2</title>
+<title>placeyourtattoo — V4.9.3</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
 .skinpresets{display:flex;gap:7px;margin:6px 0 8px}.skinpresets button{width:38px;height:38px;padding:0;border:2px solid #666;border-radius:50%;flex:none}.skinpresets button.selected{outline:2px solid #c2baff;outline-offset:2px}.measurement{font-size:12px;color:#bfc0d2;margin-top:5px}.focusrow{display:flex;gap:8px;margin-top:13px}.focusrow button{flex:1}input[type=number]{width:80px;background:#303137;color:#fff;border:1px solid #62636c;border-radius:6px;padding:7px}.inputrow{display:flex;align-items:center;gap:8px}.inputrow input[type=range]{flex:1;min-width:0}#sizeCm{width:70px}#skin{flex:none}
@@ -45,7 +45,7 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 <body>
 
 <main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span>Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span>Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
-<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 18.0 cm</div><div class="wrapSetting"><label for="wrapMethod">Wrapping <span class="testTag">BETA</span></label><select id="wrapMethod" aria-label="Wrapping algorithm"><option value="classic">Classic (V4.9.1)</option><option value="smooth">Curvature-aware (Test)</option></select></div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 18.0 cm</div><div class="wrapSetting"><label for="wrapMethod">Wrapping <span class="testTag">BETA</span></label><select id="wrapMethod" aria-label="Wrapping algorithm"><option value="classic">Classic (V4.9.1)</option><option value="surface">Surface Mesh (Test)</option></select></div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
@@ -282,6 +282,7 @@ $('moveMode').onclick=()=>{if(anchor)setMode('move')};$('orbitMode').onclick=()=
 // Each face gets three 2D coordinates. Propagation follows mesh connectivity, not camera rays.
 function wrap(preview=false){
  if(!anchor||!tex)return;
+ if($('wrapMethod').value==='surface'){wrapSurface(preview);return;}
  const data=cache.get(anchor.object);if(!data)return;
  // The model is calibrated to a 175 cm reference height. The uploaded
  // artwork is cropped to its visible alpha bounds before this measurement.
@@ -292,14 +293,6 @@ function wrap(preview=false){
  const {x,y}=anchor.basis;
  const project2=v=>{const d=v.clone().sub(anchor.point);return [d.dot(x),d.dot(y)]};
  const uv2=new Map();uv2.set(f0,data.p[f0].map(project2));const visited=new Set([f0]);const queue=[f0];let qi=0;
- // Experimental Dijkstra traversal: choose shorter, smoother routes over the mesh.
- // Classic BFS remains untouched and can be selected instantly for comparison.
- const smoothWrap=$('wrapMethod').value==='smooth';
- const bestCost=new Map([[f0,0]]),settled=new Set();
- const heap=[];
- function heapPush(node){heap.push(node);let i=heap.length-1;while(i>0){const parent=(i-1)>>1;if(heap[parent].cost<=node.cost)break;heap[i]=heap[parent];i=parent}heap[i]=node}
- function heapPop(){const first=heap[0],last=heap.pop();if(heap.length){let i=0;while(true){const l=i*2+1;if(l>=heap.length)break;const r=l+1,child=r<heap.length&&heap[r].cost<heap[l].cost?r:l;if(heap[child].cost>=last.cost)break;heap[i]=heap[child];i=child}heap[i]=last}return first}
- if(smoothWrap)heapPush({f:f0,cost:0});
  const positions=[],uvs=[],indices=[];let skipped=0,used=0,overlapBlocked=0;const maxFaces=preview?3800:16000;
  // Spatially index accepted 2D face centroids. On curved / branched meshes,
  // unfolding can cover the same stencil coordinates with a second, distant
@@ -347,13 +340,8 @@ function wrap(preview=false){
    }
    indices.push(base,base+1,base+2);used++;
  }
- while((smoothWrap?heap.length>0:qi<queue.length)&&qi<maxFaces){
-   let f;
-   if(smoothWrap){
-     const item=heapPop();f=item.f;
-     if(settled.has(f)||item.cost>bestCost.get(f)+1e-10)continue;
-     settled.add(f);qi++;
-   }else{f=queue[qi++];}
+ while(qi<queue.length&&qi<maxFaces){
+   const f=queue[qi++];
    const tri=uv2.get(f);if(!isLocalFace(f)){skipped++;continue}
    if(overlapsOtherSheet(f,tri)){overlapBlocked++;continue}
    addFace(f,tri);
@@ -361,7 +349,7 @@ function wrap(preview=false){
    const longest=Math.max(v2dist(tri[0],tri[1]),v2dist(tri[1],tri[2]),v2dist(tri[2],tri[0]));
    if(Math.hypot(cx,cy)>radius+longest)continue;
    for(let e=0;e<3;e++){
-     const nf=data.neighbors[f][e];if(nf<0||(smoothWrap?settled.has(nf):visited.has(nf))||!isLocalFace(nf))continue;
+     const nf=data.neighbors[f][e];if(nf<0||visited.has(nf)||!isLocalFace(nf))continue;
      const A=data.keys[f][e],B=data.keys[f][(e+1)%3];const other=data.keys[f][(e+2)%3];
      const nk=data.keys[nf],ia=nk.indexOf(A),ib=nk.indexOf(B);if(ia<0||ib<0)continue;
      const ic=3-ia-ib;
@@ -378,17 +366,7 @@ function wrap(preview=false){
      const nx=(pa[0]+pb[0]+third[0])/3,ny=(pa[1]+pb[1]+third[1])/3;
      // Avoid runaway paths wrapping the entire model or self-overlap across opposite limbs.
      if(Math.hypot(nx,ny)>radius+edgeLen*2)continue;
-     if(smoothWrap){
-       // Distance between face centroids plus a modest curvature penalty.
-       // A path that crosses abrupt normal changes is less preferred.
-       const current=data.p[f],next=data.p[nf];
-       const c0=current[0].clone().add(current[1]).add(current[2]).multiplyScalar(1/3);
-       const c1=next[0].clone().add(next[1]).add(next[2]).multiplyScalar(1/3);
-       const bend=1-Math.max(-1,Math.min(1,data.normals[f].dot(data.normals[nf])));
-       const cost=bestCost.get(f)+c0.distanceTo(c1)*(1+2.5*bend);
-       if(cost>=(bestCost.get(nf)??Infinity)-1e-10)continue;
-       bestCost.set(nf,cost);visited.add(nf);uv2.set(nf,ntri);heapPush({f:nf,cost});
-     }else{visited.add(nf);uv2.set(nf,ntri);queue.push(nf);}
+     visited.add(nf);uv2.set(nf,ntri);queue.push(nf);
    }
  }
  if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}
@@ -398,8 +376,85 @@ function wrap(preview=false){
  const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.03,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>`)};
  tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);$('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
- debug.textContent=`Surface faces used: ${used}\nUnfolded faces: ${visited.size}\nBody triangles: ${data.triCount}\nRemote faces blocked: ${skipped}\nOverlapping surface faces blocked: ${overlapBlocked}\nWrapping: ${smoothWrap?'curvature-aware test':'classic BFS'}\nMode: ${preview?'live preview':'full resolution'}\nSkin: opaque · depth tested`;
+ debug.textContent=`Surface faces used: ${used}\nUnfolded faces: ${visited.size}\nBody triangles: ${data.triCount}\nRemote faces blocked: ${skipped}\nOverlapping surface faces blocked: ${overlapBlocked}\nWrapping: classic BFS\nMode: ${preview?'live preview':'full resolution'}\nSkin: opaque · depth tested`;
 }
+// Experimental surface-conforming tattoo grid. Independent of triangle unfolding.
+// Cast from the local tangent plane onto the selected body mesh, rejecting distant
+// and back-facing hits. Invalid grid cells are omitted rather than bridged.
+function wrapSurface(preview=false){
+ if(!anchor||!tex)return;
+ const width=bodyHeight*(Number($('size').value)/175),height=width/imgAspect;
+ const angle=THREE.MathUtils.degToRad(Number($('rotation').value));
+ const ca=Math.cos(angle),sa=Math.sin(angle);
+ const nx=preview?Math.max(22,Math.min(60,Math.ceil(width/(bodyHeight*.0045)))):Math.max(38,Math.min(115,Math.ceil(width/(bodyHeight*.0028))));
+ const ny=Math.max(12,Math.min(preview?105:190,Math.ceil(nx*height/width)));
+ const normal=anchor.normal.clone().normalize();
+ const axisX=anchor.basis.x.clone().multiplyScalar(ca).addScaledVector(anchor.basis.y,sa).normalize();
+ const axisY=anchor.basis.y.clone().multiplyScalar(ca).addScaledVector(anchor.basis.x,-sa).normalize();
+ const cast=new THREE.Raycaster();cast.near=0;
+ // The projection rays start outside the local surface, pointing toward it.
+ const reach=Math.max(width,height)*.70+bodyHeight*.075;
+ const depth=Math.max(width,height)*.46+bodyHeight*.065;
+ cast.far=depth+reach;
+ const nodes=new Array((nx+1)*(ny+1));
+ const offset=Math.max(bodyDiag*.00010,Math.min(width,height)*.0004);
+ const maxDrift=Math.max(width,height)*.55+bodyHeight*.055;
+ let valid=0;
+ for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){
+   const u=i/nx,v=j/ny;
+   const plane=anchor.point.clone().addScaledVector(axisX,(u-.5)*width).addScaledVector(axisY,(.5-v)*height);
+   const origin=plane.clone().addScaledVector(normal,depth);
+   cast.set(origin,normal.clone().negate());
+   // Cast only against the body mesh that owns the original anchor.
+   const hits=cast.intersectObject(anchor.object,false);
+   let picked=null;
+   for(const hit of hits){
+     const hn=worldNormal(hit);
+     if(hn.dot(normal)<.16)continue;
+     if(hit.point.distanceTo(plane)>maxDrift)continue;
+     // Prefer a hit close to the original tangent plane, not a distant limb.
+     if(!picked||hit.point.distanceTo(plane)<picked.point.distanceTo(plane))picked={point:hit.point.clone(),normal:hn};
+   }
+   if(picked){picked.point.addScaledVector(picked.normal,offset);valid++}
+   nodes[j*(nx+1)+i]=picked;
+ }
+ const positions=[],uvs=[],indices=[];
+ const dx=width/nx,dy=height/ny;
+ // Don't connect across missing hits or folds where the grid jumps sharply.
+ const maxEdge=Math.hypot(dx,dy)*3.6+bodyHeight*.0015;
+ let cells=0;
+ function appendTri(ids,coords){
+   const base=positions.length/3;
+   for(let k=0;k<3;k++){
+     const node=nodes[ids[k]];
+     positions.push(node.point.x,node.point.y,node.point.z);
+     const [u,v]=coords[k];uvs.push(flipHorizontal?1-u:u,flipVertical?1-v:v);
+   }
+   indices.push(base,base+1,base+2);
+ }
+ for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
+   const a=j*(nx+1)+i,b=a+1,c=a+(nx+1),d=c+1;
+   const pts=[nodes[a],nodes[b],nodes[c],nodes[d]];
+   if(pts.some(p=>!p))continue;
+   if(pts[0].point.distanceTo(pts[1].point)>maxEdge||pts[0].point.distanceTo(pts[2].point)>maxEdge||pts[1].point.distanceTo(pts[3].point)>maxEdge||pts[2].point.distanceTo(pts[3].point)>maxEdge)continue;
+   if(pts.some(p=>p.normal.dot(normal)<.16))continue;
+   // Exclude folded cells with nearly opposite vertex normals.
+   if(pts[0].normal.dot(pts[3].normal)<-.15||pts[1].normal.dot(pts[2].normal)<-.15)continue;
+   const u=i/nx,v=j/ny,U=(i+1)/nx,V=(j+1)/ny;
+   appendTri([a,c,b],[[u,1-v],[u,1-V],[U,1-v]]);
+   appendTri([b,c,d],[[U,1-v],[u,1-V],[U,1-V]]);
+   cells++;
+ }
+ if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}
+ if(!indices.length){status('Surface mesh could not project here. Try Classic or another position.');return}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeVertexNormals();
+ const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.03,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+ m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>`)};
+ tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);
+ $('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
+ debug.textContent=`Surface mesh grid: ${nx} x ${ny}\nProjected points: ${valid}/${nodes.length}\nRendered cells: ${cells}/${nx*ny}\nMode: ${preview?'preview':'full'}`;
+}
+
 // Crop transparent padding so the requested width measures the *visible* motif.
 // Otherwise a 40 cm PNG canvas containing a tiny design looks like a 10 cm tattoo.
 function cropArtwork(img){
