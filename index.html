@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>placeyourtattoo — V4.6.1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
+.skinpresets{display:flex;gap:7px;margin:6px 0 8px}.skinpresets button{width:38px;height:38px;padding:0;border:2px solid #666;border-radius:50%;flex:none}.skinpresets button.selected{outline:2px solid #c2baff;outline-offset:2px}.measurement{font-size:12px;color:#bfc0d2;margin-top:5px}.focusrow{display:flex;gap:8px;margin-top:13px}.focusrow button{flex:1}input[type=number]{width:80px;background:#303137;color:#fff;border:1px solid #62636c;border-radius:6px;padding:7px}.inputrow{display:flex;align-items:center;gap:8px}.inputrow input[type=range]{flex:1;min-width:0}#sizeCm{width:70px}#skin{flex:none}
+select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-radius:7px;padding:11px;font:inherit}p{color:#aeb0bc;line-height:1.55;font-size:12px}.colorline{display:flex;align-items:center;justify-content:space-between}input[type=color]{width:58px;height:35px;border:0;background:none;cursor:pointer}@media(max-width:720px){main{flex-direction:column}#viewer{height:62dvh;flex:none}aside{width:100%;height:38dvh}header small{display:none}}
+
+#bookingOverlay[hidden]{display:none!important}#bookingOverlay{position:fixed;inset:0;z-index:30;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px}.bookingDialog{background:#222329;color:#eee;border:1px solid #55565e;border-radius:13px;padding:18px;width:min(440px,100%);max-height:92dvh;overflow:auto}.bookingTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.bookingTop button{padding:7px 12px}.bookingDialog img{width:100%;max-height:53dvh;object-fit:contain;background:#292a2e;border-radius:8px}.bookingDetails{display:flex;justify-content:space-between;gap:12px;margin-top:10px}.bookingDetails span{color:#bfc0d2}.bookingActions{display:flex;gap:10px;margin-top:15px}.bookingActions button{flex:1}.bookingActions button:last-child{background:#b0b0ff;color:#16161d}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header><strong>placeyourtattoo.</strong><small>Placement Engine V4.6 · Confirm Placement</small></header>
+<main><div id="viewer"><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
+<aside><h2>Tattoo placement test</h2><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo">Loading male body…</div><label for="upload">Upload transparent PNG</label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview"><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions">Approximate width: 18 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><input id="rotation" type="range" min="-180" max="180" value="0"><label>Mirror tattoo</label><div class="buttons mirrorrow"><button type="button" id="flipH" aria-pressed="false">↔ Horizontal</button><button type="button" id="flipV" aria-pressed="false">↕ Vertical</button></div><label>Skin tone presets</label><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div><div class="colorline"><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><div class="focusrow"><button id="focusTattoo" disabled>Focus Tattoo</button><button id="resetView">Full Body</button></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug"></div><p>V4.4.1: clear placement guidance and a conservative breast-curvature overlap adjustment. V4.5: estimated body region from tattoo center, kept for future booking. V4.6: confirmation preview, PNG export and native share test. V4.3.1: wider edge zones, stronger continuous auto-rotation on desktop and mobile. V4 unfolds neighboring body triangles into a local stencil map. It follows surface curvature instead of projecting a flat plane. The body is opaque. V4.2.2: adds a guard against overlapping surface unfoldings and clarifies the cm measurement; focus and dragging retained. Surface wrapping remains experimental.</p></aside>
+</main>
+<div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Placement preview">
+ <div class="bookingDialog">
+  <div class="bookingTop"><strong>Placement confirmed</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
+  <img id="bookingScreenshot" alt="Screenshot of your tattoo placement">
+  <div class="bookingDetails"><span>Tattoo size</span><strong id="bookingSize"></strong></div>
+  <div class="bookingDetails"><span>Suggested placement</span><strong id="bookingRegion"></strong></div>
+  <p style="margin:8px 0">This is a preview. In the next version, the booking card will include your selected flash and sharing options.</p>
+  <div class="bookingActions"><button id="downloadBooking" type="button">Save PNG</button><button id="shareBooking" type="button">Share PNG</button></div>
+  <p id="shareMessage" role="status" style="margin:8px 0 0"></p>
+ </div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=id=>document.getElementById(id),viewer=$('viewer'),canvasHost=viewer,overlay=$('overlay'),msg=$('message'),debug=$('debug');
+const scene=new THREE.Scene();scene.background=new THREE.Color('#292a2e');
+const camera=new THREE.PerspectiveCamera(45,1,.001,1000);const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;viewer.prepend(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.07;
+// On touch: one finger orbits the body, two fingers pinch to zoom.
+controls.touches.ONE=THREE.TOUCH.ROTATE;
+controls.touches.TWO=THREE.TOUCH.DOLLY_PAN;
+scene.add(new THREE.HemisphereLight(0xffffff,0x77777a,2.25));const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(4,7,6);scene.add(light);
+const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let meshes=[],model,bodyHeight=1,bodyDiag=1,tex=null,imgAspect=1,anchor=null,tattoo=null,mode='orbit',dragging=false,dragId=null,grabOffset={x:0,y:0},lastTime=0,queued=null,raf=0;
+const cache=new Map();const status=s=>msg.textContent=s;
+// One instruction works for mouse and touch; the gallery can reuse it later.
+function updatePlacementHint(){
+ const hint=$('hint');
+ if(!tex){hint.textContent='Choose a tattoo PNG to begin';return}
+ if(!model||!meshes.length){hint.textContent='Loading body…';return}
+ hint.textContent=anchor?'Drag your tattoo to adjust its position.':'Click or tap on the body to place your tattoo.';
+}
+
+let flipHorizontal=false,flipVertical=false;
+let initialView=null,focusGoal=null;
+let regionBox=null;
+function updateRegion(){
+ const out=$('regionValue');
+ if(!anchor||!regionBox){out.textContent='Not placed yet';return}
+ const p=anchor.point, size=regionBox.getSize(new THREE.Vector3()), c=regionBox.getCenter(new THREE.Vector3());
+ const y=(p.y-regionBox.min.y)/Math.max(size.y,1e-6);
+ const x=(p.x-c.x)/Math.max(size.y,1e-6);
+ const side=p.x<c.x?'Right':'Left'; // anatomical side for a model facing the camera
+ const facing=anchor.normal.z>=0?'front':'back';
+ const absX=Math.abs(x);
+ let region;
+ if(y>=.885)region='Head / neck';
+ else if(y>=.77){
+   if(absX>.20)region=side+' upper arm';
+   else if(absX>.125)region=side+' shoulder';
+   else region=facing==='front'?'Upper chest':'Upper back';
+ }else if(y>=.59){
+   if(absX>.235)region=side+' forearm / arm';
+   else if(absX>.145)region=side+' upper arm / side';
+   else region=facing==='front'?'Chest / abdomen':'Back';
+ }else if(y>=.49){
+   if(absX>.235)region=side+' hand / arm';
+   else if(absX>.13)region=side+' hip';
+   else region=facing==='front'?'Lower abdomen':'Lower back';
+ }else if(y>=.28){region=side+' thigh';}
+ else if(y>=.07){region=side+' lower leg';}
+ else region=side+' foot / ankle';
+ out.textContent=region;
+}
+
+// Mobile auto-orbit only while a tattoo is actively being dragged near the viewer edges.
+let dragClient=null,edgeSpeed=0,edgeClock=performance.now(),lastEdgeProjection=0;
+const EDGE_ZONE=0.36, MAX_ORBIT_SPEED=2.8; // faster edge orbit on mouse and touch
+const edgeHint=document.createElement('div');
+edgeHint.style.cssText='position:absolute;top:48px;left:50%;transform:translateX(-50%);background:#17181bdd;color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:650;pointer-events:none;opacity:0;transition:opacity .12s;z-index:4;white-space:nowrap';
+viewer.appendChild(edgeHint);
+function edgeVelocity(clientX){
+ const r=renderer.domElement.getBoundingClientRect();
+ const zone=Math.min(r.width*EDGE_ZONE,240);
+ const left=(r.left+zone-clientX)/zone,right=(clientX-(r.right-zone))/zone;
+ const signed=left>0?-Math.min(1,left):right>0?Math.min(1,right):0;
+ return Math.sign(signed)*Math.pow(Math.abs(signed),1.15)*MAX_ORBIT_SPEED;
+}
+function orbitDuringTattooDrag(dt){
+ if(!dragging||!dragClient||!anchor)return;
+ const speed=edgeVelocity(dragClient.clientX);edgeSpeed=speed;
+ edgeHint.textContent=Math.abs(speed)>0.001?"↻ Rotating body — keep holding":"";
+ edgeHint.style.opacity=Math.abs(speed)>0.001?"1":"0";
+ if(Math.abs(speed)<0.001)return;
+ // Rotate the camera around its current orbit target; keep the body stationary.
+ const offset=camera.position.clone().sub(controls.target);
+ const spherical=new THREE.Spherical().setFromVector3(offset);
+ spherical.theta+=speed*dt;spherical.makeSafe();
+ camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(spherical));
+ camera.lookAt(controls.target);
+ // Keep the original finger position while the body rotates underneath it.
+ if(performance.now()-lastEdgeProjection>115){
+   lastEdgeProjection=performance.now();
+   moveAnchor(dragEvent(dragClient),true);
+ }
+}
+
+function moveCameraTo(position,target){focusGoal={position:position.clone(),target:target.clone()};}
+function focusTattoo(){if(!tattoo||!anchor)return;
+ const box=new THREE.Box3().setFromObject(tattoo);if(box.isEmpty())return;
+ const center=box.getCenter(new THREE.Vector3()),extent=box.getSize(new THREE.Vector3());
+ const n=anchor.normal.clone().normalize();
+ // Frame approximately half the body vertically, but fit very large tattoos too.
+ const verticalFov=THREE.MathUtils.degToRad(camera.fov);
+ const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
+ const d=Math.max(bodyHeight*.50/(2*Math.tan(verticalFov/2)),
+   extent.length()*1.20/(2*Math.tan(Math.min(verticalFov,horizontalFov)/2)),bodyHeight*.11);
+ moveCameraTo(center.clone().addScaledVector(n,d),center);
+}
+$('focusTattoo').onclick=focusTattoo;
+$('resetView').onclick=()=>{if(initialView)moveCameraTo(initialView.position,initialView.target)};
+function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}window.addEventListener('resize',resize);resize();
+function prepareMesh(mesh){
+  // Build a triangle graph welded by POSITION, not by UV index: GLB splits vertices at UV seams.
+  const geo=mesh.geometry,pos=geo.getAttribute('position'),index=geo.index;const n=index?index.count/3:pos.count/3;
+  const p=Array.from({length:n},()=>[]),neighbors=Array.from({length:n},()=>[-1,-1,-1]),faceNormals=[];
+  const matrix=mesh.matrixWorld;const vertexMap=new Map(),coords=[],triKeys=[],edges=new Map();const eps=Math.max(bodyDiag*1e-7,1e-8);
+  function keyFor(v){const x=pos.getX(v),y=pos.getY(v),z=pos.getZ(v),key=`${Math.round(x/eps)},${Math.round(y/eps)},${Math.round(z/eps)}`;if(!vertexMap.has(key)){vertexMap.set(key,coords.length);coords.push(new THREE.Vector3(x,y,z).applyMatrix4(matrix))}return vertexMap.get(key)}
+  for(let f=0;f<n;f++){
+    const ids=[0,1,2].map(k=>index?index.getX(f*3+k):f*3+k),keys=ids.map(keyFor);triKeys.push(keys);
+    const vs=keys.map(k=>coords[k]);p[f]=vs;
+    faceNormals.push(new THREE.Vector3().subVectors(vs[1],vs[0]).cross(new THREE.Vector3().subVectors(vs[2],vs[0])).normalize());
+    for(let e=0;e<3;e++){const a=keys[e],b=keys[(e+1)%3],ek=a<b?`${a}:${b}`:`${b}:${a}`;if(!edges.has(ek))edges.set(ek,[]);edges.get(ek).push([f,e]);}
+  }
+  for(const uses of edges.values())if(uses.length===2){const [[a,ea],[b,eb]]=uses; if(faceNormals[a].dot(faceNormals[b])>.12){neighbors[a][ea]=b;neighbors[b][eb]=a}}
+  return {p,neighbors,normals:faceNormals,keys:triKeys,coords,triCount:n};
+}
+const bodyLoader=new GLTFLoader();
+let bodyLoadVersion=0;
+function loadBody(kind){
+ const version=++bodyLoadVersion;
+ const filename=kind==='female'?'body_female.glb':'body_male.glb';
+ $('bodySelect').disabled=true;
+ $('bodyInfo').textContent=`Loading ${kind} body…`;
+ overlay.textContent=`Loading ${filename}…`;
+ status(`Loading ${filename}…`);
+ // Retain the selected flash and its settings, but reset placement on body change.
+ cancelTattooDrag();
+ anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;updatePlacementHint();
+ bodyLoader.load('./'+filename,g=>{
+  if(version!==bodyLoadVersion)return;
+  const nextModel=g.scene;
+  nextModel.updateMatrixWorld(true);
+  const box=new THREE.Box3().setFromObject(nextModel),center=box.getCenter(new THREE.Vector3()),dim=box.getSize(new THREE.Vector3());
+  if(box.isEmpty()||dim.y<=0){$('bodySelect').disabled=false;overlay.textContent='Invalid body model';status(`Could not use ${filename}: empty model.`);return}
+  const nextMeshes=[];
+  nextModel.traverse(o=>{if(!o.isMesh)return;
+   o.material=new THREE.MeshStandardMaterial({color:$('skin').value,roughness:.92,metalness:0,side:THREE.FrontSide,transparent:false,opacity:1,depthTest:true,depthWrite:true});
+   nextMeshes.push(o);
+  });
+  if(!nextMeshes.length){$('bodySelect').disabled=false;overlay.textContent='Invalid body model';status(`No meshes in ${filename}.`);return}
+  // Build new adjacency before replacing the previous body.
+  const nextCache=new Map();
+  try{for(const m of nextMeshes)nextCache.set(m,prepareMeshForBody(m,dim.length()));}
+  catch(err){console.error(err);$('bodySelect').disabled=false;overlay.textContent='Model preparation failed';status(String(err));return}
+  if(model){scene.remove(model);model.traverse(o=>{if(o.isMesh){if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose();}})}
+  model=nextModel;scene.add(model);meshes=nextMeshes;cache.clear();for(const [m,data] of nextCache)cache.set(m,data);
+  bodyHeight=dim.y;bodyDiag=dim.length();regionBox=box.clone();updateRegion();
+  controls.target.copy(center);
+  const vf=2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+  const distance=Math.max(dim.y/vf,dim.x/(vf*camera.aspect),dim.z*2)*1.5;
+  camera.position.copy(center).add(new THREE.Vector3(0,0,distance));camera.near=Math.max(distance/2000,.0001);camera.far=distance*100;camera.updateProjectionMatrix();controls.update();
+  initialView={position:camera.position.clone(),target:controls.target.clone()};
+  $('bodySelect').disabled=false;$('bodyInfo').textContent=kind==='female'?'Female Body selected':'Male Body selected';overlay.textContent='';
+  status(tex?'Body loaded. Click or tap on the body to place your tattoo.':'Body loaded. Choose a PNG to begin.');updatePlacementHint();
+ },undefined,e=>{
+  if(version!==bodyLoadVersion)return;
+  console.error(e);$('bodySelect').disabled=false;
+  overlay.textContent=`Could not load ${filename}`;
+  $('bodyInfo').textContent=`Missing or invalid file: ${filename}`;
+  status(`Could not load ${filename}. Check that it is in the same folder as index.html.`);
+ });
+}
+// prepareMesh relies on the current body's diagonal for welding precision.
+function prepareMeshForBody(mesh,diagonal){const previous=bodyDiag;bodyDiag=diagonal;try{return prepareMesh(mesh)}finally{bodyDiag=previous}}
+$('bodySelect').addEventListener('change',e=>loadBody(e.target.value));
+loadBody('male');
+$('skin').addEventListener('input',e=>meshes.forEach(m=>m.material.color.set(e.target.value)));
+function mouseRay(e){const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pointer,camera)}
+function hitBody(e){mouseRay(e);return ray.intersectObjects(meshes,false)[0]||null}
+function hitTattoo(e){if(!tattoo)return null;mouseRay(e);return ray.intersectObject(tattoo,false)[0]||null}
+function screenPoint(v){const p=v.clone().project(camera),r=renderer.domElement.getBoundingClientRect();return {x:r.left+(p.x+1)*r.width*.5,y:r.top+(1-p.y)*r.height*.5}}
+function worldNormal(h){const normal=h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();return normal}
+function tangentBasis(normal){const up=new THREE.Vector3(0,1,0);let x=new THREE.Vector3().crossVectors(up,normal);if(x.lengthSq()<1e-6)x=new THREE.Vector3().crossVectors(new THREE.Vector3(1,0,0),normal);x.normalize();return {x,y:new THREE.Vector3().crossVectors(normal,x).normalize()}}
+function clear(){if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}debug.textContent='';$('remove').disabled=true;$('moveMode').disabled=true;$('focusTattoo').disabled=true;updateRegion()}
+function setMode(m){mode=m;controls.enabled=m==='orbit'||window.matchMedia('(pointer: coarse)').matches;$('moveMode').classList.toggle('active',m==='move');$('orbitMode').classList.toggle('active',m==='orbit');renderer.domElement.classList.toggle('move',m==='move');if(!dragging)renderer.domElement.classList.remove('drag')}
+$('moveMode').onclick=()=>{if(anchor)setMode('move')};$('orbitMode').onclick=()=>setMode('orbit');
+// Unfold each triangle across its shared 3D edge, like laying a flexible stencil over skin.
+// Each face gets three 2D coordinates. Propagation follows mesh connectivity, not camera rays.
+function wrap(preview=false){
+ if(!anchor||!tex)return;
+ const data=cache.get(anchor.object);if(!data)return;
+ // The model is calibrated to a 175 cm reference height. The uploaded
+ // artwork is cropped to its visible alpha bounds before this measurement.
+ const w=bodyHeight*(Number($('size').value)/175),h=w/imgAspect;
+ const radius=Math.hypot(w,h)*.75+Math.max(w,h)*.12;
+ const theta=THREE.MathUtils.degToRad(Number($('rotation').value));const cos=Math.cos(theta),sin=Math.sin(theta);
+ const f0=anchor.faceIndex;if(f0<0||f0>=data.triCount)return;
+ const {x,y}=anchor.basis;
+ const project2=v=>{const d=v.clone().sub(anchor.point);return [d.dot(x),d.dot(y)]};
+ const uv2=new Map();uv2.set(f0,data.p[f0].map(project2));const visited=new Set([f0]);const queue=[f0];let qi=0;
+ const positions=[],uvs=[],indices=[];let skipped=0,used=0,overlapBlocked=0;const maxFaces=preview?3800:16000;
+ // Spatially index accepted 2D face centroids. On curved / branched meshes,
+ // unfolding can cover the same stencil coordinates with a second, distant
+ // patch of skin. Do not render or propagate that second sheet.
+ const cell=Math.max(bodyHeight*.006,1e-6),accepted=new Map();
+ function overlapsOtherSheet(f,tri){
+   const ux=(tri[0][0]+tri[1][0]+tri[2][0])/3,uy=(tri[0][1]+tri[1][1]+tri[2][1])/3;
+   const px=(data.p[f][0].x+data.p[f][1].x+data.p[f][2].x)/3;
+   const py=(data.p[f][0].y+data.p[f][1].y+data.p[f][2].y)/3;
+   const pz=(data.p[f][0].z+data.p[f][1].z+data.p[f][2].z)/3;
+   const ix=Math.floor(ux/cell),iy=Math.floor(uy/cell);
+   for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
+     for(const a of (accepted.get(`${ix+dx}:${iy+dy}`)||[])){
+       const du=ux-a.ux,dv=uy-a.uy;
+       if(du*du+dv*dv>cell*cell*.6)continue;
+       const ox=px-a.px,oy=py-a.py,oz=pz-a.pz;
+       // Curved anatomy (notably the breast) can overlap in the unfolded plane.
+        // Only reject a competing sheet if it is truly far away in 3D,
+        // or is on a distinctly back-facing fold. Nearby curvature is valid.
+        const dist2=ox*ox+oy*oy+oz*oz;
+        const opposing=data.normals[f].dot(data.normals[a.f])<-.35;
+        if(dist2>Math.pow(bodyHeight*.10,2) || (opposing&&dist2>Math.pow(bodyHeight*.025,2)))return true;
+     }
+   }
+   const key=`${ix}:${iy}`;if(!accepted.has(key))accepted.set(key,[]);
+   accepted.get(key).push({ux,uy,px,py,pz,f});return false;
+ }
+ const epsOffset=Math.max(bodyDiag*.00008,Math.min(w,h)*.0004);
+ // A connected triangle graph can cross unexpected bridges between limbs.
+ // Reject remote triangles in 3D even if their unfolded UV is close to the anchor.
+ const maxSpatialReach=Math.max(w,h)*1.05+bodyHeight*.035;
+ const spatialReach2=maxSpatialReach*maxSpatialReach;
+ const isLocalFace=f=>data.p[f].some(v=>v.distanceToSquared(anchor.point)<=spatialReach2);
+ const v2dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+ function addFace(f,tri){
+   const cx=(tri[0][0]+tri[1][0]+tri[2][0])/3,cy=(tri[0][1]+tri[1][1]+tri[2][1])/3;
+   // Circle bound plus rectangular overlap test; keeps faces around corners.
+   const local=tri.map(([px,py])=>[px*cos+py*sin,-px*sin+py*cos]);
+   const minX=Math.min(...local.map(q=>q[0])),maxX=Math.max(...local.map(q=>q[0]));const minY=Math.min(...local.map(q=>q[1])),maxY=Math.max(...local.map(q=>q[1]));
+   if(maxX< -w/2||minX>w/2||maxY< -h/2||minY>h/2)return;
+   const base=positions.length/3;
+   for(let k=0;k<3;k++){
+     const p=data.p[f][k],n=data.normals[f];positions.push(p.x+n.x*epsOffset,p.y+n.y*epsOffset,p.z+n.z*epsOffset);
+     uvs.push(flipHorizontal ? .5-local[k][0]/w : local[k][0]/w+.5,flipVertical ? .5-local[k][1]/h : local[k][1]/h+.5);
+   }
+   indices.push(base,base+1,base+2);used++;
+ }
+ while(qi<queue.length&&qi<maxFaces){
+   const f=queue[qi++],tri=uv2.get(f);if(!isLocalFace(f)){skipped++;continue}
+   if(overlapsOtherSheet(f,tri)){overlapBlocked++;continue}
+   addFace(f,tri);
+   const cx=(tri[0][0]+tri[1][0]+tri[2][0])/3,cy=(tri[0][1]+tri[1][1]+tri[2][1])/3;
+   const longest=Math.max(v2dist(tri[0],tri[1]),v2dist(tri[1],tri[2]),v2dist(tri[2],tri[0]));
+   if(Math.hypot(cx,cy)>radius+longest)continue;
+   for(let e=0;e<3;e++){
+     const nf=data.neighbors[f][e];if(nf<0||visited.has(nf)||!isLocalFace(nf))continue;
+     const A=data.keys[f][e],B=data.keys[f][(e+1)%3];const other=data.keys[f][(e+2)%3];
+     const nk=data.keys[nf],ia=nk.indexOf(A),ib=nk.indexOf(B);if(ia<0||ib<0)continue;
+     const ic=3-ia-ib;
+     const pa=tri[e],pb=tri[(e+1)%3],pc=tri[(e+2)%3];
+     const edgeLen=v2dist(pa,pb);if(edgeLen<1e-10)continue;
+     const vA=data.coords[A],vB=data.coords[B],vC=data.coords[nk[ic]];
+     const ac=vA.distanceTo(vC),bc=vB.distanceTo(vC);
+     const along=(ac*ac-bc*bc+edgeLen*edgeLen)/(2*edgeLen),alt2=ac*ac-along*along;
+     if(alt2< -1e-6*edgeLen*edgeLen)continue;
+     const altitude=Math.sqrt(Math.max(0,alt2)),ex=(pb[0]-pa[0])/edgeLen,ey=(pb[1]-pa[1])/edgeLen;
+     const cross=(pb[0]-pa[0])*(pc[1]-pa[1])-(pb[1]-pa[1])*(pc[0]-pa[0]);
+     const sign=cross>=0?-1:1;const third=[pa[0]+ex*along-sign*ey*altitude,pa[1]+ey*along+sign*ex*altitude];
+     const ntri=[];ntri[ia]=pa;ntri[ib]=pb;ntri[ic]=third;
+     const nx=(pa[0]+pb[0]+third[0])/3,ny=(pa[1]+pb[1]+third[1])/3;
+     // Avoid runaway paths wrapping the entire model or self-overlap across opposite limbs.
+     if(Math.hypot(nx,ny)>radius+edgeLen*2)continue;
+     visited.add(nf);uv2.set(nf,ntri);queue.push(nf);
+   }
+ }
+ if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}
+ if(!indices.length){status('No surface found at this location. Try a nearby point.');return}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeVertexNormals();
+ // Shader clips each triangle to the tattoo rectangle. No empty area is drawn outside the PNG.
+ const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.03,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+ m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>`)};
+ tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);$('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
+ debug.textContent=`Surface faces used: ${used}\nUnfolded faces: ${visited.size}\nBody triangles: ${data.triCount}\nRemote faces blocked: ${skipped}\nOverlapping surface faces blocked: ${overlapBlocked}\nMode: ${preview?'live preview':'full resolution'}\nSkin: opaque · depth tested`;
+}
+// Crop transparent padding so the requested width measures the *visible* motif.
+// Otherwise a 40 cm PNG canvas containing a tiny design looks like a 10 cm tattoo.
+function cropArtwork(img){
+ const cv=document.createElement('canvas');cv.width=img.naturalWidth;cv.height=img.naturalHeight;
+ const ctx=cv.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
+ const pixels=ctx.getImageData(0,0,cv.width,cv.height).data;
+ let minX=cv.width,minY=cv.height,maxX=-1,maxY=-1;
+ for(let y=0;y<cv.height;y++)for(let x=0;x<cv.width;x++){
+   if(pixels[(y*cv.width+x)*4+3]>12){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}
+ }
+ if(maxX<0)return cv;
+ // Small safety margin to keep anti-aliased edges intact.
+ const pad=Math.max(2,Math.round(Math.max(maxX-minX,maxY-minY)*.015));
+ const x0=Math.max(0,minX-pad),y0=Math.max(0,minY-pad);
+ const x1=Math.min(cv.width,maxX+pad+1),y1=Math.min(cv.height,maxY+pad+1);
+ const out=document.createElement('canvas');out.width=x1-x0;out.height=y1-y0;
+ out.getContext('2d').drawImage(cv,x0,y0,out.width,out.height,0,0,out.width,out.height);
+ return out;
+}
+$('upload').addEventListener('change',()=>{const file=$('upload').files[0];if(!file)return;
+ const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{
+   const cropped=cropArtwork(img);imgAspect=cropped.width/cropped.height;
+   updateDimensions();$('preview').src=cropped.toDataURL('image/png');
+   if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
+   status('PNG ready. Click or tap on the body to place your tattoo.');updatePlacementHint();
+   if(anchor)wrap();URL.revokeObjectURL(url)
+ };img.onerror=()=>{URL.revokeObjectURL(url);status('Could not load PNG')};img.src=url;
+});
+function updateDimensions(){const cm=Number($('size').value);$('sizeValue').textContent=cm+' cm';$('sizeCm').value=cm;$('dimensions').textContent=`Estimated design: ${cm.toFixed(1)} cm wide × ${(cm/imgAspect).toFixed(1)} cm tall (reference body 175 cm; not a body measurement)`}
+$('size').addEventListener('input',()=>{updateDimensions();if(anchor&&tex)wrap(true)});
+$('sizeCm').addEventListener('change',()=>{const n=Math.min(65,Math.max(2,Number($('sizeCm').value)||18));$('size').value=n;updateDimensions();if(anchor&&tex)wrap(false)});
+$('rotation').addEventListener('input',()=>{$('rotationValue').textContent=$('rotation').value+'°';if(anchor&&tex)wrap(true)});
+for(const [id,key] of [['flipH','horizontal'],['flipV','vertical']]){ $(id).addEventListener('click',()=>{if(key==='horizontal')flipHorizontal=!flipHorizontal;else flipVertical=!flipVertical;const active=key==='horizontal'?flipHorizontal:flipVertical;$(id).classList.toggle('active',active);$(id).setAttribute('aria-pressed',String(active));if(anchor&&tex)wrap(false)}); }
+updateDimensions();
+const presetButtons=[...document.querySelectorAll('#skinpresets button')];function updateSkinSelection(){presetButtons.forEach(b=>b.classList.toggle('selected',b.dataset.color.toLowerCase()===$('skin').value.toLowerCase()))}
+presetButtons.forEach(b=>b.addEventListener('click',()=>{$('skin').value=b.dataset.color;meshes.forEach(m=>m.material.color.set(b.dataset.color));updateSkinSelection()}));
+$('skin').addEventListener('input',updateSkinSelection);
+for(const id of ['size','rotation'])$(id).addEventListener('change',()=>{if(anchor&&tex)wrap(false)});
+$('remove').onclick=()=>{anchor=null;dragging=false;clear();setMode('orbit');status('Tattoo removed. Click or tap on the body to place it again.');updatePlacementHint()};
+function moveAnchor(e,preview){const hit=hitBody(e);if(!hit)return false;const newNormal=worldNormal(hit);
+ // Rebuild the tangent basis from the fixed world-up vector on every move.
+ // Parallel-transporting the old basis accumulates unwanted twisting around limbs.
+ // The rotation slider remains the only source of deliberate artwork rotation.
+ const basis=tangentBasis(newNormal);
+ if(!anchor)anchor={};anchor.basis=basis;anchor.point=hit.point.clone();anchor.normal=newNormal;anchor.object=hit.object;anchor.faceIndex=hit.faceIndex;wrap(preview);updatePlacementHint();updateRegion();return true}
+// Raycast triangles can have gaps on fine-line PNGs and at UV seams.
+// Permit grabbing near the projected tattoo anchor as a fallback.
+function canGrabTattoo(e){
+ if(!anchor||!tattoo)return false;
+ if(hitTattoo(e))return true;
+ const r=renderer.domElement.getBoundingClientRect();
+ const center=screenPoint(anchor.point);
+ const widthPx=Math.max(35,bodyHeight*(Number($('size').value)/175)*r.height/Math.max(bodyHeight,0.01)*1.3);
+ const heightPx=widthPx/Math.max(imgAspect,0.1);
+ const dx=Math.abs(e.clientX-center.x),dy=Math.abs(e.clientY-center.y);
+ return dx<Math.min(160,Math.max(28,widthPx*.55)) && dy<Math.min(190,Math.max(28,heightPx*.55)) && !!hitBody(e);
+}
+let press=null;
+renderer.domElement.addEventListener('pointerdown',e=>{focusGoal=null;
+ if(e.button!==0)return;
+ // Never hijack multi-touch: OrbitControls handles pinch gestures.
+ if(e.pointerType==='touch' && activeTouches.size>0){
+   activeTouches.add(e.pointerId);
+   if(dragging)cancelTattooDrag();
+   press=null;
+   return;
+ }
+ if(e.pointerType==='touch')activeTouches.add(e.pointerId);
+ press={x:e.clientX,y:e.clientY};
+ // On touch, grabbing a tattoo works in either mode. On desktop retain the mode buttons.
+ if(anchor&&tex&&canGrabTattoo(e)){
+   const p=screenPoint(anchor.point);grabOffset={x:p.x-e.clientX,y:p.y-e.clientY};dragging=true;dragId=e.pointerId;dragClient={clientX:e.clientX,clientY:e.clientY};controls.enabled=false;renderer.domElement.classList.add('drag');renderer.domElement.setPointerCapture(e.pointerId);e.preventDefault();
+ }
+});
+const activeTouches=new Set();
+function cancelTattooDrag(){
+ dragging=false;dragId=null;dragClient=null;edgeSpeed=0;
+ renderer.domElement.classList.remove('drag');edgeHint.style.opacity='0';
+ if(raf)cancelAnimationFrame(raf);raf=0;queued=null;
+ controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;
+}
+function dragEvent(e){return {clientX:e.clientX+grabOffset.x,clientY:e.clientY+grabOffset.y}}
+function queueDrag(e){queued={clientX:e.clientX,clientY:e.clientY};if(raf)return;raf=requestAnimationFrame(()=>{raf=0;if(!dragging||!queued)return;if(performance.now()-lastTime<105){raf=requestAnimationFrame(()=>{raf=0;if(dragging&&queued){const ev=queued;queued=null;lastTime=performance.now();moveAnchor(dragEvent(ev),true)}});return}const ev=queued;queued=null;lastTime=performance.now();moveAnchor(dragEvent(ev),true)})}
+renderer.domElement.addEventListener('pointermove',e=>{
+ if(dragging&&e.pointerId===dragId){dragClient={clientX:e.clientX,clientY:e.clientY};queueDrag(e);e.preventDefault()}
+});
+function finish(e){activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;edgeHint.style.opacity="0";renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;queued=null;if(e.type==='pointerup')moveAnchor(dragEvent(e),false);controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;status('Tattoo moved. Grab it again or switch to Rotate Body.');press=null;return}
+ if(!press)return;const d=Math.hypot(e.clientX-press.x,e.clientY-press.y);press=null;if(e.type!=='pointerup'||d>5||!tex||!meshes.length)return;if(hitTattoo(e))return;if(e.pointerType==='touch'&&anchor)return;if(moveAnchor(e,false)){setMode('move');status('Tattoo placed. Drag your tattoo to adjust its position.')}}
+renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.addEventListener('pointercancel',finish);
+renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
+window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
+
+// V4.6: confirmation is an isolated UI layer. Surface wrapping is unchanged.
+let bookingPNG=null;
+function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
+const bookingOverlay=$('bookingOverlay');
+$('closeBooking').onclick=()=>{bookingOverlay.hidden=true};
+bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)bookingOverlay.hidden=true});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')bookingOverlay.hidden=true});
+function downloadBlob(blob,filename){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+$('confirmPlacement').onclick=async()=>{
+ if(!anchor||!tex||!tattoo)return;
+ $('confirmPlacement').disabled=true;
+ focusTattoo();
+ // Allow the existing smooth focus animation to finish before capturing.
+ const start=performance.now();
+ while(focusGoal && performance.now()-start<1600){await new Promise(resolve=>requestAnimationFrame(resolve));}
+ // Finish any temporary low-resolution drag preview before taking the snapshot.
+ wrap(false);
+ controls.update();renderer.render(scene,camera);
+ try {
+  bookingPNG=renderer.domElement.toDataURL('image/png');
+  $('bookingScreenshot').src=bookingPNG;
+  const w=Number($('size').value);$('bookingSize').textContent=`${w.toFixed(1)} × ${(w/imgAspect).toFixed(1)} cm (estimated)`;
+  $('bookingRegion').textContent=$('regionValue').textContent||'Not specified';
+  $('shareMessage').textContent='';bookingOverlay.hidden=false;
+ }catch(err){console.error(err);status('Could not capture the preview on this device.');}
+};
+$('downloadBooking').onclick=async()=>{if(!bookingPNG)return;const blob=await(await fetch(bookingPNG)).blob();downloadBlob(blob,'placeyourtattoo-placement.png')};
+$('shareBooking').onclick=async()=>{
+ if(!bookingPNG)return;
+ const blob=await(await fetch(bookingPNG)).blob();const file=new File([blob],'placeyourtattoo-placement.png',{type:'image/png'});
+ if(!window.isSecureContext){$('shareMessage').textContent='Sharing requires HTTPS. Open the app via an HTTPS link (not http://192.168.x.x).';return;}
+ if(navigator.share&&navigator.canShare?.({files:[file]})){
+  try{await navigator.share({files:[file],title:'My tattoo placement'});$('shareMessage').textContent='Sharing menu opened.'}
+  catch(err){if(err.name!=='AbortError')$('shareMessage').textContent='Sharing unavailable. Use Save PNG instead.'}
+ }else{$('shareMessage').textContent='File sharing is not supported here. Save the PNG and attach it manually in Instagram.'}
+};
+function render(){requestAnimationFrame(render);
+ const now=performance.now(),dt=Math.min(.05,(now-edgeClock)/1000);edgeClock=now;
+ if(dragging)orbitDuringTattooDrag(dt);
+ if(focusGoal){camera.position.lerp(focusGoal.position,.13);controls.target.lerp(focusGoal.target,.13);if(camera.position.distanceTo(focusGoal.position)<bodyHeight*.0001&&controls.target.distanceTo(focusGoal.target)<bodyHeight*.0001){camera.position.copy(focusGoal.position);controls.target.copy(focusGoal.target);focusGoal=null}}
+ controls.update();renderer.render(scene,camera);updateConfirmButton()}render();
+</script></body></html>
