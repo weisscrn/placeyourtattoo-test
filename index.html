@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>placeyourtattoo — V4.9.3</title>
+<title>CRAYKROW FLASHBOOK</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
 .skinpresets{display:flex;gap:7px;margin:6px 0 8px}.skinpresets button{width:38px;height:38px;padding:0;border:2px solid #666;border-radius:50%;flex:none}.skinpresets button.selected{outline:2px solid #c2baff;outline-offset:2px}.measurement{font-size:12px;color:#bfc0d2;margin-top:5px}.focusrow{display:flex;gap:8px;margin-top:13px}.focusrow button{flex:1}input[type=number]{width:80px;background:#303137;color:#fff;border:1px solid #62636c;border-radius:6px;padding:7px}.inputrow{display:flex;align-items:center;gap:8px}.inputrow input[type=range]{flex:1;min-width:0}#sizeCm{width:70px}#skin{flex:none}
@@ -13,7 +13,7 @@ select{width:100%;background:#303137;color:#fff;border:1px solid #62636c;border-
 .artistRecipient{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:9px;background:#303137}.artistRecipient>div{display:flex;flex-direction:column;gap:4px}.artistRecipientLabel{font-size:11px;color:#bfc0d2}.artistRecipient strong{font-size:19px}.artistRecipient button{padding:9px 11px;white-space:nowrap}.shareInstructions{line-height:1.65;font-size:12px;color:#d5d5df}
 #bookingOverlay .bookingActions button:first-child{background:#b0b0ff;color:#16161d}#bookingOverlay .bookingFallback{display:block;width:100%;margin-top:9px;background:#373841;color:#f4f4f7;border:1px solid #777985;border-radius:8px;padding:10px;font-size:12px}
 
-/* V4.9.4 — Classic wrapping, booking language and approximate size. */
+/* V4.9.5 — Continuous UV wrapping, booking language and approximate size. */
 main{height:100dvh}aside{padding:15px 17px 16px}aside>label{margin:12px 0 6px}aside .buttons{margin-top:10px}#viewer{background:radial-gradient(ellipse at 50% 44%,#35373e 0%,#23242a 48%,#17181b 100%)}
 #preview[hidden],#debug[hidden],#bodyInfo[hidden],.colorline[hidden]{display:none!important}
 #message{font-size:11px;margin-top:10px}#overlay:empty{display:none}#hint{bottom:12px}
@@ -39,13 +39,191 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 .mirroricons button{color:#dce9ff}.mirroricons svg{width:25px;height:25px}
 @media(max-width:380px){.skinline .skinpresets{gap:6px}.skinline .skinpresets button{width:25px;height:25px;flex-basis:25px}.viewerActions{right:8px;top:8px}.viewerActions button{padding:8px 9px}}
 .bookingApprox{font-size:11px;color:#aeb8c9;margin:10px 0 3px;line-height:1.4}
+
+/* Flashbook — swipeable editorial paper pages */
+#flashbook[hidden],#viewerBack[hidden]{display:none!important}
+#flashbook{position:fixed;inset:0;z-index:18;background:#17181b;color:#eaeaf0;display:flex;flex-direction:column;overflow:hidden}
+.flashTop{padding:20px clamp(18px,4vw,50px) 12px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.flashBrand{font-size:11px;letter-spacing:.24em;color:#aab1c2;font-weight:700}.flashTitle{font:400 clamp(30px,5vw,58px)/1.1 Georgia,serif;letter-spacing:-.055em;margin:7px 0 0}
+.flashSubtitle{font-size:12px;color:#aeb1bb;margin-top:8px}.flashTopRight{font-size:11px;letter-spacing:.12em;color:#b9bdc9;white-space:nowrap}
+.flashViewport{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:pan-y}
+.flashTrack{display:flex;height:min(100%,740px);align-items:center;gap:20px;transition:transform .42s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.flashPage{flex:0 0 min(78vw,440px);width:min(78vw,440px);height:min(96%,680px);background:#eee8dc;border-radius:3px;box-shadow:0 18px 45px #0008;position:relative;padding:clamp(18px,4vw,36px) clamp(14px,3vw,28px) 45px;display:flex;flex-direction:column;color:#24201b;user-select:none}
+.flashPage:before{content:'';position:absolute;inset:9px;border:1px solid #bcb5a85c;pointer-events:none}
+.pageHead{display:flex;align-items:center;justify-content:space-between;font:10px system-ui,sans-serif;letter-spacing:.15em;color:#797269;position:relative;z-index:1}
+.flashGrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:clamp(9px,2vw,20px);padding:20px 0 12px}
+.flashItem{border:0;background:transparent;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px;cursor:pointer;transition:transform .2s,background .2s;border-radius:5px;position:relative}
+.flashItem:hover,.flashItem:focus-visible{background:#d8d1c25e;transform:scale(1.035);outline:0}
+.flashItem img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:contrast(1.13)}
+.flashItem span{position:absolute;bottom:0;right:4px;font:9px system-ui,sans-serif;color:#a39a8e}
+.pageFoot{font:10px system-ui,sans-serif;color:#797269;display:flex;justify-content:space-between;letter-spacing:.12em}
+.flashBottom{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px 22px}
+.flashBottom button{border:1px solid #555963;background:#26282e;color:#f1f1f3;width:42px;height:42px;border-radius:50%;font-size:19px;cursor:pointer}
+.flashBottom button:disabled{opacity:.25}.flashCount{font:12px system-ui,sans-serif;letter-spacing:.17em;min-width:75px;text-align:center;color:#c3c4cb}
+.flashDots{display:flex;gap:7px}.flashDot{width:5px;height:5px;border-radius:50%;background:#5c5e66}.flashDot.active{background:#b7d0ff}
+#viewerBack{position:fixed;left:12px;top:12px;z-index:14;background:#24272df0;border:1px solid #667084;border-radius:9px;color:#fff;padding:11px 14px;font-size:12px;box-shadow:0 4px 18px #0006}
+@media(max-width:720px){.flashTop{padding:24px 22px 12px}.flashPage{flex-basis:83vw;width:83vw;height:min(95%,640px)}.flashTrack{gap:12px}.flashViewport{align-items:center}.flashBottom{padding-bottom:calc(17px + env(safe-area-inset-bottom))}}
+/* V2: compact, near-fullscreen mobile flashbook and contextual placement guide */
+.flashTop{padding:clamp(14px,3dvh,25px) 18px 4px;align-items:center;justify-content:center}
+.flashTitle{font:600 clamp(19px,4.8vw,28px)/1.2 system-ui,sans-serif;letter-spacing:.13em;margin:0;text-align:center}
+.flashTitle span{font-weight:350;letter-spacing:.08em}
+#flashbook{height:100dvh;padding-top:env(safe-area-inset-top);background:#292a2e}
+.flashViewport{flex:1;min-height:0}
+.flashTrack{height:100%}
+.flashPage{height:min(97%,850px)}
+.flashBottom{padding:5px 16px calc(8px + env(safe-area-inset-bottom))}
+@media(max-width:720px){.flashTop{padding:10px 12px 4px}.flashPage{height:97%;width:89vw;flex-basis:89vw;padding:20px 13px 29px}.flashGrid{padding:12px 0 5px;gap:7px}.flashBottom{padding:4px 12px calc(6px + env(safe-area-inset-bottom))}.flashBottom button{height:34px;width:34px}}
+#viewerBack{top:calc(8px + env(safe-area-inset-top));left:8px;z-index:16;padding:9px 11px}
+#placeCoach[hidden],#placedToast[hidden]{display:none!important}
+#placeCoach{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);width:min(290px,78%);z-index:7;display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;pointer-events:none;color:#fff;text-shadow:0 2px 9px #000;background:#17181bc7;padding:18px 12px;border:1px solid #9fb9ff88;border-radius:18px;box-shadow:0 12px 38px #0008;animation:coachIn .3s ease-out}
+#placeCoach strong{font-size:20px;letter-spacing:.16em}
+#placeCoach small{font-size:12px;line-height:1.5;color:#e5eaff}
+.coachPulse{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#b7d0ff26;border:2px solid #b7d0ff;animation:coachPulse 1.8s ease-in-out infinite}
+.coachPulse span{font-size:35px;color:#dce7ff}
+#placedToast{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);z-index:8;background:#202630e8;color:#f4f7ff;border:1px solid #8ba8df;border-radius:12px;padding:12px 16px;max-width:85%;font-size:12px;text-align:center;pointer-events:none;box-shadow:0 8px 25px #0008}
+@keyframes coachPulse{0%,100%{box-shadow:0 0 0 0 #b7d0ff55;transform:scale(1)}50%{box-shadow:0 0 0 16px #b7d0ff00;transform:scale(1.07)}}
+@keyframes coachIn{from{opacity:0;transform:translate(-50%,-46%) scale(.92)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media(prefers-reduced-motion:reduce){.coachPulse,#placeCoach{animation:none}}
+
+/* V3 mobile editorial polish */
+.flashViewport{justify-content:flex-start}
+.flashTrack{flex:0 0 auto}
+.flashBottom button{background:#242b3b;color:#b7d0ff;border:1px solid #6f90d0;border-radius:12px;font-size:23px;transition:background .2s}
+.flashBottom button:active{background:#405784}
+.flashPage{flex-basis:min(90vw,520px);width:min(90vw,520px)}
+.flashItem span{font-size:11px;font-weight:700;color:#57524b;letter-spacing:.05em}
+#placeCoach{width:min(330px,86%);top:37%;padding:22px 15px;border:2px solid #b7d0ffbb;background:#17181be0}
+#placeCoach strong{font-size:clamp(21px,5.5vw,28px);letter-spacing:.075em;line-height:1.1}
+#placeCoach small{font-size:14px;letter-spacing:.07em;font-weight:650}
+#placeCoach.coachReplay{animation:coachPop .65s cubic-bezier(.15,1.45,.4,1) both}
+@keyframes coachPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}65%{opacity:1;transform:translate(-50%,-50%) scale(1.09)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+#viewer.bodyPop canvas{transform-origin:50% 52%}
+@keyframes figurePop{0%{transform:scale(.94)}55%{transform:scale(1.045)}100%{transform:scale(1)}}
+@media(max-width:720px){
+ .flashPage{width:calc(100vw - 28px);flex-basis:calc(100vw - 28px);height:97%}
+ .flashTop{padding:10px 12px 7px}
+ .flashBottom{gap:18px}
+ .flashBottom button{width:40px;height:40px}
+ .testUpload,aside>.buttons{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){#viewer.bodyPop canvas,#placeCoach.coachReplay{animation:none}}
+
+/* V4: cleaner book, bigger artwork, clear instruction and hidden redundant action */
+#remove[hidden]{display:none!important}
+.flashInstruction{text-align:center;font-size:clamp(11px,2.7vw,14px);font-weight:750;letter-spacing:.13em;color:#d9e5ff;padding:9px 10px 2px}
+.flashPage{padding:clamp(10px,2.5vw,22px);}
+.flashGrid{padding:0;gap:clamp(7px,1.6vw,14px)}
+.flashItem{padding:3px;overflow:hidden}
+.flashItem img{width:100%;height:100%;object-fit:contain;filter:contrast(1.08)}
+.flashItem span{bottom:3px;right:5px;font-size:10px;background:#eee8dccc;padding:2px 4px;border-radius:3px}
+#placeCoach{top:27%;width:min(350px,90%);padding:15px 12px}
+#placeCoach strong{font-size:clamp(23px,6vw,31px)}
+@media(max-width:720px){.flashPage{padding:10px}.flashGrid{gap:5px}.flashInstruction{padding-top:8px}.flashBottom{padding-top:2px}#placeCoach{top:25%}}
+
+/* V5 navigation and placement clarity */
+.flashStage{position:relative;flex:1;min-height:0;display:flex;align-items:stretch}
+.flashStage .flashViewport{width:100%;height:100%;flex:1;min-width:0}
+.flashSide{position:absolute;z-index:5;top:50%;transform:translateY(-50%);width:38px;height:64px;display:grid;place-items:center;border:1px solid #7699e5aa;border-radius:12px;background:#1b2639d9;color:#b9d0ff;font-size:39px;line-height:1;cursor:pointer;box-shadow:0 5px 20px #0006}
+.flashSidePrev{left:3px}.flashSideNext{right:3px}
+.flashSide:active{background:#385b9d}
+.flashBottom{justify-content:center;display:flex;align-items:center;min-height:26px}
+.flashCount{font-size:14px;letter-spacing:.06em;text-align:center}
+.flashInstruction{padding:8px 8px 0;font-size:13px}
+#placeCoach{top:auto!important;bottom:13px;left:50%;width:min(370px,calc(100% - 26px));transform:translateX(-50%);padding:16px 18px;border:1px solid #8caeff;border-radius:14px;background:#263d65dd;box-shadow:0 10px 35px #0008;gap:3px;text-shadow:none;z-index:9}
+#placeCoach strong{font-size:clamp(19px,5.2vw,26px);letter-spacing:.045em;line-height:1.15}
+#placeCoach small{font-size:13px;color:#e2ebff;letter-spacing:.07em}
+#placeCoach.coachReplay{animation:coachV5 .55s cubic-bezier(.18,1.3,.4,1) both}
+@keyframes coachV5{0%{opacity:0;transform:translateX(-50%) translateY(16px) scale(.9)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@media(max-width:720px){.flashSide{width:32px;height:58px;font-size:35px}.flashSidePrev{left:1px}.flashSideNext{right:1px}#placeCoach{bottom:12px}}
+/* V6: compact controls, consistent graphite and unobstructed artwork */
+#flashbook{background:#292a2e}
+.flashBottom{gap:24px;min-height:49px;padding:2px 14px calc(9px + env(safe-area-inset-bottom))}
+.flashBottom .flashSide{position:static;transform:none;width:42px;height:39px;min-width:42px;border-radius:10px;background:#26334b;border:1px solid #7599e3;color:#b7d0ff;font-size:29px;line-height:1;padding:0;display:grid;place-items:center;box-shadow:none}
+.flashBottom .flashSide:active{background:#405b91}
+.flashCount{font-size:13px;min-width:112px;letter-spacing:.025em;color:#e2e5ed}
+.flashInstruction{font-size:12px;padding:5px 10px 3px}
+#placeCoach{padding:11px 15px;gap:0;width:min(340px,calc(100% - 28px));border:1px solid #8caeff;background:#263d65df}
+#placeCoach strong{font-size:clamp(15px,4.1vw,19px);letter-spacing:.06em}
+#placeCoach small{font-size:11px;letter-spacing:.06em}
+#placedToast{top:auto;bottom:18px;transform:translateX(-50%);background:#263d65e8;border:1px solid #8caeff;font-size:13px;font-weight:700;padding:11px 16px;white-space:nowrap}
+#hint{font-size:13px;bottom:13px}
+@media(max-width:720px){.flashBottom{gap:18px}.flashBottom .flashSide{width:40px;height:36px;min-width:40px;font-size:27px}#placeCoach{bottom:12px}}
+
+/* V7 — compact placement UI, centered confirmation, unified blue accents */
+.flashInstruction{color:#d9e5ff}
+.flashBottom{display:grid;grid-template-columns:42px minmax(116px,auto) 42px;align-items:center;justify-content:center;gap:18px}
+.flashBottom .flashSide{position:static!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:center!important;width:42px;height:39px;min-width:42px;line-height:1!important;padding:0 0 3px!important}
+.flashCount{min-width:116px;line-height:1.2;align-self:center}
+#placeCoach{position:absolute;top:auto!important;bottom:16px;left:50%;width:max-content;max-width:calc(100% - 24px);padding:10px 15px;transform:translateX(-50%);border-radius:11px;background:rgba(38,61,101,.88);border:1px solid rgba(140,174,255,.6);white-space:nowrap;box-shadow:0 7px 22px #0005}
+#placeCoach strong{font-size:clamp(12px,3.3vw,15px);letter-spacing:.045em;font-weight:650;line-height:1.3}
+#placedToast{position:absolute;left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%);z-index:10;display:flex;align-items:center;justify-content:center;gap:9px;width:max-content;max-width:calc(100% - 28px);background:rgba(38,61,101,.93);border:1px solid #8caeff;border-radius:12px;padding:12px 17px;color:#fff;font-size:15px;font-weight:750;box-shadow:0 10px 30px #0007;white-space:nowrap}
+#placedToast .toastCheck{display:inline-grid;place-items:center;background:#31bd7c;color:#102e21;border-radius:50%;font-size:14px;width:24px;height:24px;line-height:1;font-weight:900}
+#hint.afterPlacement{bottom:12px;left:50%;width:max-content;max-width:calc(100% - 20px);transform:translateX(-50%);padding:9px 12px;background:rgba(38,61,101,.83);border:1px solid rgba(140,174,255,.48);border-radius:10px;color:#e5eeff;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.015em;white-space:nowrap;line-height:1.3}
+@media(max-width:720px){.flashBottom{grid-template-columns:40px minmax(116px,auto) 40px;gap:16px}.flashBottom .flashSide{width:40px;height:36px;min-width:40px}#placeCoach{bottom:12px;padding:9px 12px}#placedToast{font-size:14px}}
+/* V9: slider-only controls; numeric fields retained solely for JS compatibility. */
+#sizeCm,#rotationDeg{display:none!important}
+/* Slightly clearer borders, without changing button placement or fill. */
+.viewerActions button{border-color:#697384}
+#viewerBack{border-color:#727d91}
+
+/* V10 — subtle active camera-view state */
+.viewerActions button.viewSelected{background:rgba(91,135,232,.19);border-color:rgba(144,178,255,.75);color:#e8f0ff;box-shadow:inset 0 0 0 1px rgba(144,178,255,.11),0 3px 12px #0005}
+.viewerActions button.viewSelected:disabled{opacity:.5}
+
+/* V11 — compact radio-button body model selector */
+.bodyModelRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 11px}
+.bodyModelTitle{font-size:13px;color:#d9dbe4;white-space:nowrap}
+.bodyModelChoices{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.bodyModelChoice{display:flex;align-items:center;gap:6px;padding:8px 9px;background:#30333a;border:1px solid #626979;border-radius:8px;color:#dfe2ed;font-size:12px;cursor:pointer;white-space:nowrap;min-height:37px}
+.bodyModelChoice:has(input:checked){border-color:#8caaf4;background:rgba(91,135,232,.18);color:#eef3ff}
+.bodyModelChoice input{appearance:none;-webkit-appearance:none;width:15px;height:15px;flex:none;border:1.6px solid #9aa3b8;border-radius:50%;margin:0;display:grid;place-items:center;background:#262931}
+.bodyModelChoice input:checked{border-color:#9bb8ff}
+.bodyModelChoice input:checked:before{content:"";width:7px;height:7px;border-radius:50%;background:#9bb8ff}
+.bodyModelChoice:focus-within{outline:2px solid #9bb8ff;outline-offset:2px}
+.bodyModelChoice:has(input:disabled){opacity:.5;pointer-events:none}
+@media(max-width:380px){.bodyModelRow{gap:5px}.bodyModelChoices{gap:4px}.bodyModelChoice{padding:7px 6px;font-size:11px}}
+
+#viewerBack{color:#e3edff;border-color:#697384;font-family:Arial,sans-serif;font-weight:650}
+.bodyModelChoice{font-family:Arial,sans-serif;font-weight:650}
+/* Slider values (size, rotation) in the button type (Arial, 650). */
+.value{font-family:Arial,sans-serif;font-weight:650}
+/* V14 — compact panel: no inherited label margins on the body chips, estimated height right-aligned
+   under the width value, tighter rows, and Confirm Placement fades while it covers controls. */
+.bodyModelChoice{margin:0}
+.bodyModelRow{margin:0 0 6px}
+#dimensions{text-align:right;margin-top:-2px;line-height:1.2}
+/* The panel always gets the height its controls need (no scrolling, nothing covered); the 3D view
+   takes the rest. Only on very short screens does it cap at 60% and scroll. */
+@media(max-width:720px){aside{padding-top:8px;flex-shrink:0;max-height:60dvh!important}#viewer{min-height:30dvh!important}aside>label{margin:5px 0 3px}.mirrorSkinRow{margin-top:6px}#confirmPlacement{margin-top:8px!important}}
+#confirmPlacement{transition:opacity .2s ease}
+#confirmPlacement.coversControls{opacity:.38;pointer-events:none}
+/* Mirror tattoo (left) and Skin tone (right) share one row: label on top, controls below. */
+.mirrorSkinRow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-top:10px}
+.mirrorSkinRow .mirrorline,.mirrorSkinRow .skinline{flex-direction:column;justify-content:flex-start;gap:7px;margin-top:0;min-height:0}
+.mirrorSkinRow .mirrorline{align-items:flex-start}.mirrorSkinRow .skinline{align-items:flex-end}
+.mirrorSkinRow .skinline .skinpresets{min-height:38px}
+/* V13 — edge-rotation info pill: below the camera buttons, neutral glass instead of blue. */
+#edgeHint{display:flex;align-items:center;gap:7px;position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:4;pointer-events:none;opacity:0;transition:opacity .18s ease;white-space:nowrap;padding:9px 12px;border-radius:10px;line-height:1.3;background:rgba(23,24,27,.55);border:1px solid rgba(255,255,255,.16);color:#e3edff;font-family:Arial,sans-serif;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.06em;box-shadow:0 4px 14px #0004;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+/* Same tile size as the DRAG TO MOVE hint: the larger arrow must not make the tile taller. */
+#edgeHint svg{width:16px;height:16px;margin:-1.5px 0;flex:none}
+/* V12 — selected controls match the body model selector. */
+.bodyModelChoice:has(input:checked){color:#b7d0ff}
+.mirroricons button.active{background:#30333a!important;color:#b7d0ff!important;border-color:#8caaf4!important;box-shadow:none!important}
+.mirroricons button[aria-pressed="true"]{background:#30333a!important;color:#b7d0ff!important;border-color:#8caaf4!important;box-shadow:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
 <body>
+<div id="flashbook" aria-label="Tattoo flashbook">
+  <div class="flashTop"><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1></div>
+  <div class="flashStage"><div class="flashViewport" id="flashViewport"><div class="flashTrack" id="flashTrack"></div></div></div>
+  <div class="flashInstruction">TAP A DESIGN TO TRY IT ON</div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">‹</button><span class="flashCount" id="flashCount">Page 1 of 3</span><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">›</button></div>
+</div>
+<button id="viewerBack" type="button" hidden>← Flashbook</button>
 
-<main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span>Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span>Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div></div>
-<aside><label for="bodySelect">Body model</label><select id="bodySelect" aria-label="Body model"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">18 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="18"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="18" aria-label="Tattoo width in centimeters"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 18.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees"></div><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+
+<main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span>Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span>Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div><div id="placeCoach" hidden aria-live="polite"><strong>TAP BODY TO PLACE TATTOO</strong></div><div id="placedToast" hidden><span class="toastCheck" aria-hidden="true">✓</span><strong>TATTOO PLACED</strong></div></div>
+<aside><div class="bodyModelRow"><span class="bodyModelTitle">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span>Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span>Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
@@ -95,12 +273,31 @@ controls.touches.TWO=THREE.TOUCH.DOLLY_PAN;
 scene.add(new THREE.HemisphereLight(0xffffff,0x77777a,2.25));const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(4,7,6);scene.add(light);
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let meshes=[],model,bodyHeight=1,bodyDiag=1,tex=null,imgAspect=1,anchor=null,tattoo=null,mode='orbit',dragging=false,dragId=null,grabOffset={x:0,y:0},lastTime=0,queued=null,raf=0;
 const cache=new Map();const status=s=>msg.textContent=s;
+let selectedFlashReady=false,toastTimer=null,coachWasReady=false;
+let figurePopStart=0,figurePopPrevious=1;
+function startFigurePop(){figurePopStart=performance.now();figurePopPrevious=1;}
+function showPlacementCoach(){
+ const ready=selectedFlashReady&&!!tex&&!anchor&&!!model&&meshes.length>0&&flashbook.hidden;
+ $('placeCoach').hidden=!ready;
+ $('hint').style.visibility=ready?'hidden':'';
+ if(ready&&!coachWasReady){$('placedToast').hidden=true;const c=$('placeCoach');c.classList.remove('coachReplay');void c.offsetWidth;c.classList.add('coachReplay');const v=$('viewer');v.classList.remove('bodyPop');void v.offsetWidth;v.classList.add('bodyPop');startFigurePop();}
+ coachWasReady=ready;
+}
+function showPlacedToast(){
+ $('placeCoach').hidden=true;
+ $('hint').style.visibility='';
+ if(!selectedFlashReady)return;
+ $('placedToast').hidden=false;
+ if(toastTimer)clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>$('placedToast').hidden=true,1600);
+}
+
 // One instruction works for mouse and touch; the gallery can reuse it later.
 function updatePlacementHint(){
  const hint=$('hint');
- if(!tex){hint.textContent='Choose a tattoo PNG to begin';return}
- if(!model||!meshes.length){hint.textContent='Loading body…';return}
- hint.textContent=anchor?'Drag your tattoo to adjust its position.':'Click or tap on the body to place your tattoo.';
+ if(!tex){hint.classList.remove('afterPlacement');hint.textContent='Choose a tattoo PNG to begin';showPlacementCoach();return}
+ if(!model||!meshes.length){hint.classList.remove('afterPlacement');hint.textContent='Loading body…';showPlacementCoach();return}
+ hint.textContent=anchor?'DRAG TO MOVE · PINCH TO ZOOM':'Tap the body to place your tattoo.';hint.classList.toggle('afterPlacement',!!anchor);showPlacementCoach();
 }
 
 let flipHorizontal=false,flipVertical=false;
@@ -139,7 +336,11 @@ function updateRegion(){
 let dragClient=null,edgeSpeed=0,edgeClock=performance.now(),lastEdgeProjection=0;
 const EDGE_ZONE=0.36, MAX_ORBIT_SPEED=2.8; // faster edge orbit on mouse and touch
 const edgeHint=document.createElement('div');
-edgeHint.style.cssText='position:absolute;top:48px;left:50%;transform:translateX(-50%);background:#17181bdd;color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:650;pointer-events:none;opacity:0;transition:opacity .12s;z-index:4;white-space:nowrap';
+// Neutral glass pill below the camera buttons: an info, not a control (no blue accent).
+edgeHint.id='edgeHint';
+// Rotation arrows larger than the text; inline SVG so they look identical on every phone.
+const rotateIcon=d=>'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+d+'"/></svg>';
+const ROTATE_ICON_LEFT=rotateIcon('M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5'),ROTATE_ICON_RIGHT=rotateIcon('M19.95 11a8 8 0 1 0 -.5 4m.5 5v-5h-5');
 viewer.appendChild(edgeHint);
 function edgeVelocity(clientX){
  const r=renderer.domElement.getBoundingClientRect();
@@ -151,7 +352,8 @@ function edgeVelocity(clientX){
 function orbitDuringTattooDrag(dt){
  if(!dragging||!dragClient||!anchor)return;
  const speed=edgeVelocity(dragClient.clientX);edgeSpeed=speed;
- edgeHint.textContent=Math.abs(speed)>0.001?"↻ Rotating body — keep holding":"";
+ // Keep the last text while fading out, so the pill does not collapse; the chevron shows the direction.
+ if(Math.abs(speed)>0.001){const dir=speed<0?'left':'right';if(edgeHint.dataset.dir!==dir){edgeHint.dataset.dir=dir;edgeHint.innerHTML=dir==='left'?ROTATE_ICON_LEFT+'<span>KEEP HOLDING</span>':'<span>KEEP HOLDING</span>'+ROTATE_ICON_RIGHT}}
  edgeHint.style.opacity=Math.abs(speed)>0.001?"1":"0";
  if(Math.abs(speed)<0.001)return;
  // Rotate the camera around its current orbit target; keep the body stationary.
@@ -179,23 +381,42 @@ function focusTattoo(){if(!tattoo||!anchor)return;
    extent.length()*1.20/(2*Math.tan(Math.min(verticalFov,horizontalFov)/2)),bodyHeight*.11);
  moveCameraTo(center.clone().addScaledVector(n,d),center);
 }
-$('focusTattoo').onclick=focusTattoo;
-$('resetView').onclick=()=>{if(initialView)moveCameraTo(initialView.position,initialView.target)};
+// Camera mode highlight reflects the last explicitly selected view.
+function setCameraViewSelected(mode){
+ for(const [id,key] of [['focusTattoo','focus'],['resetView','full']]){
+  const active=mode===key;
+  $(id).classList.toggle('viewSelected',active);
+  $(id).setAttribute('aria-pressed',String(active));
+ }
+}
+$('focusTattoo').onclick=()=>{if(!tattoo||!anchor)return;focusTattoo();setCameraViewSelected('focus')};
+$('resetView').onclick=()=>{if(initialView)moveCameraTo(initialView.position,initialView.target);setCameraViewSelected('full')};
+setCameraViewSelected('full');
+// OrbitControls fires 'start' for mouse/touch orbit and wheel zoom, not for
+// the scripted Focus / Full Body transitions. Clear both view highlights.
+controls.addEventListener('start',()=>setCameraViewSelected(null));
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}window.addEventListener('resize',resize);resize();
 function prepareMesh(mesh){
   // Build a triangle graph welded by POSITION, not by UV index: GLB splits vertices at UV seams.
   const geo=mesh.geometry,pos=geo.getAttribute('position'),index=geo.index;const n=index?index.count/3:pos.count/3;
-  const p=Array.from({length:n},()=>[]),neighbors=Array.from({length:n},()=>[-1,-1,-1]),faceNormals=[];
+  const p=Array.from({length:n},()=>[]),neighbors=Array.from({length:n},()=>[-1,-1,-1]),faceNormals=[],crosses=[];
   const matrix=mesh.matrixWorld;const vertexMap=new Map(),coords=[],triKeys=[],edges=new Map();const eps=Math.max(bodyDiag*1e-7,1e-8);
   function keyFor(v){const x=pos.getX(v),y=pos.getY(v),z=pos.getZ(v),key=`${Math.round(x/eps)},${Math.round(y/eps)},${Math.round(z/eps)}`;if(!vertexMap.has(key)){vertexMap.set(key,coords.length);coords.push(new THREE.Vector3(x,y,z).applyMatrix4(matrix))}return vertexMap.get(key)}
   for(let f=0;f<n;f++){
     const ids=[0,1,2].map(k=>index?index.getX(f*3+k):f*3+k),keys=ids.map(keyFor);triKeys.push(keys);
     const vs=keys.map(k=>coords[k]);p[f]=vs;
-    faceNormals.push(new THREE.Vector3().subVectors(vs[1],vs[0]).cross(new THREE.Vector3().subVectors(vs[2],vs[0])).normalize());
+    const cross=new THREE.Vector3().subVectors(vs[1],vs[0]).cross(new THREE.Vector3().subVectors(vs[2],vs[0]));
+    faceNormals.push(cross.clone().normalize());crosses.push(cross);
     for(let e=0;e<3;e++){const a=keys[e],b=keys[(e+1)%3],ek=a<b?`${a}:${b}`:`${b}:${a}`;if(!edges.has(ek))edges.set(ek,[]);edges.get(ek).push([f,e]);}
   }
   for(const uses of edges.values())if(uses.length===2){const [[a,ea],[b,eb]]=uses; if(faceNormals[a].dot(faceNormals[b])>.12){neighbors[a][ea]=b;neighbors[b][eb]=a}}
-  return {p,neighbors,normals:faceNormals,keys:triKeys,coords,triCount:n};
+  // Per welded vertex: area-weighted normal, one-ring neighbours and incident faces.
+  // Used by the Discrete Exponential Map wrap, which assigns ONE uv per surface vertex.
+  const vc=coords.length,vNormals=Array.from({length:vc},()=>new THREE.Vector3()),vAdj=Array.from({length:vc},()=>[]),vFaces=Array.from({length:vc},()=>[]);
+  for(let f=0;f<n;f++){const k=triKeys[f];for(let e=0;e<3;e++){vNormals[k[e]].add(crosses[f]);vFaces[k[e]].push(f)}}
+  for(const ek of edges.keys()){const [a,b]=ek.split(':').map(Number);vAdj[a].push(b);vAdj[b].push(a)}
+  for(const v of vNormals){if(v.lengthSq()>0)v.normalize();else v.set(0,0,1)}
+  return {p,neighbors,normals:faceNormals,keys:triKeys,coords,triCount:n,vNormals,vAdj,vFaces};
 }
 const bodyLoader=new GLTFLoader();
 const bodyAssets=new Map(); // Keep both loaded models and prepared adjacency in memory.
@@ -232,12 +453,12 @@ function fetchBody(kind){
 function loadBody(kind){
  const version=++bodyLoadVersion;
  const filename=kind==='female'?'body_female.glb':'body_male.glb';
- $('bodySelect').disabled=true;
+ $('bodySelect').disabled=true;syncBodyRadios();
  $('bodyInfo').textContent=`Loading ${kind} body…`;
  overlay.textContent=`Loading ${filename}…`;
  status(`Loading ${filename}…`);
  cancelTattooDrag();
- anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;updatePlacementHint();
+ coachWasReady=false;anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;setCameraViewSelected('full');updatePlacementHint();
  fetchBody(kind).then(asset=>{
   if(version!==bodyLoadVersion)return;
   if(model)scene.remove(model); // Do not dispose: cached models are reused.
@@ -251,7 +472,7 @@ function loadBody(kind){
   const distance=Math.max(dim.y/vf,dim.x/(vf*camera.aspect),dim.z*2)*1.5;
   camera.position.copy(center).add(new THREE.Vector3(0,0,distance));camera.near=Math.max(distance/2000,.0001);camera.far=distance*100;camera.updateProjectionMatrix();controls.update();
   initialView={position:camera.position.clone(),target:controls.target.clone()};
-  $('bodySelect').disabled=false;$('bodyInfo').textContent=kind==='female'?'Female Body selected':'Male Body selected';overlay.textContent='';
+  $('bodySelect').disabled=false;syncBodyRadios();$('bodyInfo').textContent=kind==='female'?'Female Body selected':'Male Body selected';overlay.textContent='';
   status(tex?'Body loaded. Click or tap on the body to place your tattoo.':'Body loaded. Choose a PNG to begin.');updatePlacementHint();
   // Prepare the other model in the background, once, without interrupting interaction.
   const other=kind==='female'?'male':'female';
@@ -262,7 +483,7 @@ function loadBody(kind){
   }
  }).catch(e=>{
   if(version!==bodyLoadVersion)return;
-  console.error(e);$('bodySelect').disabled=false;
+  console.error(e);$('bodySelect').disabled=false;syncBodyRadios();
   overlay.textContent=`Could not load ${filename}`;
   $('bodyInfo').textContent=`Missing or invalid file: ${filename}`;
   status(`Could not load ${filename}. Check that it is in the same folder as index.html.`);
@@ -270,115 +491,263 @@ function loadBody(kind){
 }
 function prepareMeshForBody(mesh,diagonal){const previous=bodyDiag;bodyDiag=diagonal;try{return prepareMesh(mesh)}finally{bodyDiag=previous}}
 $('bodySelect').addEventListener('change',e=>loadBody(e.target.value));
+const bodyRadios=[...document.querySelectorAll('input[name="bodyModelChoice"]')];
+function syncBodyRadios(){const select=$('bodySelect');for(const radio of bodyRadios){radio.checked=radio.value===select.value;radio.disabled=select.disabled;}}
+syncBodyRadios();
+for(const radio of bodyRadios)radio.addEventListener('change',()=>{if(!radio.checked)return;const select=$('bodySelect');if(select.disabled)return;select.value=radio.value;select.dispatchEvent(new Event('change',{bubbles:true}));syncBodyRadios();});
+
 loadBody('male');
 $('skin').addEventListener('input',e=>meshes.forEach(m=>m.material.color.set(e.target.value)));
 function mouseRay(e){const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pointer,camera)}
 function hitBody(e){mouseRay(e);return ray.intersectObjects(meshes,false)[0]||null}
-function hitTattoo(e){if(!tattoo)return null;mouseRay(e);return ray.intersectObject(tattoo,false)[0]||null}
+// The tattoo mesh covers its whole artwork rectangle (transparent gaps between fine lines
+// included), so a ray hit means "on the tattoo" at any zoom level. Hits hidden behind the
+// body (tattoo on the far side) do not count.
+function hitTattoo(e){if(!tattoo)return null;mouseRay(e);const t=ray.intersectObject(tattoo,false)[0];if(!t)return null;
+ const b=ray.intersectObjects(meshes,false)[0];return !b||t.distance<=b.distance+bodyHeight*.01?t:null}
 function screenPoint(v){const p=v.clone().project(camera),r=renderer.domElement.getBoundingClientRect();return {x:r.left+(p.x+1)*r.width*.5,y:r.top+(1-p.y)*r.height*.5}}
 function worldNormal(h){const normal=h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();return normal}
 function tangentBasis(normal){const up=new THREE.Vector3(0,1,0);let x=new THREE.Vector3().crossVectors(up,normal);if(x.lengthSq()<1e-6)x=new THREE.Vector3().crossVectors(new THREE.Vector3(1,0,0),normal);x.normalize();return {x,y:new THREE.Vector3().crossVectors(normal,x).normalize()}}
 function clear(){if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}debug.textContent='';$('remove').disabled=true;$('moveMode').disabled=true;$('focusTattoo').disabled=true;updateRegion()}
 function setMode(m){mode=m;controls.enabled=m==='orbit'||window.matchMedia('(pointer: coarse)').matches;$('moveMode').classList.toggle('active',m==='move');$('orbitMode').classList.toggle('active',m==='orbit');renderer.domElement.classList.toggle('move',m==='move');if(!dragging)renderer.domElement.classList.remove('drag')}
 $('moveMode').onclick=()=>{if(anchor)setMode('move')};$('orbitMode').onclick=()=>setMode('orbit');
-// Unfold each triangle across its shared 3D edge, like laying a flexible stencil over skin.
-// Each face gets three 2D coordinates. Propagation follows mesh connectivity, not camera rays.
+// Discrete Exponential Map (Schmidt et al. 2006, "Interactive Decal Compositing").
+// Every welded surface vertex gets exactly ONE 2D stencil coordinate, so neighbouring
+// triangles always share their texture coordinates: the artwork can stretch slightly on
+// doubly curved skin (breast, neck, shoulder) but it can no longer tear apart.
+// Vertices are reached in order of geodesic distance (Dijkstra over mesh edges); each new
+// vertex is unfolded from every already-solved neighbour in that neighbour's parallel-
+// transported tangent frame and the estimates are averaged ("upwind averaging").
+// ARAP refinement (Liu et al. 2008, "A Local/Global Approach to Mesh Parameterization").
+// The exponential map grows outwards from the anchor, so small errors accumulate towards
+// the rim. ARAP redistributes that distortion evenly: every skin triangle is kept as close
+// as possible to a rigid copy of itself. Local step: best 2D rotation per triangle.
+// Global step: one sparse cotangent-Laplacian solve (Jacobi-preconditioned CG).
+// Faces spanning the cut where two unfolding fronts meet stay excluded, so the stencil is
+// never glued around a limb. Runs only on release (full resolution), not while dragging.
+// Written as a generator: the render loop advances it in small time slices so the page never
+// freezes, then the finished result is blended in (see arapJob / uvBlend).
+function* arapRefineSteps(data,dem,f0,P,orient,motifSize,inRegion){
+ const t0=performance.now();
+ const {coords,keys,vFaces,triCount}=data,{U,V,state}=dem;
+ // Where the unfolding flows around a bump (breast) its two sides meet again with a gap of only
+ // millimetres: such seam faces are included so ARAP closes the seam. Around a limb the gap is
+ // half the circumference: those faces stay excluded, so the stencil is never glued around an arm.
+ const seamTol=bodyHeight*.035;
+ const faceOk=f=>{const [a,b,c]=keys[f];if(state[a]!==2||state[b]!==2||state[c]!==2||!inRegion(a,b,c))return false;
+   for(const [i,j] of [[a,b],[b,c],[c,a]]){const l3=coords[i].distanceTo(coords[j]),l2=Math.hypot(U[i]-U[j],V[i]-V[j]);if(l2>l3*3+1e-9&&l2-l3>seamTol)return false}return true};
+ if(!faceOk(f0))return null;
+ // Patch = faces connected to the anchor triangle (through shared vertices).
+ const localId=new Int32Array(coords.length).fill(-1),verts=[],faces=[],seenF=new Uint8Array(triCount);
+ const queue=[f0];seenF[f0]=1;
+ for(let qi=0;qi<queue.length;qi++){const f=queue[qi];faces.push(f);
+   for(const v of keys[f]){if(localId[v]>=0)continue;localId[v]=verts.length;verts.push(v);
+     for(const g of vFaces[v])if(!seenF[g]){seenF[g]=1;if(faceOk(g))queue.push(g)}}}
+ const n=verts.length,m=faces.length;if(n<4)return null;
+ // Per face: isometric 2D copy of the 3D triangle (same handedness as the stencil) and cot weights.
+ const X=new Float64Array(m*6),W=new Float64Array(m*3),FI=new Int32Array(m*3);
+ for(let t=0;t<m;t++){const k=keys[faces[t]],p0=coords[k[0]],p1=coords[k[1]],p2=coords[k[2]];
+   const e1=new THREE.Vector3().subVectors(p1,p0),e2=new THREE.Vector3().subVectors(p2,p0);
+   const l1=e1.length()||1e-12,ax=e2.dot(e1)/l1,ay=Math.sqrt(Math.max(0,e2.lengthSq()-ax*ax))*orient;
+   const x=[0,0,l1,0,ax,ay];for(let i=0;i<6;i++)X[t*6+i]=x[i];
+   for(let c=0;c<3;c++){FI[t*3+c]=localId[k[c]];
+     // Weight of edge (c, c+1) = cot of the angle at the opposite corner c+2.
+     const o=(c+2)%3,a=c,b=(c+1)%3;
+     const ux=x[a*2]-x[o*2],uy=x[a*2+1]-x[o*2+1],vx=x[b*2]-x[o*2],vy=x[b*2+1]-x[o*2+1];
+     const cot=(ux*vx+uy*vy)/Math.max(Math.abs(ux*vy-uy*vx),1e-14);
+     W[t*3+c]=Math.min(1e3,Math.max(.01,cot))}}
+ // Sparse symmetric Laplacian in CSR form.
+ const rows=Array.from({length:n},()=>new Map()),diag=new Float64Array(n);
+ for(let t=0;t<m;t++)for(let c=0;c<3;c++){const i=FI[t*3+c],j=FI[t*3+(c+1)%3],w=W[t*3+c];
+   diag[i]+=w;diag[j]+=w;rows[i].set(j,(rows[i].get(j)||0)+w);rows[j].set(i,(rows[j].get(i)||0)+w)}
+ const start=new Int32Array(n+1);for(let i=0;i<n;i++)start[i+1]=start[i]+rows[i].size;
+ const col=new Int32Array(start[n]),val=new Float64Array(start[n]);
+ for(let i=0;i<n;i++){let s=start[i];for(const [j,w] of rows[i]){col[s]=j;val[s]=w;s++}}
+ // Pin one anchor-triangle corner; the remaining freedom (rotation) is fixed afterwards.
+ const pin=localId[keys[f0][0]];
+ yield;
+ const u=new Float64Array(n),v=new Float64Array(n);for(let i=0;i<n;i++){u[i]=U[verts[i]];v[i]=V[verts[i]]}
+ const matvec=(x,out)=>{for(let i=0;i<n;i++){if(i===pin){out[i]=x[i];continue}let s=diag[i]*x[i];
+   for(let k=start[i];k<start[i+1];k++){const j=col[k];if(j!==pin)s-=val[k]*x[j]}out[i]=s}};
+ const r=new Float64Array(n),z=new Float64Array(n),p=new Float64Array(n),Ap=new Float64Array(n);
+ function cg(x,b,maxIt){matvec(x,Ap);let rz=0,bb=0;
+   for(let i=0;i<n;i++){r[i]=b[i]-Ap[i];const d=i===pin?1:diag[i];z[i]=r[i]/d;p[i]=z[i];rz+=r[i]*z[i];bb+=b[i]*b[i]}
+   const tol=1e-12*Math.max(bb,1e-30);
+   for(let it=0;it<maxIt;it++){matvec(p,Ap);let pAp=0;for(let i=0;i<n;i++)pAp+=p[i]*Ap[i];if(Math.abs(pAp)<1e-300)break;
+     const alpha=rz/pAp;let rr=0,rzNew=0;
+     for(let i=0;i<n;i++){x[i]+=alpha*p[i];r[i]-=alpha*Ap[i];rr+=r[i]*r[i]}
+     if(rr<tol)break;
+     for(let i=0;i<n;i++){const d=i===pin?1:diag[i];z[i]=r[i]/d;rzNew+=r[i]*z[i]}
+     const beta=rzNew/rz;rz=rzNew;for(let i=0;i<n;i++)p[i]=z[i]+beta*p[i]}}
+ const bu=new Float64Array(n),bv=new Float64Array(n);
+ const iterations=n>25000?3:n>12000?5:8;
+ for(let iter=0;iter<iterations;iter++){
+   bu.fill(0);bv.fill(0);
+   for(let t=0;t<m;t++){
+     // Local step: closest rotation to the current stencil triangle's Jacobian.
+     let s00=0,s01=0,s10=0,s11=0;
+     for(let c=0;c<3;c++){const a=c,b=(c+1)%3,i=FI[t*3+a],j=FI[t*3+b],w=W[t*3+c];
+       const du=u[i]-u[j],dv=v[i]-v[j],dx=X[t*6+a*2]-X[t*6+b*2],dy=X[t*6+a*2+1]-X[t*6+b*2+1];
+       s00+=w*du*dx;s01+=w*du*dy;s10+=w*dv*dx;s11+=w*dv*dy}
+     const th=Math.atan2(s10-s01,s00+s11),cs=Math.cos(th),sn=Math.sin(th);
+     for(let c=0;c<3;c++){const a=c,b=(c+1)%3,i=FI[t*3+a],j=FI[t*3+b],w=W[t*3+c];
+       const dx=X[t*6+a*2]-X[t*6+b*2],dy=X[t*6+a*2+1]-X[t*6+b*2+1],rx=(cs*dx-sn*dy)*w,ry=(sn*dx+cs*dy)*w;
+       bu[i]+=rx;bv[i]+=ry;bu[j]-=rx;bv[j]-=ry}}
+   // Global step with the pinned vertex moved to the right-hand side.
+   for(let k=start[pin];k<start[pin+1];k++){const j=col[k];if(j===pin)continue;bu[j]+=val[k]*u[pin];bv[j]+=val[k]*v[pin]}
+   bu[pin]=u[pin];bv[pin]=v[pin];
+   cg(u,bu,40);cg(v,bv,40);
+   yield;
+ }
+ // Re-centre on the tapped point and restore the artwork's orientation around it, so the
+ // refinement never shifts or turns the motif — it only evens out the distortion.
+ const [k0,k1,k2]=keys[f0],q0=coords[k0],q1=coords[k1],q2=coords[k2];
+ const e1=new THREE.Vector3().subVectors(q1,q0),e2=new THREE.Vector3().subVectors(q2,q0),ep=new THREE.Vector3().subVectors(P,q0);
+ const d11=e1.dot(e1),d12=e1.dot(e2),d22=e2.dot(e2),dp1=ep.dot(e1),dp2=ep.dot(e2),den=d11*d22-d12*d12||1e-30;
+ const b1=(d22*dp1-d12*dp2)/den,b2=(d11*dp2-d12*dp1)/den,b0=1-b1-b2;
+ const ia=localId[k0],ib=localId[k1],ic=localId[k2];
+ const cu=b0*u[ia]+b1*u[ib]+b2*u[ic],cv=b0*v[ia]+b1*v[ib]+b2*v[ic];
+ const r0=Math.max(motifSize*.3,1e-6);let sDot=0,sCross=0;
+ for(let i=0;i<n;i++){const g=verts[i],ou=U[g],ov=V[g],wgt=Math.exp(-(ou*ou+ov*ov)/(r0*r0));
+   const nu=u[i]-cu,nv=v[i]-cv;sDot+=wgt*(nu*ou+nv*ov);sCross+=wgt*(nu*ov-nv*ou)}
+ const phi=Math.atan2(sCross,sDot),cp=Math.cos(phi),sp=Math.sin(phi);
+ const outU=Float64Array.from(U),outV=Float64Array.from(V);
+ for(let i=0;i<n;i++){const nu=u[i]-cu,nv=v[i]-cv;outU[verts[i]]=cp*nu-sp*nv;outV[verts[i]]=sp*nu+cp*nv}
+ return {U:outU,V:outV,iterations,verts:n,faces:m,ms:performance.now()-t0};
+}
+// Both GLB bodies are modelled at real scale in metres (male 1.75 m, female 1.65 m), so a
+// tattoo width in cm converts directly and is physically the same size on either body.
+const SCENE_UNITS_PER_CM=.01;
+let demCache=null,arapJob=null,uvBlend=null,shownDemKey=null;
 function wrap(preview=false){
  if(!anchor||!tex)return;
  const data=cache.get(anchor.object);if(!data)return;
- // The model is calibrated to a 175 cm reference height. The uploaded
- // artwork is cropped to its visible alpha bounds before this measurement.
- const w=bodyHeight*(Number($('size').value)/175),h=w/imgAspect;
- const radius=Math.hypot(w,h)*.75+Math.max(w,h)*.12;
+ // Real-world size: the artwork is cropped to its visible alpha bounds before this measurement.
+ const w=Number($('size').value)*SCENE_UNITS_PER_CM,h=w/imgAspect;
  const theta=THREE.MathUtils.degToRad(Number($('rotation').value));const cos=Math.cos(theta),sin=Math.sin(theta);
  const f0=anchor.faceIndex;if(f0<0||f0>=data.triCount)return;
- const {x,y}=anchor.basis;
- const project2=v=>{const d=v.clone().sub(anchor.point);return [d.dot(x),d.dot(y)]};
- const uv2=new Map();uv2.set(f0,data.p[f0].map(project2));const visited=new Set([f0]);const queue=[f0];let qi=0;
- const positions=[],uvs=[],indices=[];let skipped=0,used=0,overlapBlocked=0;const maxFaces=preview?3800:16000;
- // Spatially index accepted 2D face centroids. On curved / branched meshes,
- // unfolding can cover the same stencil coordinates with a second, distant
- // patch of skin. Do not render or propagate that second sheet.
- const cell=Math.max(bodyHeight*.006,1e-6),accepted=new Map();
- function overlapsOtherSheet(f,tri){
-   const ux=(tri[0][0]+tri[1][0]+tri[2][0])/3,uy=(tri[0][1]+tri[1][1]+tri[2][1])/3;
-   const px=(data.p[f][0].x+data.p[f][1].x+data.p[f][2].x)/3;
-   const py=(data.p[f][0].y+data.p[f][1].y+data.p[f][2].y)/3;
-   const pz=(data.p[f][0].z+data.p[f][1].z+data.p[f][2].z)/3;
-   const ix=Math.floor(ux/cell),iy=Math.floor(uy/cell);
-   for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
-     for(const a of (accepted.get(`${ix+dx}:${iy+dy}`)||[])){
-       const du=ux-a.ux,dv=uy-a.uy;
-       if(du*du+dv*dv>cell*cell*.6)continue;
-       const ox=px-a.px,oy=py-a.py,oz=pz-a.pz;
-       // Curved anatomy (notably the breast) can overlap in the unfolded plane.
-        // Only reject a competing sheet if it is truly far away in 3D,
-        // or is on a distinctly back-facing fold. Nearby curvature is valid.
-        const dist2=ox*ox+oy*oy+oz*oz;
-        const opposing=data.normals[f].dot(data.normals[a.f])<-.35;
-        if(dist2>Math.pow(bodyHeight*.10,2) || (opposing&&dist2>Math.pow(bodyHeight*.025,2)))return true;
-     }
-   }
-   const key=`${ix}:${iy}`;if(!accepted.has(key))accepted.set(key,[]);
-   accepted.get(key).push({ux,uy,px,py,pz,f});return false;
+ const {coords,vNormals,vAdj,vFaces,keys}=data,nV=coords.length;
+ const P=anchor.point,N0=anchor.normal,X0=anchor.basis.x,Y0=anchor.basis.y;
+ // Edge paths overestimate true geodesics by a few percent: add margin so no corner is lost.
+ const reach=Math.hypot(w,h)*.5*1.2+bodyHeight*.012;
+ // Rotation and mirroring only change how the stencil is read, not the unfolding itself:
+ // reuse the last solve when the anchor and reach are unchanged.
+ const demKey=[f0,P.x,P.y,P.z,reach].join('|');
+ let dem=demCache&&demCache.data===data&&demCache.key===demKey&&(preview||!demCache.capped)?demCache:null;
+ if(!dem){
+ const maxVerts=preview?30000:90000;
+ const dist=new Float64Array(nV).fill(Infinity),parent=new Int32Array(nV).fill(-1),state=new Uint8Array(nV);
+ const U=new Float64Array(nV),V=new Float64Array(nV),frame=new Float64Array(nV*3);
+ const done=[];
+ // Minimal binary heap of [distance, vertex] pairs (lazy deletion).
+ const heap=[];
+ const push=(d,v)=>{heap.push([d,v]);let i=heap.length-1;while(i){const j=(i-1)>>1;if(heap[j][0]<=heap[i][0])break;[heap[i],heap[j]]=[heap[j],heap[i]];i=j}};
+ const pop=()=>{const top=heap[0],last=heap.pop();if(heap.length){heap[0]=last;let i=0;for(;;){const l=2*i+1,r=l+1;let m=i;if(l<heap.length&&heap[l][0]<heap[m][0])m=l;if(r<heap.length&&heap[r][0]<heap[m][0])m=r;if(m===i)break;[heap[i],heap[m]]=[heap[m],heap[i]];i=m}}return top};
+ const tmp=new THREE.Vector3(),e1=new THREE.Vector3(),e2=new THREE.Vector3(),carried=new THREE.Vector3();
+ // Carry a tangent direction onto the tangent plane of vertex v (discrete parallel transport).
+ function setFrame(v,dir){const n=vNormals[v];e1.copy(dir).addScaledVector(n,-dir.dot(n));
+   if(e1.lengthSq()<1e-12)e1.copy(tangentBasis(n).x);e1.normalize();frame[v*3]=e1.x;frame[v*3+1]=e1.y;frame[v*3+2]=e1.z}
+ // Unfold vertex v from solved vertex q: log map of the edge in q's tangent plane.
+ function estimate(q,v,out){const n=vNormals[q];tmp.subVectors(coords[v],coords[q]);const len=tmp.length();
+   tmp.addScaledVector(n,-tmp.dot(n));const tl=tmp.length();if(tl<1e-12){out[0]=U[q];out[1]=V[q];return len}
+   const s=len/tl;e1.set(frame[q*3],frame[q*3+1],frame[q*3+2]);e2.crossVectors(n,e1);
+   out[0]=U[q]+tmp.dot(e1)*s;out[1]=V[q]+tmp.dot(e2)*s;return len}
+ function relax(v){for(const r of vAdj[v]){if(state[r]===2)continue;const nd=dist[v]+coords[r].distanceTo(coords[v]);if(nd<dist[r]){dist[r]=nd;parent[r]=v;push(nd,r)}}}
+ // Seed: the three corners of the tapped triangle, projected into the anchor's tangent plane.
+ for(const v of keys[f0]){if(state[v]===2)continue;tmp.subVectors(coords[v],P);const len=tmp.length();tmp.addScaledVector(N0,-tmp.dot(N0));
+   const tl=tmp.length(),s=tl>1e-12?len/tl:0;U[v]=tmp.dot(X0)*s;V[v]=tmp.dot(Y0)*s;dist[v]=len;state[v]=2;setFrame(v,X0);done.push(v)}
+ for(const v of keys[f0])relax(v);
+ const est=[0,0],best=[0,0];let cutLocus=0;
+ while(heap.length&&done.length<maxVerts){
+   const [d,v]=pop();if(state[v]===2||d>dist[v])continue;if(d>reach)break;
+   const pq=parent[v];const plen=estimate(pq,v,best);
+   // Upwind averaging over all solved neighbours. Estimates that disagree strongly with the
+   // parent come from the other side of a limb (cut locus) and are ignored.
+   const pw=1/(plen*plen+1e-18);let su=best[0]*pw,sv=best[1]*pw,sw=pw;
+   for(const q of vAdj[v]){if(q===pq||state[q]!==2)continue;const len=estimate(q,v,est);
+     if(Math.hypot(est[0]-best[0],est[1]-best[1])>.5*(len+plen)){cutLocus++;continue}
+     const wq=1/(len*len+1e-18);su+=est[0]*wq;sv+=est[1]*wq;sw+=wq}
+   U[v]=su/sw;V[v]=sv/sw;state[v]=2;
+   carried.set(frame[pq*3],frame[pq*3+1],frame[pq*3+2]);setFrame(v,carried);
+   done.push(v);relax(v);
  }
- const epsOffset=Math.max(bodyDiag*.00008,Math.min(w,h)*.0004);
- // A connected triangle graph can cross unexpected bridges between limbs.
- // Reject remote triangles in 3D even if their unfolded UV is close to the anchor.
- const maxSpatialReach=Math.max(w,h)*1.05+bodyHeight*.035;
- const spatialReach2=maxSpatialReach*maxSpatialReach;
- const isLocalFace=f=>data.p[f].some(v=>v.distanceToSquared(anchor.point)<=spatialReach2);
- const v2dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
- function addFace(f,tri){
-   const cx=(tri[0][0]+tri[1][0]+tri[2][0])/3,cy=(tri[0][1]+tri[1][1]+tri[2][1])/3;
-   // Circle bound plus rectangular overlap test; keeps faces around corners.
-   const local=tri.map(([px,py])=>[px*cos+py*sin,-px*sin+py*cos]);
-   const minX=Math.min(...local.map(q=>q[0])),maxX=Math.max(...local.map(q=>q[0]));const minY=Math.min(...local.map(q=>q[1])),maxY=Math.max(...local.map(q=>q[1]));
-   if(maxX< -w/2||minX>w/2||maxY< -h/2||minY>h/2)return;
-   const base=positions.length/3;
-   for(let k=0;k<3;k++){
-     const p=data.p[f][k],n=data.normals[f];positions.push(p.x+n.x*epsOffset,p.y+n.y*epsOffset,p.z+n.z*epsOffset);
-     uvs.push(flipHorizontal ? .5-local[k][0]/w : local[k][0]/w+.5,flipVertical ? .5-local[k][1]/h : local[k][1]/h+.5);
-   }
-   indices.push(base,base+1,base+2);used++;
+ dem=demCache={data,key:demKey,U,V,state,done,cutLocus,dist,capped:done.length>=maxVerts};
  }
- while(qi<queue.length&&qi<maxFaces){
-   const f=queue[qi++];
-   const tri=uv2.get(f);if(!isLocalFace(f)){skipped++;continue}
-   if(overlapsOtherSheet(f,tri)){overlapBlocked++;continue}
-   addFace(f,tri);
-   const cx=(tri[0][0]+tri[1][0]+tri[2][0])/3,cy=(tri[0][1]+tri[1][1]+tri[2][1])/3;
-   const longest=Math.max(v2dist(tri[0],tri[1]),v2dist(tri[1],tri[2]),v2dist(tri[2],tri[0]));
-   if(Math.hypot(cx,cy)>radius+longest)continue;
-   for(let e=0;e<3;e++){
-     const nf=data.neighbors[f][e];if(nf<0||visited.has(nf)||!isLocalFace(nf))continue;
-     const A=data.keys[f][e],B=data.keys[f][(e+1)%3];const other=data.keys[f][(e+2)%3];
-     const nk=data.keys[nf],ia=nk.indexOf(A),ib=nk.indexOf(B);if(ia<0||ib<0)continue;
-     const ic=3-ia-ib;
-     const pa=tri[e],pb=tri[(e+1)%3],pc=tri[(e+2)%3];
-     const edgeLen=v2dist(pa,pb);if(edgeLen<1e-10)continue;
-     const vA=data.coords[A],vB=data.coords[B],vC=data.coords[nk[ic]];
-     const ac=vA.distanceTo(vC),bc=vB.distanceTo(vC);
-     const along=(ac*ac-bc*bc+edgeLen*edgeLen)/(2*edgeLen),alt2=ac*ac-along*along;
-     if(alt2< -1e-6*edgeLen*edgeLen)continue;
-     const altitude=Math.sqrt(Math.max(0,alt2)),ex=(pb[0]-pa[0])/edgeLen,ey=(pb[1]-pa[1])/edgeLen;
-     const cross=(pb[0]-pa[0])*(pc[1]-pa[1])-(pb[1]-pa[1])*(pc[0]-pa[0]);
-     const sign=cross>=0?-1:1;const third=[pa[0]+ex*along-sign*ey*altitude,pa[1]+ey*along+sign*ex*altitude];
-     const ntri=[];ntri[ia]=pa;ntri[ib]=pb;ntri[ic]=third;
-     const nx=(pa[0]+pb[0]+third[0])/3,ny=(pa[1]+pb[1]+third[1])/3;
-     // Avoid runaway paths wrapping the entire model or self-overlap across opposite limbs.
-     if(Math.hypot(nx,ny)>radius+edgeLen*2)continue;
-     visited.add(nf);uv2.set(nf,ntri);queue.push(nf);
-   }
+ const {state,done,cutLocus,dist}=dem;
+ const [s0a,s0b,s0c]=keys[f0];
+ const orient=Math.sign((dem.U[s0b]-dem.U[s0a])*(dem.V[s0c]-dem.V[s0a])-(dem.V[s0b]-dem.V[s0a])*(dem.U[s0c]-dem.U[s0a]))||1;
+ // Even out the distortion with ARAP, restricted to the artwork rectangle plus a margin (skin far
+ // outside the motif must not pull on it). Cached per rotation. It also runs in the background
+ // WHILE dragging: as soon as the finger rests, the motif settles under it, so releasing the
+ // finger changes nothing any more.
+ if((!dem.refined||dem.refinedTheta!==theta)&&!(arapJob&&arapJob.dem===dem&&arapJob.theta===theta)){
+   const mx=w/2+Math.max(w,h)*.15,my=h/2+Math.max(w,h)*.15,DU=dem.U,DV=dem.V;
+   const inRegion=(...vs)=>{let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+     for(const v of vs){const x=DU[v]*cos+DV[v]*sin,y=-DU[v]*sin+DV[v]*cos;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
+     return x1>=-mx&&x0<=mx&&y1>=-my&&y0<=my};
+   arapJob={dem,theta,gen:arapRefineSteps(data,dem,f0,P,orient,Math.min(w,h),inRegion)};
  }
+ const refined=dem.refined&&dem.refinedTheta===theta?dem.refined:null,U=refined?refined.U:dem.U,V=refined?refined.V:dem.V;
+ // If the unrefined stencil is currently on screen for this same anchor, morph into the refined one.
+ const blendFromDem=!!refined&&shownDemKey===demKey;
+ const uvsFrom=[];uvBlend=null;
  if(tattoo){scene.remove(tattoo);tattoo.geometry.dispose();tattoo.material.dispose();tattoo=null}
+ // Emit every face whose three corners were solved and whose stencil triangle touches the artwork.
+ const local=v=>{const u=U[v],q=V[v];return [u*cos+q*sin,-u*sin+q*cos]};
+ const area=(a,b,c)=>(U[b]-U[a])*(V[c]-V[a])-(V[b]-V[a])*(U[c]-U[a]);
+ const seen=new Uint8Array(data.triCount),outIndex=new Map(),positions=[],uvs=[],indices=[];
+ const epsOffset=Math.max(bodyDiag*.00008,Math.min(w,h)*.0004);
+ let used=0,folded=0,stretchSum=0,stretchMax=0;
+ const vertexOut=v=>{let i=outIndex.get(v);if(i!==undefined)return i;i=positions.length/3;outIndex.set(v,i);
+   const p=coords[v],n=vNormals[v];positions.push(p.x+n.x*epsOffset,p.y+n.y*epsOffset,p.z+n.z*epsOffset);
+   const [rx,ry]=local(v);uvs.push(flipHorizontal?.5-rx/w:rx/w+.5,flipVertical?.5-ry/h:ry/h+.5);
+   if(blendFromDem){const fx=dem.U[v]*cos+dem.V[v]*sin,fy=-dem.U[v]*sin+dem.V[v]*cos;uvsFrom.push(flipHorizontal?.5-fx/w:fx/w+.5,flipVertical?.5-fy/h:fy/h+.5)}
+   return i};
+ // Collect every face whose three corners were solved and whose stencil triangle touches the artwork.
+ const cand=[];let edgeSum=0;
+ for(const v of done)for(const f of vFaces[v]){
+   if(seen[f])continue;seen[f]=1;const [a,b,c]=keys[f];
+   if(state[a]!==2||state[b]!==2||state[c]!==2)continue;
+   const la=local(a),lb=local(b),lc=local(c);
+   if(Math.max(la[0],lb[0],lc[0])< -w/2||Math.min(la[0],lb[0],lc[0])>w/2||Math.max(la[1],lb[1],lc[1])< -h/2||Math.min(la[1],lb[1],lc[1])>h/2)continue;
+   // Reject inverted triangles and extreme stretch (only occurs where two fronts meet).
+   const A=area(a,b,c);let bad=A*orient<=0;
+   for(const [i,j] of [[a,b],[b,c],[c,a]]){const l3=coords[i].distanceTo(coords[j]),l2=Math.hypot(U[i]-U[j],V[i]-V[j]);if(l2>l3*3+1e-9||l2<l3*.2)bad=true}
+   if(bad){folded++;continue}
+   edgeSum+=coords[a].distanceTo(coords[b]);
+   cand.push({a,b,c,la,lb,lc,d:dist[a]+dist[b]+dist[c]});
+ }
+ // Overlap lock: every point of the artwork may land on the skin only once. Where the
+ // unfolding reaches the same stencil area along two routes (armpit: torso and inner arm),
+ // the skin nearest to the tapped point wins and the second copy is not drawn.
+ // Faces are accepted nearest-first and claim the grid cells whose centres they cover.
+ cand.sort((p,q)=>p.d-q.d);
+ const cell=Math.max(edgeSum/Math.max(cand.length,1)*.5,1e-6),gx0=-w/2-cell,gy0=-h/2-cell;
+ const gw=Math.ceil((w+2*cell)/cell)+1,gh=Math.ceil((h+2*cell)/cell)+1,claimed=new Uint8Array(gw*gh);
+ let overlapBlocked=0;const cells=[];
+ for(const t of cand){
+   const {la,lb,lc}=t,det=(lb[0]-la[0])*(lc[1]-la[1])-(lb[1]-la[1])*(lc[0]-la[0]),sg=det>=0?1:-1;
+   const i0=Math.max(0,Math.ceil((Math.min(la[0],lb[0],lc[0])-gx0)/cell-.5)),i1=Math.min(gw-1,Math.floor((Math.max(la[0],lb[0],lc[0])-gx0)/cell-.5));
+   const j0=Math.max(0,Math.ceil((Math.min(la[1],lb[1],lc[1])-gy0)/cell-.5)),j1=Math.min(gh-1,Math.floor((Math.max(la[1],lb[1],lc[1])-gy0)/cell-.5));
+   cells.length=0;let taken=0;
+   for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const x=gx0+(i+.5)*cell,y=gy0+(j+.5)*cell;
+     const e0=((lb[0]-la[0])*(y-la[1])-(lb[1]-la[1])*(x-la[0]))*sg,e1=((lc[0]-lb[0])*(y-lb[1])-(lc[1]-lb[1])*(x-lb[0]))*sg,e2=((la[0]-lc[0])*(y-lc[1])-(la[1]-lc[1])*(x-lc[0]))*sg;
+     if(e0>=0&&e1>=0&&e2>=0){const k=j*gw+i;cells.push(k);if(claimed[k])taken++}}
+   if(cells.length>=2&&taken>cells.length*.3){overlapBlocked++;continue}
+   for(const k of cells)claimed[k]=1;
+   const {a,b,c}=t;
+   for(const [i,j] of [[a,b],[b,c],[c,a]]){const s=Math.abs(Math.hypot(U[i]-U[j],V[i]-V[j])/Math.max(coords[i].distanceTo(coords[j]),1e-12)-1);stretchSum+=s/3;if(s>stretchMax)stretchMax=s}
+   indices.push(vertexOut(a),vertexOut(b),vertexOut(c));used++;
+ }
  if(!indices.length){status('No surface found at this location. Try a nearby point.');return}
  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeVertexNormals();
  // Shader clips each triangle to the tattoo rectangle. No empty area is drawn outside the PNG.
  const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.03,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>`)};
  tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);$('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
- debug.textContent=`Surface faces used: ${used}\nUnfolded faces: ${visited.size}\nBody triangles: ${data.triCount}\nRemote faces blocked: ${skipped}\nOverlapping surface faces blocked: ${overlapBlocked}\nWrapping: classic BFS\nMode: ${preview?'live preview':'full resolution'}\nSkin: opaque · depth tested`;
+ if(blendFromDem){const attr=g.getAttribute('uv');uvBlend={attr,from:Float32Array.from(uvsFrom),to:Float32Array.from(uvs),start:performance.now()};attr.array.set(uvBlend.from);attr.needsUpdate=true}
+ shownDemKey=refined?null:demKey;
+ debug.textContent=`Surface faces used: ${used}\nSolved vertices: ${done.length}\nBody triangles: ${data.triCount}\nFolded faces dropped: ${folded}\nSecond-sheet faces blocked: ${overlapBlocked}\nEdge stretch: mean ${(stretchSum/Math.max(used,1)*100).toFixed(2)}% · max ${(stretchMax*100).toFixed(0)}%\nCut-locus estimates ignored: ${cutLocus}\nWrapping: Discrete Exponential Map${refined?` + ARAP (${refined.iterations} it, ${refined.verts} verts, ${refined.ms.toFixed(0)} ms)`:""}\nMode: ${preview?'live preview':'full resolution'}\nSkin: opaque · depth tested`;
 }
 // Crop transparent padding so the requested width measures the *visible* motif.
 // Otherwise a 40 cm PNG canvas containing a tiny design looks like a 10 cm tattoo.
@@ -401,7 +770,7 @@ function cropArtwork(img){
 }
 $('upload').addEventListener('change',()=>{const file=$('upload').files[0];if(!file)return;
  const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{
-   const cropped=cropArtwork(img);imgAspect=cropped.width/cropped.height;
+   selectedFlashReady=false;$('placeCoach').hidden=true;const cropped=cropArtwork(img);imgAspect=cropped.width/cropped.height;
    updateDimensions();$('preview').src=cropped.toDataURL('image/png');
    if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
    status('PNG ready. Click or tap on the body to place your tattoo.');updatePlacementHint();
@@ -426,17 +795,15 @@ function moveAnchor(e,preview){const hit=hitBody(e);if(!hit)return false;const n
  // The rotation slider remains the only source of deliberate artwork rotation.
  const basis=tangentBasis(newNormal);
  if(!anchor)anchor={};anchor.basis=basis;anchor.point=hit.point.clone();anchor.normal=newNormal;anchor.object=hit.object;anchor.faceIndex=hit.faceIndex;wrap(preview);updatePlacementHint();updateRegion();return true}
-// Raycast triangles can have gaps on fine-line PNGs and at UV seams.
-// Permit grabbing near the projected tattoo anchor as a fallback.
+// Grab anywhere on the artwork rectangle, exactly as large as it appears on screen. A finger is
+// less precise than a mouse, so touches within a few screen pixels of the edge also count; the
+// tolerance is in pixels and therefore identical at every zoom level.
 function canGrabTattoo(e){
  if(!anchor||!tattoo)return false;
  if(hitTattoo(e))return true;
- const r=renderer.domElement.getBoundingClientRect();
- const center=screenPoint(anchor.point);
- const widthPx=Math.max(35,bodyHeight*(Number($('size').value)/175)*r.height/Math.max(bodyHeight,0.01)*1.3);
- const heightPx=widthPx/Math.max(imgAspect,0.1);
- const dx=Math.abs(e.clientX-center.x),dy=Math.abs(e.clientY-center.y);
- return dx<Math.min(160,Math.max(28,widthPx*.55)) && dy<Math.min(190,Math.max(28,heightPx*.55)) && !!hitBody(e);
+ const tol=e.pointerType==='touch'?16:6;
+ for(let k=0;k<8;k++){const a=k*Math.PI/4;if(hitTattoo({clientX:e.clientX+Math.cos(a)*tol,clientY:e.clientY+Math.sin(a)*tol}))return true}
+ return false;
 }
 let press=null;
 renderer.domElement.addEventListener('pointerdown',e=>{focusGoal=null;
@@ -467,15 +834,24 @@ function queueDrag(e){queued={clientX:e.clientX,clientY:e.clientY};if(raf)return
 renderer.domElement.addEventListener('pointermove',e=>{
  if(dragging&&e.pointerId===dragId){dragClient={clientX:e.clientX,clientY:e.clientY};queueDrag(e);e.preventDefault()}
 });
-function finish(e){activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;edgeHint.style.opacity="0";renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;queued=null;if(e.type==='pointerup')moveAnchor(dragEvent(e),false);controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;status('Tattoo moved. Grab it again or switch to Rotate Body.');press=null;return}
- if(!press)return;const d=Math.hypot(e.clientX-press.x,e.clientY-press.y);press=null;if(e.type!=='pointerup'||d>5||!tex||!meshes.length)return;if(hitTattoo(e))return;if(e.pointerType==='touch'&&anchor)return;if(moveAnchor(e,false)){setMode('move');status('Tattoo placed. Drag your tattoo to adjust its position.')}}
+function finish(e){activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;edgeHint.style.opacity="0";renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;const last=queued;queued=null;
+ // Fingers slide a few pixels while lifting: keep the last dragged position (plus a pending
+ // move that the throttle had not applied yet) and only upgrade the quality.
+ if(last)moveAnchor(dragEvent(last),false);else wrap(false);controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;status('Tattoo moved. Grab it again or switch to Rotate Body.');press=null;return}
+ if(!press)return;const d=Math.hypot(e.clientX-press.x,e.clientY-press.y);press=null;if(e.type!=='pointerup'||d>5||!tex||!meshes.length)return;if(hitTattoo(e))return;if(e.pointerType==='touch'&&anchor)return;if(moveAnchor(e,false)){setMode('move');status('Tattoo placed. Drag your tattoo to adjust its position.');showPlacedToast()}}
 renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.addEventListener('pointercancel',finish);
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
 window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
 
-// Booking UI / export; Classic wrapping implementation remains unchanged.
+// Booking UI / export; independent of Continuous UV wrapping.
 let bookingPNG=null,bookingCardPNG=null;
 function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
+// The button is sticky at the bottom of the panel. While it still covers controls (panel not
+// scrolled to the end) it is faded and lets taps through; at the end it sits below them, solid.
+const panel=document.querySelector('aside');
+function updateConfirmOverlay(){const covers=panel.scrollHeight-panel.clientHeight-panel.scrollTop>2;$('confirmPlacement').classList.toggle('coversControls',covers)}
+panel.addEventListener('scroll',updateConfirmOverlay,{passive:true});window.addEventListener('resize',updateConfirmOverlay);
+requestAnimationFrame(updateConfirmOverlay);
 const bookingOverlay=$('bookingOverlay');
 $('copyArtist').onclick=async()=>{
  const username='@craykrow';
@@ -506,6 +882,7 @@ $('confirmPlacement').onclick=async()=>{
  const start=performance.now();
  while(focusGoal && performance.now()-start<1600){await new Promise(resolve=>requestAnimationFrame(resolve));}
  wrap(false);
+ while((arapJob||uvBlend)&&performance.now()-start<5000){await new Promise(resolve=>requestAnimationFrame(resolve));}
  controls.update();renderer.render(scene,camera);
  try {
   bookingPNG=renderer.domElement.toDataURL('image/png');
@@ -612,9 +989,103 @@ $('copyBookingMessage').onclick=async()=>{
   window.prompt('Copy your booking message:',message);
  }
 };
+
+// Three-page Flashbook prototype. Replace entries with more transparent PNGs later.
+const FLASH_DESIGNS=[
+ {id:'A',src:'./flashes/4.png',thumb:'./flashes/4_thumb.png',name:'Flash A'},
+ {id:'B',src:'./flashes/Mario3.png',thumb:'./flashes/Mario3_thumb.png',name:'Flash B'}
+];
+const FLASH_PAGES=[
+ [0,1,0,1],
+ [1,0,1,0],
+ [0,0,1,1]
+];
+let flashPage=0,flashTouchStart=null;
+const flashbook=$('flashbook'),flashTrack=$('flashTrack'),flashViewport=$('flashViewport');
+function buildFlashbook(){
+ flashTrack.innerHTML='';
+ FLASH_PAGES.forEach((designs,i)=>{
+  const page=document.createElement('section');page.className='flashPage';page.setAttribute('aria-label',`Flashbook page ${i+1}`);
+  // The book title is displayed only once, outside the paper pages.
+  const grid=document.createElement('div');grid.className='flashGrid';
+  designs.forEach((idx,j)=>{
+   const d=FLASH_DESIGNS[idx],btn=document.createElement('button');btn.className='flashItem';btn.type='button';btn.setAttribute('aria-label',`Try ${d.name} on body`);
+   const img=document.createElement('img');img.src=d.thumb||d.src;img.alt=d.name;img.loading='eager';img.decoding='async';img.draggable=false;img.addEventListener('error',()=>{if(img.src!==new URL(d.src,location.href).href)img.src=d.src;});
+   const no=document.createElement('span');no.textContent=`#${String(i*4+j+1).padStart(3,'0')}`;btn.append(img,no);
+   btn.addEventListener('click',()=>openFlashDesign(d,i*4+j+1));grid.appendChild(btn);
+  });
+  page.appendChild(grid);flashTrack.appendChild(page);
+ });
+
+ requestAnimationFrame(positionFlashbook);
+ Promise.all(Array.from(flashTrack.querySelectorAll('.flashPage:first-child img')).map(im=>im.decode().catch(()=>{}))).then(()=>{if(!flashbook.hidden)requestAnimationFrame(positionFlashbook)});
+}
+function positionFlashbook(){
+ const pages=flashTrack.querySelectorAll('.flashPage');if(!pages.length)return;
+ const target=pages[flashPage];
+ const shift=flashViewport.clientWidth/2-(target.offsetLeft+target.offsetWidth/2);
+ flashTrack.style.transform=`translateX(${shift}px)`;
+ $('flashCount').textContent=`Page ${flashPage+1} of ${FLASH_PAGES.length}`;
+ $('flashPrev').disabled=false;$('flashNext').disabled=false;
+
+}
+function goFlashPage(i){flashPage=((i%FLASH_PAGES.length)+FLASH_PAGES.length)%FLASH_PAGES.length;positionFlashbook()}
+$('flashPrev').onclick=()=>goFlashPage(flashPage-1);$('flashNext').onclick=()=>goFlashPage(flashPage+1);
+flashViewport.addEventListener('pointerdown',e=>{flashTouchStart={x:e.clientX,y:e.clientY}});
+flashViewport.addEventListener('pointerup',e=>{if(!flashTouchStart)return;const dx=e.clientX-flashTouchStart.x,dy=e.clientY-flashTouchStart.y;flashTouchStart=null;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.2){goFlashPage(flashPage+(dx<0?1:-1));window.__flashSuppressClickUntil=performance.now()+400}});
+flashViewport.addEventListener('click',e=>{if((window.__flashSuppressClickUntil||0)>performance.now()){e.preventDefault();e.stopPropagation()}},true);
+flashViewport.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>15){e.preventDefault();goFlashPage(flashPage+(e.deltaX>0?1:-1))}},{passive:false});
+window.addEventListener('resize',()=>{if(!flashbook.hidden)positionFlashbook()});
+let selectedDesignNumber=null;
+let flashLoadToken=0;
+async function openFlashDesign(design,designNumber){
+ if((window.__flashSuppressClickUntil||0)>performance.now())return;
+ selectedDesignNumber=designNumber;
+ // Only the most recently tapped design may finish loading (fast double taps on a phone).
+ const token=++flashLoadToken;
+ flashbook.hidden=true;$('viewerBack').hidden=false;requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
+ // Remove the previous tattoo and artwork immediately, not after the new PNG has loaded:
+ // otherwise the old design stays visible (and can even be placed again) while loading.
+ cancelTattooDrag();anchor=null;arapJob=null;uvBlend=null;clear();
+ if(tex){tex.dispose();tex=null}
+ $('hint').classList.remove('afterPlacement');$('hint').style.visibility='hidden';
+ resize();
+ try{
+  const response=await fetch(design.src);if(!response.ok)throw new Error('Could not load '+design.src);
+  const blob=await response.blob();const url=URL.createObjectURL(blob);
+  const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=url});
+  if(token!==flashLoadToken){URL.revokeObjectURL(url);return}
+  const cropped=cropArtwork(img);URL.revokeObjectURL(url);
+  imgAspect=cropped.width/cropped.height;
+  if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
+  // Every newly selected flash starts at 15 cm and 0 degrees.
+  $('size').value=15;$('rotation').value=0;$('rotationDeg').value=0;$('rotationValue').textContent='0°';
+  $('preview').src=cropped.toDataURL('image/png');updateDimensions();
+  anchor=null;clear();setMode('orbit');setCameraViewSelected('full');selectedFlashReady=true;updatePlacementHint();
+  status(`Design #${String(selectedDesignNumber).padStart(3,'0')} selected. Tap the body to place it.`);
+ }catch(err){console.error(err);status('Could not load flash. Check the flashes folder.');}
+}
+$('viewerBack').onclick=()=>{requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
+buildFlashbook();
+
 function render(){requestAnimationFrame(render);
  const now=performance.now(),dt=Math.min(.05,(now-edgeClock)/1000);edgeClock=now;
  if(dragging)orbitDuringTattooDrag(dt);
+ if(figurePopStart&&!dragging){
+  const t=Math.min(1,(now-figurePopStart)/2200);
+  // Two complete camera push-pull cycles; no permanent change to view distance.
+  const phase=(t*2)%1;
+  const distanceFactor=t>=1?1:1-.31*Math.sin(Math.PI*phase)**2;
+  camera.position.sub(controls.target).multiplyScalar(distanceFactor/figurePopPrevious).add(controls.target);
+  figurePopPrevious=distanceFactor;
+  if(t>=1){figurePopStart=0;figurePopPrevious=1;}
+ }
  if(focusGoal){camera.position.lerp(focusGoal.position,.13);controls.target.lerp(focusGoal.target,.13);if(camera.position.distanceTo(focusGoal.position)<bodyHeight*.0001&&controls.target.distanceTo(focusGoal.target)<bodyHeight*.0001){camera.position.copy(focusGoal.position);controls.target.copy(focusGoal.target);focusGoal=null}}
+ if(arapJob){const job=arapJob;
+  if(!anchor||demCache!==job.dem)arapJob=null;
+  else{const t0=performance.now();let r;do{r=job.gen.next()}while(!r.done&&performance.now()-t0<8);
+   if(r.done){arapJob=null;job.dem.refined=r.value||{U:job.dem.U,V:job.dem.V,iterations:0,verts:0,faces:0,ms:0};job.dem.refinedTheta=job.theta;wrap(dragging)}}}
+ if(uvBlend){const k=Math.min(1,(now-uvBlend.start)/220),e=k*k*(3-2*k),a=uvBlend.attr.array,{from,to}=uvBlend;
+  for(let i=0;i<a.length;i++)a[i]=from[i]+(to[i]-from[i])*e;uvBlend.attr.needsUpdate=true;if(k>=1)uvBlend=null}
  controls.update();renderer.render(scene,camera);updateConfirmButton()}render();
 </script></body></html>
