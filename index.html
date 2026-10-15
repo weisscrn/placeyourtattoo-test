@@ -190,6 +190,15 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 .flashEmpty{margin:auto;font:600 14px Arial,sans-serif;letter-spacing:.08em;color:#797269;text-transform:uppercase}
 .viewerActions{top:calc(8px + env(safe-area-inset-top));right:8px}
 #viewerBack{min-height:35px}
+/* V16 — DE/EN switch, top right of the flashbook (same look as the camera buttons, smaller). */
+.flashTop{position:relative}
+.langSwitch{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;border:1px solid #697384;border-radius:8px;overflow:hidden;background:#24272de8}
+.langSwitch button{background:transparent;border:0;border-radius:7px;padding:4px 7px;font:650 10px Arial,sans-serif;letter-spacing:.04em;color:#e3edff;opacity:.55;cursor:pointer}
+.langSwitch button[aria-pressed="true"]{opacity:1;background:rgba(91,135,232,.19);box-shadow:inset 0 0 0 1px rgba(144,178,255,.75)}
+.langSwitch button:focus-visible{outline:2px solid #9bb8ff;outline-offset:1px}
+@media(max-width:420px){.flashTitle{font-size:17px!important;letter-spacing:.1em!important}.langSwitch{right:8px}}
+/* Flashbook: keep a strip at the bottom of every field free for the number, so motifs never touch it. */
+.flashItem{padding:3px 3px 22px!important}
 /* V15 — slim booking dialog */
 #closeBooking{background:#24272de8;border:1px solid #697384;color:#e3edff;border-radius:9px;padding:7px 12px;font:650 13px Arial,sans-serif;line-height:1;transition:background .15s,border-color .15s}
 #closeBooking:active,#closeBooking:focus-visible{background:rgba(91,135,232,.19);border-color:rgba(144,178,255,.75);outline:0}
@@ -248,37 +257,37 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 </head>
 <body>
 <div id="flashbook" aria-label="Tattoo flashbook">
-  <div class="flashTop"><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1></div>
+  <div class="flashTop"><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1><div class="langSwitch" role="group" aria-label="Language / Sprache"><button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button></div></div>
   <div class="flashStage"><div class="flashViewport" id="flashViewport"><div class="flashTrack" id="flashTrack"></div></div></div>
-  <div class="flashInstruction">TAP A DESIGN TO TRY IT ON</div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">‹</button><span class="flashCount" id="flashCount">Page 1 of 3</span><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">›</button></div>
+  <div class="flashInstruction" data-i18n="flash.instruction">TAP A DESIGN TO TRY IT ON</div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">‹</button><span class="flashCount" id="flashCount">Page 1 of 3</span><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">›</button></div>
 </div>
 <button id="viewerBack" type="button" hidden>← Flashbook</button>
 
 
-<main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span>Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span>Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div><div id="placeCoach" hidden aria-live="polite"><strong>TAP BODY TO PLACE TATTOO</strong></div><div id="placedToast" hidden><span class="toastCheck" aria-hidden="true">✓</span><strong>TATTOO PLACED</strong></div></div>
-<aside><div class="bodyModelRow"><span class="bodyModelTitle">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span>Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span>Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size">Tattoo width (cm) <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation">Rotation <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span>Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span>Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+<main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span data-i18n="view.focus">Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span data-i18n="view.full">Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div><div id="placeCoach" hidden aria-live="polite"><strong data-i18n="hint.tapBody">TAP BODY TO PLACE TATTOO</strong></div><div id="placedToast" hidden><span class="toastCheck" aria-hidden="true">✓</span><strong data-i18n="hint.placed">TATTOO PLACED</strong></div></div>
+<aside><div class="bodyModelRow"><span class="bodyModelTitle" data-i18n="panel.bodyModel">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span data-i18n="panel.male">Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span data-i18n="panel.female">Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size"><span data-i18n="panel.width">Tattoo width (cm)</span> <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation"><span data-i18n="panel.rotation">Rotation</span> <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span data-i18n="panel.mirror">Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span data-i18n="panel.skin">Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d" data-i18n="panel.confirm">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
-  <div class="bookingTop"><strong>New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
+  <div class="bookingTop"><strong data-i18n="booking.title">New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
   <img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
-  <div class="bookingDetails"><span>Flash</span><strong id="bookingFlash"></strong></div>
-  <div class="bookingDetails"><span>Approximate size</span><strong id="bookingSize"></strong></div>
-  <label for="bookingRegionSelect">Placement (suggested, editable)</label>
+  <div class="bookingDetails"><span data-i18n="booking.flash">Flash</span><strong id="bookingFlash"></strong></div>
+  <div class="bookingDetails"><span data-i18n="booking.size">Approximate size</span><strong id="bookingSize"></strong></div>
+  <label for="bookingRegionSelect" data-i18n="booking.placement">Placement (suggested, editable)</label>
   <select id="bookingRegionSelect">
-   <option value="Chest">Chest</option><option value="Left chest">Left chest</option><option value="Right chest">Right chest</option>
-   <option value="Abdomen">Abdomen</option><option value="Ribs / side">Ribs / side</option>
-   <option value="Upper back">Upper back</option><option value="Lower back">Lower back</option>
-   <option value="Shoulder">Shoulder</option><option value="Upper arm">Upper arm</option>
-   <option value="Forearm">Forearm</option><option value="Hand">Hand</option>
-   <option value="Thigh">Thigh</option><option value="Calf">Calf</option><option value="Foot">Foot</option>
-   <option value="Neck">Neck</option><option value="Other / not sure">Other / not sure</option>
+   <option value="Chest" data-i18n="region.Chest">Chest</option><option value="Left chest" data-i18n="region.Left chest">Left chest</option><option value="Right chest" data-i18n="region.Right chest">Right chest</option>
+   <option value="Abdomen" data-i18n="region.Abdomen">Abdomen</option><option value="Ribs / side" data-i18n="region.Ribs / side">Ribs / side</option>
+   <option value="Upper back" data-i18n="region.Upper back">Upper back</option><option value="Lower back" data-i18n="region.Lower back">Lower back</option>
+   <option value="Shoulder" data-i18n="region.Shoulder">Shoulder</option><option value="Upper arm" data-i18n="region.Upper arm">Upper arm</option>
+   <option value="Forearm" data-i18n="region.Forearm">Forearm</option><option value="Hand" data-i18n="region.Hand">Hand</option>
+   <option value="Thigh" data-i18n="region.Thigh">Thigh</option><option value="Calf" data-i18n="region.Calf">Calf</option><option value="Foot" data-i18n="region.Foot">Foot</option>
+   <option value="Neck" data-i18n="region.Neck">Neck</option><option value="Other / not sure" data-i18n="region.Other / not sure">Other / not sure</option>
   </select>
-  <label for="bookingBudget">Maximum budget</label>
-  <select id="bookingBudget"><option value="">Flexible / not sure</option><option>Under €200</option><option>€200–300</option><option>€300–500</option><option>€500–800</option><option>€800–1,200</option><option>€1,200+</option></select>
-  <label for="bookingNote">Message to artist (optional)</label>
-  <textarea id="bookingNote" rows="2" maxlength="800" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
-  <div class="bookingActions"><a id="sendInstagram" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01"/></svg><span id="sendInstagramLabel">Send via Instagram &amp; paste message</span></a><button id="downloadBooking" type="button">Save Image</button></div>
+  <label for="bookingBudget" data-i18n="booking.budget">Maximum budget</label>
+  <select id="bookingBudget"><option value="" data-i18n="budget.flex">Flexible / not sure</option><option value="lt200" data-i18n="budget.lt200">Under €200</option><option value="200-300" data-i18n="budget.200">€200–300</option><option value="300-500" data-i18n="budget.300">€300–500</option><option value="500-800" data-i18n="budget.500">€500–800</option><option value="800-1200" data-i18n="budget.800">€800–1,200</option><option value="1200+" data-i18n="budget.1200">€1,200+</option></select>
+  <label for="bookingNote" data-i18n="booking.message">Message to artist (optional)</label>
+  <textarea id="bookingNote" rows="2" maxlength="800" data-i18n-placeholder="booking.placeholder" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
+  <div class="bookingActions"><a id="sendInstagram" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01"/></svg><span id="sendInstagramLabel" data-i18n="booking.send">Send via Instagram &amp; paste message</span></a><button id="downloadBooking" type="button" data-i18n="booking.save">Save Image</button></div>
   <p id="shareMessage" role="status" style="margin:8px 0 0"></p>
  </div>
 </div>
@@ -318,11 +327,52 @@ function showPlacedToast(){
 // One instruction works for mouse and touch; the gallery can reuse it later.
 function updatePlacementHint(){
  const hint=$('hint');
- if(!tex){hint.classList.remove('afterPlacement');hint.textContent='Choose a tattoo PNG to begin';showPlacementCoach();return}
- if(!model||!meshes.length){hint.classList.remove('afterPlacement');hint.textContent='Loading body…';showPlacementCoach();return}
- hint.textContent=anchor?'DRAG TO MOVE · PINCH TO ZOOM':'Tap the body to place your tattoo.';hint.classList.toggle('afterPlacement',!!anchor);showPlacementCoach();
+ if(!tex){hint.classList.remove('afterPlacement');hint.textContent=t('hint.choose');showPlacementCoach();return}
+ if(!model||!meshes.length){hint.classList.remove('afterPlacement');hint.textContent=t('hint.loading');showPlacementCoach();return}
+ hint.textContent=anchor?t('hint.drag'):t('hint.tapBodyLong');hint.classList.toggle('afterPlacement',!!anchor);showPlacementCoach();
 }
 
+// Language: German or English for the whole page (customer-facing texts and the request that is
+// sent to the artist). Default follows the phone's language; the choice is remembered.
+const I18N={
+ en:{'flash.instruction':'TAP A DESIGN TO TRY IT ON','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
+  'view.focus':'Focus','view.full':'Full Body',
+  'hint.tapBody':'TAP BODY TO PLACE TATTOO','hint.placed':'TATTOO PLACED','hint.drag':'DRAG TO MOVE · PINCH TO ZOOM','hint.tapBodyLong':'Tap the body to place your tattoo.','hint.choose':'Choose a design to begin','hint.loading':'Loading body…','hint.keep':'KEEP HOLDING',
+  'panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement →',
+  'booking.title':'New Booking Request','booking.flash':'Flash','booking.size':'Approximate size','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram & paste message','booking.save':'Save Image','booking.own':'Own upload',
+  'budget.flex':'Flexible / not sure','budget.lt200':'Under €200','budget.200':'€200–300','budget.300':'€300–500','budget.500':'€500–800','budget.800':'€800–1,200','budget.1200':'€1,200+',
+  'region.Chest':'Chest','region.Left chest':'Left chest','region.Right chest':'Right chest','region.Abdomen':'Abdomen','region.Ribs / side':'Ribs / side','region.Upper back':'Upper back','region.Lower back':'Lower back','region.Shoulder':'Shoulder','region.Upper arm':'Upper arm','region.Forearm':'Forearm','region.Hand':'Hand','region.Thigh':'Thigh','region.Calf':'Calf','region.Foot':'Foot','region.Neck':'Neck','region.Other / not sure':'Other / not sure',
+  'msg.title':'NEW TATTOO BOOKING REQUEST','msg.hi':"Hi @{a}! I'd like to book a tattoo.",'msg.flash':'Flash','msg.placement':'Placement','msg.size':'Approximate size','msg.budget':'Maximum budget','msg.message':'Message',
+  'card.flash':'FLASH','card.size':'APPROXIMATE SIZE','card.placement':'PLACEMENT','card.budget':'MAXIMUM BUDGET','card.artist':'FOR ARTIST','card.message':'MESSAGE TO ARTIST','card.error':'Could not create the image.'},
+ de:{'flash.instruction':'TIPPE AUF EIN MOTIV ZUM ANPROBIEREN','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
+  'view.focus':'Fokus','view.full':'Ganzer Körper',
+  'hint.tapBody':'TIPPE AUF DEN KÖRPER','hint.placed':'TATTOO PLATZIERT','hint.drag':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ZOOMEN','hint.tapBodyLong':'Tippe auf den Körper, um dein Tattoo zu platzieren.','hint.choose':'Wähle ein Motiv aus','hint.loading':'Körper lädt…','hint.keep':'GEDRÜCKT HALTEN',
+  'panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen →',
+  'booking.title':'Neue Buchungsanfrage','booking.flash':'Flash','booking.size':'Ungefähre Größe','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden & Nachricht einfügen','booking.save':'Bild speichern','booking.own':'Own upload',
+  'budget.flex':'Flexibel / weiß nicht','budget.lt200':'Unter 200 €','budget.200':'200–300 €','budget.300':'300–500 €','budget.500':'500–800 €','budget.800':'800–1.200 €','budget.1200':'1.200 €+',
+  'region.Chest':'Brust','region.Left chest':'Linke Brust','region.Right chest':'Rechte Brust','region.Abdomen':'Bauch','region.Ribs / side':'Rippen / Seite','region.Upper back':'Oberer Rücken','region.Lower back':'Unterer Rücken','region.Shoulder':'Schulter','region.Upper arm':'Oberarm','region.Forearm':'Unterarm','region.Hand':'Hand','region.Thigh':'Oberschenkel','region.Calf':'Wade','region.Foot':'Fuß','region.Neck':'Hals / Nacken','region.Other / not sure':'Andere / weiß nicht',
+  'msg.title':'NEUE TATTOO-ANFRAGE','msg.hi':'Hi @{a}! Ich würde gern ein Tattoo buchen.','msg.flash':'Flash','msg.placement':'Stelle','msg.size':'Ungefähre Größe','msg.budget':'Maximales Budget','msg.message':'Nachricht',
+  'card.flash':'FLASH','card.size':'UNGEFÄHRE GRÖSSE','card.placement':'STELLE','card.budget':'MAXIMALES BUDGET','card.artist':'FÜR ARTIST','card.message':'NACHRICHT AN DEN ARTIST','card.error':'Das Bild konnte nicht erstellt werden.'}
+};
+let lang=(()=>{try{const s=localStorage.getItem('lang');if(s==='de'||s==='en')return s}catch(e){}return (navigator.language||'').toLowerCase().startsWith('de')?'de':'en'})();
+const t=(key,vars={})=>(I18N[lang][key]??I18N.en[key]??key).replace(/\{(\w+)\}/g,(_,k)=>vars[k]??'');
+// Numbers with the right decimal mark: 24.5 / 24,5.
+const num=(v,d=1)=>{const s=Number(v).toFixed(d);return lang==='de'?s.replace('.',','):s};
+const numShort=v=>{const s=String(Number(v));return lang==='de'?s.replace('.',','):s};
+function applyLanguage(){
+ document.documentElement.lang=lang;
+ document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});
+ document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder)});
+ document.querySelectorAll('.langSwitch button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
+}
+function setLanguage(next){
+ lang=next;try{localStorage.setItem('lang',lang)}catch(e){}
+ applyLanguage();
+ // Texts that are built in code: refresh them in the new language.
+ if(typeof updateDimensions==='function')updateDimensions();
+ if(typeof positionFlashbook==='function'&&typeof flashTrack!=='undefined'){const empty=flashTrack.querySelector('.flashEmpty');if(empty)empty.textContent=t('flash.empty');positionFlashbook()}
+ updatePlacementHint();edgeHint.dataset.dir='';
+}
 let flipHorizontal=false,flipVertical=false;
 let initialView=null,focusGoal=null;
 let regionBox=null;
@@ -376,7 +426,7 @@ function orbitDuringTattooDrag(dt){
  if(!dragging||!dragClient||!anchor)return;
  const speed=edgeVelocity(dragClient.clientX);edgeSpeed=speed;
  // Keep the last text while fading out, so the pill does not collapse; the chevron shows the direction.
- if(Math.abs(speed)>0.001){const dir=speed<0?'left':'right';if(edgeHint.dataset.dir!==dir){edgeHint.dataset.dir=dir;edgeHint.innerHTML=dir==='left'?ROTATE_ICON_LEFT+'<span>KEEP HOLDING</span>':'<span>KEEP HOLDING</span>'+ROTATE_ICON_RIGHT}}
+ if(Math.abs(speed)>0.001){const dir=speed<0?'left':'right';if(edgeHint.dataset.dir!==dir){edgeHint.dataset.dir=dir;edgeHint.innerHTML=dir==='left'?ROTATE_ICON_LEFT+'<span>'+t('hint.keep')+'</span>':'<span>'+t('hint.keep')+'</span>'+ROTATE_ICON_RIGHT}}
  edgeHint.style.opacity=Math.abs(speed)>0.001?"1":"0";
  if(Math.abs(speed)<0.001)return;
  // Rotate the camera around its current orbit target; keep the body stationary.
@@ -816,7 +866,7 @@ $('upload').addEventListener('change',()=>{const file=$('upload').files[0];if(!f
    if(anchor)wrap();URL.revokeObjectURL(url)
  };img.onerror=()=>{URL.revokeObjectURL(url);status('Could not load PNG')};img.src=url;
 });
-function updateDimensions(){const cm=Number($('size').value);$('sizeValue').textContent=cm+' cm';$('sizeCm').value=cm;$('dimensions').textContent=`Estimated height: ${(cm/imgAspect).toFixed(1)} cm`;}
+function updateDimensions(){const cm=Number($('size').value);$('sizeValue').textContent=numShort(cm)+' cm';$('sizeCm').value=cm;$('dimensions').textContent=t('panel.height',{v:num(cm/imgAspect)});}
 $('size').addEventListener('input',()=>{updateDimensions();if(anchor&&tex)wrap(true)});
 $('sizeCm').addEventListener('change',()=>{const n=Math.min(65,Math.max(2,Number($('sizeCm').value)||18));$('size').value=n;updateDimensions();if(anchor&&tex)wrap(false)});
 $('rotation').addEventListener('input',()=>{$('rotationValue').textContent=$('rotation').value+'°';$('rotationDeg').value=$('rotation').value;if(anchor&&tex)wrap(true)});
@@ -949,8 +999,8 @@ $('confirmPlacement').onclick=async()=>{
   bookingPNG=captureFocusShot(CARD_W,CARD_IMAGE_H);
   $('bookingScreenshot').src=bookingPNG;
   const w=Number($('size').value);
-  $('bookingSize').textContent=`${w.toFixed(1)} × ${(w/imgAspect).toFixed(1)} cm`;
-  $('bookingFlash').textContent=selectedDesignNumber?flashLabel(selectedDesignNumber):'Own upload';
+  $('bookingSize').textContent=`${num(w)} × ${num(w/imgAspect)} cm`;
+  $('bookingFlash').textContent=selectedDesignNumber?flashLabel(selectedDesignNumber):t('booking.own');
   setSuggestedRegion();
   $('shareMessage').textContent='';bookingOverlay.hidden=false;
  }catch(err){console.error(err);status('Could not capture the preview on this device.');}
@@ -972,9 +1022,9 @@ async function createBookingCard(){
  if(!bookingPNG)throw Error('No screenshot available');
  const preview=await loadPreview(bookingPNG);
  const W=CARD_W,H=CARD_H,margin=64,col2=W/2+16;
- const budget=$('bookingBudget').value||'Flexible / not sure';
+ const budget=selectedText($('bookingBudget'));
  const flash=$('bookingFlash').textContent.trim();
- const region=$('bookingRegionSelect').value;
+ const region=selectedText($('bookingRegionSelect'));
  const note=$('bookingNote').value.trim();
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
@@ -985,14 +1035,14 @@ async function createBookingCard(){
  const label=(t,x,y)=>{ctx.fillStyle='#696a77';ctx.font='28px system-ui,Arial,sans-serif';ctx.fillText(t,x,y)};
  const value=(t,x,y)=>{ctx.fillStyle='#17181b';ctx.font='bold 38px system-ui,Arial,sans-serif';ctx.fillText(t,x,y)};
  let y=CARD_TOP+CARD_IMAGE_H+72;
- label('FLASH',margin,y);label('APPROXIMATE SIZE',col2,y);value(flash,margin,y+48);value($('bookingSize').textContent,col2,y+48);
+ label(t('card.flash'),margin,y);label(t('card.size'),col2,y);value(flash,margin,y+48);value($('bookingSize').textContent,col2,y+48);
  y+=120;
- label('PLACEMENT',margin,y);label('MAXIMUM BUDGET',col2,y);value(region,margin,y+48);value(budget,col2,y+48);
+ label(t('card.placement'),margin,y);label(t('card.budget'),col2,y);value(region,margin,y+48);value(budget,col2,y+48);
  y+=120;
- label('FOR ARTIST',margin,y);value('@'+ARTIST_INSTAGRAM,margin,y+48);
+ label(t('card.artist'),margin,y);value('@'+ARTIST_INSTAGRAM,margin,y+48);
  if(note){
   // Message only if the customer typed one; shortened with … if it does not fit.
-  y+=120;label('MESSAGE TO ARTIST',margin,y);
+  y+=120;label(t('card.message'),margin,y);
   ctx.fillStyle='#17181b';ctx.font='34px system-ui,Arial,sans-serif';
   const lineH=46,maxLines=Math.max(1,Math.floor((H-40-(y+52))/lineH)+1),inner=W-2*margin,lines=[];let line='';
   for(const word of note.split(/\s+/)){const next=line?line+' '+word:word;if(ctx.measureText(next).width>inner&&line){lines.push(line);line=word}else line=next}
@@ -1009,7 +1059,7 @@ async function bookingFile(){
 }
 $('downloadBooking').onclick=async()=>{
  let file;
- try{file=await bookingFile()}catch(err){console.error(err);$('shareMessage').textContent='Could not create the image.';return}
+ try{file=await bookingFile()}catch(err){console.error(err);$('shareMessage').textContent=t('card.error');return}
  // Share sheet (needs https): on an iPhone it offers "Save Image", which saves to Photos.
  if(navigator.canShare&&navigator.canShare({files:[file]})){
   try{await navigator.share({files:[file],title:'Tattoo placement'});return}
@@ -1017,22 +1067,22 @@ $('downloadBooking').onclick=async()=>{
  }
  downloadBlob(file,file.name);
 };
+const selectedText=sel=>sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:'';
 function bookingMessageText(){
  const size=$('bookingSize').textContent.trim();
  const flash=$('bookingFlash').textContent.trim();
- const region=$('bookingRegionSelect').value;
- const budget=$('bookingBudget').value||'Flexible / not sure';
+ const region=selectedText($('bookingRegionSelect')),budget=selectedText($('bookingBudget'));
  const note=$('bookingNote').value.trim();
- return `NEW TATTOO BOOKING REQUEST
+ return `${t('msg.title')}
 
-Hi @${ARTIST_INSTAGRAM}! I'd like to book a tattoo.
+${t('msg.hi',{a:ARTIST_INSTAGRAM})}
 
-Flash: ${flash}
-Placement: ${region}
-Approximate size: ${size}
-Maximum budget: ${budget}`+(note?`
+${t('msg.flash')}: ${flash}
+${t('msg.placement')}: ${region}
+${t('msg.size')}: ${size}
+${t('msg.budget')}: ${budget}`+(note?`
 
-Message:
+${t('msg.message')}:
 ${note}`:'')+'\n';
 }
 // "Send via Instagram": copy the booking text, then the link opens the chat with the artist
@@ -1137,7 +1187,7 @@ async function buildFlashbook(){
  flashTrack.innerHTML='';flashPage=0;
  if(!flashPages.length){
   const page=document.createElement('section');page.className='flashPage';
-  page.innerHTML='<div class="flashEmpty">No flashes yet</div>';flashTrack.appendChild(page);
+  page.innerHTML='<div class="flashEmpty"></div>';page.firstChild.textContent=t('flash.empty');flashTrack.appendChild(page);
  }
  flashPages.forEach((items,i)=>{
   const page=document.createElement('section');page.className='flashPage';page.setAttribute('aria-label',`Flashbook page ${i+1}`);
@@ -1161,7 +1211,7 @@ function positionFlashbook(){
  const shift=flashViewport.clientWidth/2-(target.offsetLeft+target.offsetWidth/2);
  flashTrack.style.transform=`translateX(${shift}px)`;
  const count=Math.max(1,flashPages.length);
- $('flashCount').textContent=`Page ${Math.min(flashPage+1,count)} of ${count}`;
+ $('flashCount').textContent=t('flash.page',{n:Math.min(flashPage+1,count),m:count});
  $('flashPrev').disabled=flashPages.length<2;$('flashNext').disabled=flashPages.length<2;
  loadNearbyPages();
 }
@@ -1205,6 +1255,8 @@ async function openFlashDesign(design,designNumber){
 }
 $('viewerBack').onclick=()=>{requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
 buildFlashbook();
+document.querySelectorAll('.langSwitch button').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.lang)));
+applyLanguage();updateDimensions();
 
 function render(){requestAnimationFrame(render);
  const now=performance.now(),dt=Math.min(.05,(now-edgeClock)/1000);edgeClock=now;
