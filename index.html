@@ -395,13 +395,18 @@ function orbitDuringTattooDrag(dt){
 function moveCameraTo(position,target){focusGoal={position:position.clone(),target:target.clone()};}
 function focusTattoo(){if(!tattoo||!anchor)return;
  const box=new THREE.Box3().setFromObject(tattoo);if(box.isEmpty())return;
- const center=box.getCenter(new THREE.Vector3()),extent=box.getSize(new THREE.Vector3());
+ const center=box.getCenter(new THREE.Vector3());
  const n=anchor.normal.clone().normalize();
- // Frame approximately half the body vertically, but fit very large tattoos too.
- const verticalFov=THREE.MathUtils.degToRad(camera.fov);
- const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
- const d=Math.max(bodyHeight*.50/(2*Math.tan(verticalFov/2)),
-   extent.length()*1.20/(2*Math.tan(Math.min(verticalFov,horizontalFov)/2)),bodyHeight*.11);
+ // The artwork fills about two thirds of the frame width (or 60 % of its height), but at least ~24 %
+ // of the body height (~40 cm) stays visible so the customer still sees where on the body it sits.
+ const vf=THREE.MathUtils.degToRad(camera.fov),hf=2*Math.atan(Math.tan(vf/2)*camera.aspect);
+ // Size as seen from the camera (a large tattoo wrapping around the body looks narrower than its
+ // unrolled width), measured on the tattoo surface along the view's right/up directions.
+ const pos=tattoo.geometry.getAttribute('position'),bx=anchor.basis.x,by=anchor.basis.y,p=new THREE.Vector3();
+ let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+ for(let i=0;i<pos.count;i++){p.fromBufferAttribute(pos,i).sub(center);const px=p.dot(bx),py=p.dot(by);if(px<x0)x0=px;if(px>x1)x1=px;if(py<y0)y0=py;if(py>y1)y1=py}
+ const wr=x1-x0,hr=y1-y0;
+ const d=Math.max(wr/.64/(2*Math.tan(hf/2)),hr/.6/(2*Math.tan(vf/2)),bodyHeight*.24/(2*Math.tan(vf/2)));
  moveCameraTo(center.clone().addScaledVector(n,d),center);
 }
 // Camera mode highlight reflects the last explicitly selected view.
@@ -917,6 +922,19 @@ function setSuggestedRegion(){
  if(!match)match=bookingRegions.find(v=>raw.toLowerCase().includes(v.toLowerCase())||v.toLowerCase().includes(raw.toLowerCase()));
  select.value=match||'Other / not sure';
 }
+// Saved booking image: iPhone full-screen format; the focused placement fills 70 % of it.
+const CARD_W=1170,CARD_H=2532,CARD_TOP=120,CARD_IMAGE_H=Math.round(CARD_H*.70);
+// Render the focused tattoo once at the image's own size (the phone screen alone is too small).
+function captureFocusShot(w,h){
+ const size=renderer.getSize(new THREE.Vector2()),ratio=renderer.getPixelRatio(),aspect=camera.aspect;
+ renderer.setPixelRatio(1);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+ focusTattoo();if(focusGoal){camera.position.copy(focusGoal.position);controls.target.copy(focusGoal.target);focusGoal=null}
+ camera.lookAt(controls.target);renderer.render(scene,camera);
+ const url=renderer.domElement.toDataURL('image/png');
+ renderer.setPixelRatio(ratio);renderer.setSize(size.x,size.y,false);camera.aspect=aspect;camera.updateProjectionMatrix();
+ controls.update();renderer.render(scene,camera);
+ return url;
+}
 $('confirmPlacement').onclick=async()=>{
  if(!anchor||!tex||!tattoo)return;
  $('confirmPlacement').disabled=true;
@@ -927,7 +945,7 @@ $('confirmPlacement').onclick=async()=>{
  while((arapJob||uvBlend)&&performance.now()-start<5000){await new Promise(resolve=>requestAnimationFrame(resolve));}
  controls.update();renderer.render(scene,camera);
  try {
-  bookingPNG=renderer.domElement.toDataURL('image/png');
+  bookingPNG=captureFocusShot(CARD_W,CARD_IMAGE_H);
   $('bookingScreenshot').src=bookingPNG;
   const w=Number($('size').value);
   $('bookingSize').textContent=`${w.toFixed(1)} × ${(w/imgAspect).toFixed(1)} cm`;
@@ -952,39 +970,35 @@ function loadPreview(src){return new Promise((resolve,reject)=>{const img=new Im
 async function createBookingCard(){
  if(!bookingPNG)throw Error('No screenshot available');
  const preview=await loadPreview(bookingPNG);
- const W=900,margin=56,inner=W-2*margin;
+ const W=CARD_W,H=CARD_H,margin=64,col2=W/2+16;
  const budget=$('bookingBudget').value||'Flexible / not sure';
  const flash=$('bookingFlash').textContent.trim();
  const region=$('bookingRegionSelect').value;
  const note=$('bookingNote').value.trim();
- const artist=ARTIST_INSTAGRAM;
- // Measure the customer's message (if any) before sizing the canvas so nothing is cut off.
- let lines=0;
- if(note){const scratch=document.createElement('canvas').getContext('2d');scratch.font='28px system-ui,Arial,sans-serif';
-  let line='';lines=1;for(const word of note.split(/\s+/)){const next=line?line+' '+word:word;if(scratch.measureText(next).width>inner&&line){lines++;line=word}else line=next}
-  lines=Math.min(lines,18)}
- const messageY=909,H=note?messageY+44+(lines-1)*40+44:messageY+21;
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#17181b';ctx.font='bold 36px system-ui,Arial,sans-serif';ctx.fillText('NEW BOOKING REQUEST',margin,82);
- const imageY=112,imageH=490;
- ctx.fillStyle='#292a2e';ctx.fillRect(margin,imageY,inner,imageH);
- const scale=Math.min(inner/preview.width,imageH/preview.height);
- const dw=preview.width*scale,dh=preview.height*scale;
- ctx.drawImage(preview,margin+(inner-dw)/2,imageY+(imageH-dh)/2,dw,dh);
- let y=650;
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('APPROXIMATE SIZE',margin,y);ctx.fillText('PLACEMENT',480,y);
- ctx.fillStyle='#17181b';ctx.font='bold 29px system-ui,Arial,sans-serif';ctx.fillText($('bookingSize').textContent,margin,y+39);
- drawWrapped(ctx,region,480,y+39,350,35,2);
- y+=96;
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MAXIMUM BUDGET',margin,y);ctx.fillText('FLASH',480,y);
- ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(budget,margin,y+39);ctx.fillText(flash,480,y+39);
- y+=98;
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('FOR ARTIST',margin,y);ctx.fillStyle='#17181b';ctx.font='bold 26px system-ui,Arial,sans-serif';ctx.fillText('@'+artist,margin,y+36);
+ ctx.fillStyle='#17181b';ctx.font='bold 46px system-ui,Arial,sans-serif';ctx.fillText('NEW BOOKING REQUEST',margin,82);
+ // Focused placement: full width, 70 % of the image height.
+ ctx.fillStyle='#292a2e';ctx.fillRect(0,CARD_TOP,W,CARD_IMAGE_H);
+ const scale=Math.min(W/preview.width,CARD_IMAGE_H/preview.height),dw=preview.width*scale,dh=preview.height*scale;
+ ctx.drawImage(preview,(W-dw)/2,CARD_TOP+(CARD_IMAGE_H-dh)/2,dw,dh);
+ const label=(t,x,y)=>{ctx.fillStyle='#696a77';ctx.font='28px system-ui,Arial,sans-serif';ctx.fillText(t,x,y)};
+ const value=(t,x,y)=>{ctx.fillStyle='#17181b';ctx.font='bold 38px system-ui,Arial,sans-serif';ctx.fillText(t,x,y)};
+ let y=CARD_TOP+CARD_IMAGE_H+72;
+ label('FLASH',margin,y);label('APPROXIMATE SIZE',col2,y);value(flash,margin,y+48);value($('bookingSize').textContent,col2,y+48);
+ y+=120;
+ label('PLACEMENT',margin,y);label('MAXIMUM BUDGET',col2,y);value(region,margin,y+48);value(budget,col2,y+48);
+ y+=120;
+ label('FOR ARTIST',margin,y);value('@'+ARTIST_INSTAGRAM,margin,y+48);
  if(note){
-  ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MESSAGE TO ARTIST',margin,messageY);
-  ctx.fillStyle='#17181b';ctx.font='28px system-ui,Arial,sans-serif';
-  drawWrapped(ctx,note,margin,messageY+44,inner,40,18);
+  // Message only if the customer typed one; shortened with … if it does not fit.
+  y+=120;label('MESSAGE TO ARTIST',margin,y);
+  ctx.fillStyle='#17181b';ctx.font='34px system-ui,Arial,sans-serif';
+  const lineH=46,maxLines=Math.max(1,Math.floor((H-40-(y+52))/lineH)+1),inner=W-2*margin,lines=[];let line='';
+  for(const word of note.split(/\s+/)){const next=line?line+' '+word:word;if(ctx.measureText(next).width>inner&&line){lines.push(line);line=word}else line=next}
+  if(line)lines.push(line);
+  if(lines.length>maxLines){lines.length=maxLines;let last=lines[maxLines-1];while(last&&ctx.measureText(last+'…').width>inner)last=last.slice(0,-1);lines[maxLines-1]=last.replace(/\s+$/,'')+'…'}
+  lines.forEach((l,i)=>ctx.fillText(l,margin,y+52+i*lineH));
  }
  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('PNG export failed')),'image/png'));
 }
