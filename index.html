@@ -922,8 +922,9 @@ function setSuggestedRegion(){
  if(!match)match=bookingRegions.find(v=>raw.toLowerCase().includes(v.toLowerCase())||v.toLowerCase().includes(raw.toLowerCase()));
  select.value=match||'Other / not sure';
 }
-// Saved booking image: iPhone full-screen format; the focused placement fills 70 % of it.
-const CARD_W=1170,CARD_H=2532,CARD_TOP=120,CARD_IMAGE_H=Math.round(CARD_H*.70);
+// Saved booking image: iPhone full-screen format; the focused placement fills 67 % of it. The white
+// band on top keeps the picture clear of the iPhone's camera cut-out when viewed full screen.
+const CARD_W=1170,CARD_H=2532,CARD_TOP=Math.round(CARD_H*.055),CARD_IMAGE_H=Math.round(CARD_H*.67);
 // Render the focused tattoo once at the image's own size (the phone screen alone is too small).
 function captureFocusShot(w,h){
  const size=renderer.getSize(new THREE.Vector2()),ratio=renderer.getPixelRatio(),aspect=camera.aspect;
@@ -977,8 +978,7 @@ async function createBookingCard(){
  const note=$('bookingNote').value.trim();
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#17181b';ctx.font='bold 46px system-ui,Arial,sans-serif';ctx.fillText('NEW BOOKING REQUEST',margin,82);
- // Focused placement: full width, 70 % of the image height.
+ // Focused placement: full width, 67 % of the image height.
  ctx.fillStyle='#292a2e';ctx.fillRect(0,CARD_TOP,W,CARD_IMAGE_H);
  const scale=Math.min(W/preview.width,CARD_IMAGE_H/preview.height),dw=preview.width*scale,dh=preview.height*scale;
  ctx.drawImage(preview,(W-dw)/2,CARD_TOP+(CARD_IMAGE_H-dh)/2,dw,dh);
