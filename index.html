@@ -990,7 +990,8 @@ async function createBookingCard(){
 }
 async function bookingFile(){
  const blob=await createBookingCard();
- return new File([blob],'placeyourtattoo-booking.png',{type:'image/png'});
+ const no=String(selectedDesignNumber||0).padStart(3,'0');
+ return new File([blob],`${ARTIST_INSTAGRAM}-flash-${no}.png`,{type:'image/png'});
 }
 $('downloadBooking').onclick=async()=>{
  let file;
@@ -1041,11 +1042,19 @@ function copyText(text){
  }catch(err){}
  return ok;
 }
-$('sendInstagram').addEventListener('click',e=>{
- // One tap: copy the request, then the link opens the chat with the artist. The button label
- // tells the customer the only thing left to do there: paste and send.
- const message=bookingMessageText();
- if(!copyText(message)){e.preventDefault();window.prompt('Copy your booking request, then paste it in the Instagram chat:',message);window.open($('sendInstagram').href,'_blank')}
+$('sendInstagram').addEventListener('click',async e=>{
+ // One tap. Safari cancels a clipboard write when Instagram takes over too quickly, so wait until
+ // the copy is confirmed (a few milliseconds), then open the chat with the artist.
+ e.preventDefault();
+ const url=$('sendInstagram').href,message=bookingMessageText();
+ let copied=false;
+ if(navigator.clipboard&&window.isSecureContext){
+  try{await Promise.race([navigator.clipboard.writeText(message),new Promise((_,reject)=>setTimeout(()=>reject(Error('timeout')),1200))]);copied=true}
+  catch(err){console.warn('Clipboard write failed',err)}
+ }
+ if(!copied)copied=copyText(message);
+ if(!copied)window.prompt('Copy your booking request, then paste it in the Instagram chat:',message);
+ if(!window.open(url,'_blank'))location.href=url;
 });
 
 // Flashbook. The flashes folder holds the artwork PNGs, named by number: 01.png (one field),
