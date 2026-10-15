@@ -187,6 +187,39 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 .bodyModelChoice{font-family:Arial,sans-serif;font-weight:650}
 /* Slider values (size, rotation) in the button type (Arial, 650). */
 .value{font-family:Arial,sans-serif;font-weight:650}
+.flashEmpty{margin:auto;font:600 14px Arial,sans-serif;letter-spacing:.08em;color:#797269;text-transform:uppercase}
+.viewerActions{top:calc(8px + env(safe-area-inset-top));right:8px}
+#viewerBack{min-height:35px}
+/* V15 — slim booking dialog */
+#closeBooking{background:#24272de8;border:1px solid #697384;color:#e3edff;border-radius:9px;padding:7px 12px;font:650 13px Arial,sans-serif;line-height:1;transition:background .15s,border-color .15s}
+#closeBooking:active,#closeBooking:focus-visible{background:rgba(91,135,232,.19);border-color:rgba(144,178,255,.75);outline:0}
+#bookingOverlay .bookingActions{flex-direction:column;gap:8px;margin-top:12px}
+#bookingOverlay .bookingSend{display:flex;align-items:center;justify-content:center;gap:8px;background:#b7d0ff;color:#141b28;border-radius:9px;padding:13px;font:700 13px Arial,sans-serif;text-decoration:none}
+#bookingOverlay .bookingSend:active{background:#9fbcf5}
+#bookingOverlay .bookingActions button#downloadBooking{background:#24272de8!important;color:#e3edff!important;border:1px solid #697384;border-radius:9px;padding:11px;font:650 12px Arial,sans-serif}
+#bookingOverlay .bookingActions button#downloadBooking:active{background:rgba(91,135,232,.19)!important;border-color:rgba(144,178,255,.75)}
+#bookingOverlay .bookingApprox{margin:6px 0 0}
+#bookingOverlay .bookingDialog label{margin:9px 0 4px}
+#bookingOverlay .bookingDialog textarea{resize:none}
+#bookingOverlay .sendHint{margin:10px 0 0;padding:9px 11px;border-radius:9px;background:rgba(91,135,232,.16);border:1px solid rgba(144,178,255,.55);color:#e3edff;font:12px/1.45 Arial,sans-serif}
+#bookingOverlay .sendHint[hidden]{display:none}
+#bookingOverlay .sendHint{display:flex;align-items:center;gap:7px;padding:6px 9px;margin-top:8px;font-size:11px;line-height:1.3}
+#bookingOverlay .sendCheck{flex:none;display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#31bd7c;color:#102e21;font:900 12px Arial,sans-serif}
+#bookingOverlay{padding:8px 14px}
+#bookingOverlay .bookingDialog{padding:12px 15px 14px;max-height:calc(100dvh - 16px)}
+#bookingOverlay .bookingTop{margin-bottom:8px}
+#closeBooking{padding:6px 11px}
+#bookingOverlay .bookingDialog img{max-height:16dvh}
+#bookingOverlay .bookingDetails{margin-top:5px}
+#bookingOverlay .bookingDialog label{margin:7px 0 3px}
+#bookingOverlay .bookingDialog select{padding:7px 10px}
+#bookingOverlay .bookingDialog textarea{padding:7px 10px}
+#bookingOverlay .bookingActions{margin-top:9px;gap:7px}
+#bookingOverlay .bookingSend{padding:11px}
+#bookingOverlay .bookingActions button#downloadBooking{padding:9px}
+#shareMessage:empty{display:none}
+#bookingOverlay .bookingDialog img{max-height:21dvh}
+#shareMessage{font-size:12px;color:#cfe0ff;min-height:1em}
 /* V14 — compact panel: no inherited label margins on the body chips, estimated height right-aligned
    under the width value, tighter rows, and Confirm Placement fades while it covers controls. */
 .bodyModelChoice{margin:0}
@@ -229,6 +262,7 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
  <div class="bookingDialog">
   <div class="bookingTop"><strong>New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close">✕</button></div>
   <img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
+  <div class="bookingDetails"><span>Flash</span><strong id="bookingFlash"></strong></div>
   <div class="bookingDetails"><span>Approximate size</span><strong id="bookingSize"></strong></div>
   <label for="bookingRegionSelect">Placement (suggested, editable)</label>
   <select id="bookingRegionSelect">
@@ -240,22 +274,11 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
    <option value="Thigh">Thigh</option><option value="Calf">Calf</option><option value="Foot">Foot</option>
    <option value="Neck">Neck</option><option value="Other / not sure">Other / not sure</option>
   </select>
-  <label for="bookingGender">Gender (optional)</label>
-  <select id="bookingGender"><option value="">Prefer not to say</option><option>Female</option><option>Male</option><option>Non-binary</option><option>Self-described / other</option></select>
-  <label for="bookingLanguage">Preferred language / Bevorzugte Sprache</label>
-  <select id="bookingLanguage"><option value="English">English</option><option value="Deutsch">Deutsch</option></select>
   <label for="bookingBudget">Maximum budget</label>
   <select id="bookingBudget"><option value="">Flexible / not sure</option><option>Under €200</option><option>€200–300</option><option>€300–500</option><option>€500–800</option><option>€800–1,200</option><option>€1,200+</option></select>
-  <p class="bookingApprox">Placement and size are approximate and may differ on your body.</p>
   <label for="bookingNote">Message to artist (optional)</label>
-  <textarea id="bookingNote" rows="3" maxlength="800" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
-  <div class="artistRecipient">
-    <div><span class="artistRecipientLabel">YOUR ARTIST</span><strong id="bookingArtist">@craykrow</strong></div>
-    <button id="copyArtist" type="button">Copy username</button>
-  </div>
-  <p class="shareInstructions"><strong>How to send:</strong><br>1. Tap <strong>Copy Booking Message</strong>.<br>2. Return to the artist's Instagram profile (<strong>@craykrow</strong>), open a message and paste your booking request.<br>3. Tap <strong>Save PNG</strong> to keep your tattoo placement. Your artist may ask you to send it after accepting your message request.</p>
-  <div class="bookingActions"><button id="copyBookingMessage" type="button">Copy Booking Message</button><button id="downloadBooking" type="button">Save PNG</button></div>
-  <p class="shareInstructions"><strong>Save your tattoo placement for later.</strong> You can send the saved PNG after the artist accepts your Instagram message request.</p>
+  <textarea id="bookingNote" rows="2" maxlength="800" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
+  <div class="bookingActions"><a id="sendInstagram" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01"/></svg><span id="sendInstagramLabel">Send via Instagram &amp; paste message</span></a><button id="downloadBooking" type="button">Save Image</button></div>
   <p id="shareMessage" role="status" style="margin:8px 0 0"></p>
  </div>
 </div>
@@ -754,11 +777,22 @@ function wrap(preview=false){
 function cropArtwork(img){
  const cv=document.createElement('canvas');cv.width=img.naturalWidth;cv.height=img.naturalHeight;
  const ctx=cv.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
- const pixels=ctx.getImageData(0,0,cv.width,cv.height).data;
- let minX=cv.width,minY=cv.height,maxX=-1,maxY=-1;
- for(let y=0;y<cv.height;y++)for(let x=0;x<cv.width;x++){
-   if(pixels[(y*cv.width+x)*4+3]>12){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}
- }
+ const pixels=ctx.getImageData(0,0,cv.width,cv.height).data,W=cv.width,H=cv.height;
+ // Tiny detached specks (stray pencil/eraser crumbs) must not stretch the frame: they would shift
+ // the motif's centre and inflate the measured width. Group ink on a coarse grid, ignore groups of
+ // only a few pixels for the bounds (nothing is erased; same rule as the thumbnail script).
+ const b=Math.max(1,Math.ceil(Math.max(W,H)/256)),gw=Math.ceil(W/b),gh=Math.ceil(H/b),ink=new Int32Array(gw*gh);let total=0;
+ for(let y=0;y<H;y++){const grow=((y/b)|0)*gw;for(let x=0;x<W;x++)if(pixels[(y*W+x)*4+3]>12){ink[grow+((x/b)|0)]++;total++}}
+ if(!total)return cv;
+ const speck=Math.min(Math.max(8,W*H*5e-6),Math.max(1,total/2000)),keep=new Uint8Array(gw*gh),seen=new Uint8Array(gw*gh);
+ for(let i=0;i<ink.length;i++){if(!ink[i]||seen[i])continue;
+   const stack=[i],members=[];let size=0;seen[i]=1;
+   while(stack.length){const c=stack.pop();members.push(c);size+=ink[c];const cx=c%gw,cy=(c/gw)|0;
+     for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=cx+dx,ny=cy+dy;if(nx<0||ny<0||nx>=gw||ny>=gh)continue;const n=ny*gw+nx;if(ink[n]&&!seen[n]){seen[n]=1;stack.push(n)}}}
+   if(size>=speck)for(const m of members)keep[m]=1}
+ let minX=W,minY=H,maxX=-1,maxY=-1;
+ for(let y=0;y<H;y++){const grow=((y/b)|0)*gw;for(let x=0;x<W;x++){
+   if(pixels[(y*W+x)*4+3]>12&&keep[grow+((x/b)|0)]){if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y}}}
  if(maxX<0)return cv;
  // Small safety margin to keep anti-aliased edges intact.
  const pad=Math.max(2,Math.round(Math.max(maxX-minX,maxY-minY)*.015));
@@ -770,7 +804,7 @@ function cropArtwork(img){
 }
 $('upload').addEventListener('change',()=>{const file=$('upload').files[0];if(!file)return;
  const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{
-   selectedFlashReady=false;$('placeCoach').hidden=true;const cropped=cropArtwork(img);imgAspect=cropped.width/cropped.height;
+   selectedFlashReady=false;$('placeCoach').hidden=true;const cropped=cropArtwork(img);artAlpha=makeArtAlpha(cropped);imgAspect=cropped.width/cropped.height;
    updateDimensions();$('preview').src=cropped.toDataURL('image/png');
    if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
    status('PNG ready. Click or tap on the body to place your tattoo.');updatePlacementHint();
@@ -795,14 +829,32 @@ function moveAnchor(e,preview){const hit=hitBody(e);if(!hit)return false;const n
  // The rotation slider remains the only source of deliberate artwork rotation.
  const basis=tangentBasis(newNormal);
  if(!anchor)anchor={};anchor.basis=basis;anchor.point=hit.point.clone();anchor.normal=newNormal;anchor.object=hit.object;anchor.faceIndex=hit.faceIndex;wrap(preview);updatePlacementHint();updateRegion();return true}
-// Grab anywhere on the artwork rectangle, exactly as large as it appears on screen. A finger is
-// less precise than a mouse, so touches within a few screen pixels of the edge also count; the
-// tolerance is in pixels and therefore identical at every zoom level.
+// Grab only where the artwork actually has ink. Transparent areas (inside an oval, between
+// wings) rotate the body instead. A finger gets a few pixels of slack around fine lines.
+let artAlpha=null;
+function makeArtAlpha(canvas){
+ // Low-resolution copy of the artwork's alpha channel (longest side 512 px) for hit tests.
+ const s=Math.min(1,512/Math.max(canvas.width,canvas.height)),w=Math.max(1,Math.round(canvas.width*s)),h=Math.max(1,Math.round(canvas.height*s));
+ const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(canvas,0,0,w,h);
+ const d=ctx.getImageData(0,0,w,h).data,a=new Uint8Array(w*h);for(let i=0;i<a.length;i++)a[i]=d[i*4+3];
+ return {w,h,a};
+}
+function inkAt(uv){
+ if(!artAlpha||!uv||uv.x<0||uv.x>1||uv.y<0||uv.y>1)return false;
+ const x=Math.min(artAlpha.w-1,Math.floor(uv.x*artAlpha.w)),y=Math.min(artAlpha.h-1,Math.floor((1-uv.y)*artAlpha.h));
+ return artAlpha.a[y*artAlpha.w+x]>40;
+}
 function canGrabTattoo(e){
  if(!anchor||!tattoo)return false;
- if(hitTattoo(e))return true;
- const tol=e.pointerType==='touch'?16:6;
- for(let k=0;k<8;k++){const a=k*Math.PI/4;if(hitTattoo({clientX:e.clientX+Math.cos(a)*tol,clientY:e.clientY+Math.sin(a)*tol}))return true}
+ const tol=e.pointerType==='touch'?10:4,points=[[0,0]];
+ for(const r of [tol/2,tol])for(let k=0;k<8;k++){const a=k*Math.PI/4;points.push([Math.cos(a)*r,Math.sin(a)*r])}
+ for(const [dx,dy] of points){
+  mouseRay({clientX:e.clientX+dx,clientY:e.clientY+dy});
+  const t=ray.intersectObject(tattoo,false)[0];if(!t||!inkAt(t.uv))continue;
+  // Ink under the finger: make sure it is not on the far side of the body.
+  const b=ray.intersectObjects(meshes,false)[0];
+  if(!b||t.distance<=b.distance+bodyHeight*.01)return true;
+ }
  return false;
 }
 let press=null;
@@ -853,16 +905,6 @@ function updateConfirmOverlay(){const covers=panel.scrollHeight-panel.clientHeig
 panel.addEventListener('scroll',updateConfirmOverlay,{passive:true});window.addEventListener('resize',updateConfirmOverlay);
 requestAnimationFrame(updateConfirmOverlay);
 const bookingOverlay=$('bookingOverlay');
-$('copyArtist').onclick=async()=>{
- const username='@craykrow';
- try {
-  await navigator.clipboard.writeText(username);
-  $('shareMessage').textContent='Copied @craykrow — paste it into Instagram recipient search.';
- } catch(err) {
-  // Selectable prompt fallback for browsers where clipboard access is blocked.
-  window.prompt('Copy artist username:',username);
- }
-};
 $('closeBooking').onclick=()=>{bookingOverlay.hidden=true};
 bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)bookingOverlay.hidden=true});
 window.addEventListener('keydown',e=>{if(e.key==='Escape')bookingOverlay.hidden=true});
@@ -889,6 +931,7 @@ $('confirmPlacement').onclick=async()=>{
   $('bookingScreenshot').src=bookingPNG;
   const w=Number($('size').value);
   $('bookingSize').textContent=`${w.toFixed(1)} × ${(w/imgAspect).toFixed(1)} cm`;
+  $('bookingFlash').textContent=selectedDesignNumber?flashLabel(selectedDesignNumber):'Own upload';
   setSuggestedRegion();
   $('shareMessage').textContent='';bookingOverlay.hidden=false;
  }catch(err){console.error(err);status('Could not capture the preview on this device.');}
@@ -911,41 +954,38 @@ async function createBookingCard(){
  const preview=await loadPreview(bookingPNG);
  const W=900,margin=56,inner=W-2*margin;
  const budget=$('bookingBudget').value||'Flexible / not sure';
- const gender=$('bookingGender').value||'Not specified';
- const language=$('bookingLanguage').value;
+ const flash=$('bookingFlash').textContent.trim();
  const region=$('bookingRegionSelect').value;
- const note=$('bookingNote').value.trim()||'Hey! I’m interested in this tattoo. Let me know about your availability.';
- const artist='craykrow';
- // Measure message before allocating canvas height so no booking information is cut off.
- const scratch=document.createElement('canvas').getContext('2d');
- scratch.font='28px system-ui,Arial,sans-serif';
- const words=note.split(/\s+/);let lines=1,line='';
- for(const word of words){const next=line?line+' '+word:word;if(scratch.measureText(next).width>inner&&line){lines++;line=word}else line=next}
- const H=1110+Math.max(0,lines-2)*40+(artist?55:0);
+ const note=$('bookingNote').value.trim();
+ const artist=ARTIST_INSTAGRAM;
+ // Measure the customer's message (if any) before sizing the canvas so nothing is cut off.
+ let lines=0;
+ if(note){const scratch=document.createElement('canvas').getContext('2d');scratch.font='28px system-ui,Arial,sans-serif';
+  let line='';lines=1;for(const word of note.split(/\s+/)){const next=line?line+' '+word:word;if(scratch.measureText(next).width>inner&&line){lines++;line=word}else line=next}
+  lines=Math.min(lines,18)}
+ const messageY=909,H=note?messageY+44+(lines-1)*40+44:messageY+21;
  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#17181b';ctx.font='bold 42px system-ui,Arial,sans-serif';ctx.fillText('PLACEYOURTATTOO',margin,85);
- ctx.fillStyle='#5c5c6c';ctx.font='bold 22px system-ui,Arial,sans-serif';ctx.fillText('NEW BOOKING REQUEST',margin,128);
- let imageY=162,imageH=490;
+ ctx.fillStyle='#17181b';ctx.font='bold 36px system-ui,Arial,sans-serif';ctx.fillText('NEW BOOKING REQUEST',margin,82);
+ const imageY=112,imageH=490;
  ctx.fillStyle='#292a2e';ctx.fillRect(margin,imageY,inner,imageH);
  const scale=Math.min(inner/preview.width,imageH/preview.height);
  const dw=preview.width*scale,dh=preview.height*scale;
  ctx.drawImage(preview,margin+(inner-dw)/2,imageY+(imageH-dh)/2,dw,dh);
- let y=700;
+ let y=650;
  ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('APPROXIMATE SIZE',margin,y);ctx.fillText('PLACEMENT',480,y);
  ctx.fillStyle='#17181b';ctx.font='bold 29px system-ui,Arial,sans-serif';ctx.fillText($('bookingSize').textContent,margin,y+39);
  drawWrapped(ctx,region,480,y+39,350,35,2);
  y+=96;
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MAXIMUM BUDGET',margin,y);ctx.fillText('GENDER (OPTIONAL)',480,y);
- ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(budget,margin,y+39);ctx.fillText(gender,480,y+39);
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MAXIMUM BUDGET',margin,y);ctx.fillText('FLASH',480,y);
+ ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(budget,margin,y+39);ctx.fillText(flash,480,y+39);
  y+=98;
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('PREFERRED LANGUAGE',margin,y);
- ctx.fillStyle='#17181b';ctx.font='bold 27px system-ui,Arial,sans-serif';ctx.fillText(language,margin,y+36);
- y+=72;
- if(artist){ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('FOR ARTIST',margin,y);ctx.fillStyle='#17181b';ctx.font='bold 26px system-ui,Arial,sans-serif';ctx.fillText('@'+artist,margin,y+36);y+=65}
- ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MESSAGE TO ARTIST',margin,y);
- ctx.fillStyle='#17181b';ctx.font='28px system-ui,Arial,sans-serif';
- drawWrapped(ctx,note,margin,y+44,inner,40,18);
+ ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('FOR ARTIST',margin,y);ctx.fillStyle='#17181b';ctx.font='bold 26px system-ui,Arial,sans-serif';ctx.fillText('@'+artist,margin,y+36);
+ if(note){
+  ctx.fillStyle='#696a77';ctx.font='22px system-ui,Arial,sans-serif';ctx.fillText('MESSAGE TO ARTIST',margin,messageY);
+  ctx.fillStyle='#17181b';ctx.font='28px system-ui,Arial,sans-serif';
+  drawWrapped(ctx,note,margin,messageY+44,inner,40,18);
+ }
  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('PNG export failed')),'image/png'));
 }
 async function bookingFile(){
@@ -953,83 +993,156 @@ async function bookingFile(){
  return new File([blob],'placeyourtattoo-booking.png',{type:'image/png'});
 }
 $('downloadBooking').onclick=async()=>{
- try{const file=await bookingFile();downloadBlob(file,file.name)}
- catch(err){console.error(err);$('shareMessage').textContent='Could not create booking PNG.'}
+ let file;
+ try{file=await bookingFile()}catch(err){console.error(err);$('shareMessage').textContent='Could not create the image.';return}
+ // Share sheet (needs https): on an iPhone it offers "Save Image", which saves to Photos.
+ if(navigator.canShare&&navigator.canShare({files:[file]})){
+  try{await navigator.share({files:[file],title:'Tattoo placement'});return}
+  catch(err){if(err&&err.name==='AbortError')return}
+ }
+ downloadBlob(file,file.name);
 };
 function bookingMessageText(){
  const size=$('bookingSize').textContent.trim();
+ const flash=$('bookingFlash').textContent.trim();
  const region=$('bookingRegionSelect').value;
  const budget=$('bookingBudget').value||'Flexible / not sure';
- const gender=$('bookingGender').value||'Not specified';
- const language=$('bookingLanguage').value;
- const note=$('bookingNote').value.trim()||"Hey! I'm interested in this tattoo. Let me know about your availability.";
+ const note=$('bookingNote').value.trim();
  return `NEW TATTOO BOOKING REQUEST
 
-Hi @craykrow! I'd like to book a tattoo.
+Hi @${ARTIST_INSTAGRAM}! I'd like to book a tattoo.
 
+Flash: ${flash}
 Placement: ${region}
 Approximate size: ${size}
-Preferred language: ${language}
-Maximum budget: ${budget}
-Gender (optional): ${gender}
+Maximum budget: ${budget}`+(note?`
 
 Message:
-${note}
-
-Placement and size are approximate.
-`;
+${note}`:'')+'\n';
 }
-$('copyBookingMessage').onclick=async()=>{
- const message=bookingMessageText();
+// "Send via Instagram": copy the booking text, then the link opens the chat with the artist
+// (ig.me/m/<name> opens the Instagram app straight in the conversation). Instagram does not let
+// a website prefill the message, so the customer only has to paste and send.
+const ARTIST_INSTAGRAM='craykrow';
+$('sendInstagram').href='https://ig.me/m/'+ARTIST_INSTAGRAM;
+function copyText(text){
+ // On https (the live site) the Clipboard API is started first, synchronously inside the tap, so
+ // Safari grants it before the Instagram tab takes over. The old textarea method is only the
+ // fallback for plain http (local network testing), with the selection steps iOS needs.
+ if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).catch(err=>console.warn('Clipboard write failed',err));return true}
+ let ok=false;
  try{
-  await navigator.clipboard.writeText(message);
-  $('shareMessage').textContent='Booking message copied! Paste it into your Instagram DM to @craykrow.';
- }catch(err){
-  // Allows manual copying if Clipboard API is not available.
-  window.prompt('Copy your booking message:',message);
- }
-};
+  const ta=document.createElement('textarea');ta.value=text;ta.readOnly=false;ta.contentEditable='true';
+  ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px';
+  document.body.appendChild(ta);
+  const range=document.createRange();range.selectNodeContents(ta);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+  ta.focus();ta.setSelectionRange(0,text.length);
+  ok=document.execCommand('copy');ta.blur();ta.remove();sel.removeAllRanges();
+ }catch(err){}
+ return ok;
+}
+$('sendInstagram').addEventListener('click',e=>{
+ // One tap: copy the request, then the link opens the chat with the artist. The button label
+ // tells the customer the only thing left to do there: paste and send.
+ const message=bookingMessageText();
+ if(!copyText(message)){e.preventDefault();window.prompt('Copy your booking request, then paste it in the Instagram chat:',message);window.open($('sendInstagram').href,'_blank')}
+});
 
-// Three-page Flashbook prototype. Replace entries with more transparent PNGs later.
-const FLASH_DESIGNS=[
- {id:'A',src:'./flashes/4.png',thumb:'./flashes/4_thumb.png',name:'Flash A'},
- {id:'B',src:'./flashes/Mario3.png',thumb:'./flashes/Mario3_thumb.png',name:'Flash B'}
-];
-const FLASH_PAGES=[
- [0,1,0,1],
- [1,0,1,0],
- [0,0,1,1]
-];
-let flashPage=0,flashTouchStart=null;
+// Flashbook. The flashes folder holds the artwork PNGs, named by number: 01.png (one field),
+// 01_horizontal.png (a whole row) or 01_vertikal.png (a whole column). The thumbnail script
+// ("Vorschaubilder erstellen.bat") writes flashes/flashes.json with every flash and its shape,
+// plus previews in flashes/thumbs/. Newest first, 2 x 2 fields per page; a flash that does not
+// fit the space left on a page is moved to the next page and the following flashes that do fit
+// fill the gap. The number shown is the file's number and never changes.
+const FLASH_DIR='./flashes/',THUMB_DIR='./flashes/thumbs/';
+const flashLabel=n=>'#'+String(n).padStart(3,'0');
+let flashPages=[],flashPage=0,flashTouchStart=null;
 const flashbook=$('flashbook'),flashTrack=$('flashTrack'),flashViewport=$('flashViewport');
-function buildFlashbook(){
- flashTrack.innerHTML='';
- FLASH_PAGES.forEach((designs,i)=>{
+async function loadFlashList(){
+ try{
+  const r=await fetch(FLASH_DIR+'flashes.json',{cache:'no-store'});
+  if(r.ok){const list=await r.json();
+   return list.map(e=>({number:e.number,shape:e.shape||'single',name:'Flash '+flashLabel(e.number),src:[FLASH_DIR+e.file],thumb:[THUMB_DIR+e.file]}))
+     .sort((a,b)=>b.number-a.number)}
+ }catch(err){console.warn('flashes.json missing or invalid, probing numbered PNGs instead',err)}
+ return probeFlashes();
+}
+// Fallback without flashes.json: plain numbered PNGs (1.png or 001.png …, no gaps), one field each.
+const flashFileNames=n=>[...new Set([String(n).padStart(3,'0')+'.png',String(n).padStart(2,'0')+'.png',n+'.png'])];
+async function flashExists(n){
+ const found=await Promise.all(flashFileNames(n).map(name=>fetch(FLASH_DIR+name,{method:'HEAD',cache:'no-store'}).then(r=>r.ok).catch(()=>false)));
+ return found.some(Boolean);
+}
+async function probeFlashes(){
+ let total=0;
+ if(await flashExists(1)){let lo=1,hi=2;while(hi<=4096&&await flashExists(hi)){lo=hi;hi*=2}while(hi-lo>1){const mid=(lo+hi)>>1;if(await flashExists(mid))lo=mid;else hi=mid}total=lo}
+ const designs=[];
+ for(let n=total;n>=1;n--){const names=flashFileNames(n);designs.push({number:n,shape:'single',name:'Flash '+flashLabel(n),src:names.map(x=>FLASH_DIR+x),thumb:names.map(x=>THUMB_DIR+x)})}
+ return designs;
+}
+// Fill 2 x 2 pages in order. If the next flash does not fit the free fields, the next later flash
+// that does fit is pulled forward; the skipped one opens the following page.
+function findSpot(free,shape){
+ if(shape==='horizontal'){for(let r=0;r<2;r++)if(free[r][0]&&free[r][1])return {row:r,col:0,cells:[[r,0],[r,1]]};return null}
+ if(shape==='vertical'){for(let c=0;c<2;c++)if(free[0][c]&&free[1][c])return {row:0,col:c,cells:[[0,c],[1,c]]};return null}
+ for(let r=0;r<2;r++)for(let c=0;c<2;c++)if(free[r][c])return {row:r,col:c,cells:[[r,c]]};return null;
+}
+function layoutFlashPages(designs){
+ const queue=designs.slice(),pages=[];
+ while(queue.length){
+  const free=[[true,true],[true,true]],items=[];let left=4;
+  for(let i=0;i<queue.length&&left>0;){
+   const spot=findSpot(free,queue[i].shape);
+   if(!spot){i++;continue}
+   for(const [r,c] of spot.cells){free[r][c]=false;left--}
+   items.push({design:queue[i],...spot});queue.splice(i,1);
+  }
+  pages.push(items);
+ }
+ return pages;
+}
+// Try each candidate URL in turn: preview first, then the full PNG.
+function setImageSources(img,urls){let i=0;img.onerror=()=>{if(++i<urls.length)img.src=urls[i]};img.src=urls[0]}
+function loadNearbyPages(){
+ flashTrack.querySelectorAll('.flashPage').forEach((page,i)=>{
+  if(Math.abs(i-flashPage)>1)return;
+  page.querySelectorAll('img[data-pending]').forEach(img=>{const urls=JSON.parse(img.dataset.pending);delete img.dataset.pending;setImageSources(img,urls)});
+ });
+}
+async function buildFlashbook(){
+ flashPages=layoutFlashPages(await loadFlashList());
+ flashTrack.innerHTML='';flashPage=0;
+ if(!flashPages.length){
+  const page=document.createElement('section');page.className='flashPage';
+  page.innerHTML='<div class="flashEmpty">No flashes yet</div>';flashTrack.appendChild(page);
+ }
+ flashPages.forEach((items,i)=>{
   const page=document.createElement('section');page.className='flashPage';page.setAttribute('aria-label',`Flashbook page ${i+1}`);
-  // The book title is displayed only once, outside the paper pages.
   const grid=document.createElement('div');grid.className='flashGrid';
-  designs.forEach((idx,j)=>{
-   const d=FLASH_DESIGNS[idx],btn=document.createElement('button');btn.className='flashItem';btn.type='button';btn.setAttribute('aria-label',`Try ${d.name} on body`);
-   const img=document.createElement('img');img.src=d.thumb||d.src;img.alt=d.name;img.loading='eager';img.decoding='async';img.draggable=false;img.addEventListener('error',()=>{if(img.src!==new URL(d.src,location.href).href)img.src=d.src;});
-   const no=document.createElement('span');no.textContent=`#${String(i*4+j+1).padStart(3,'0')}`;btn.append(img,no);
-   btn.addEventListener('click',()=>openFlashDesign(d,i*4+j+1));grid.appendChild(btn);
+  items.forEach(({design:d,row,col})=>{
+   const btn=document.createElement('button');btn.className='flashItem';btn.type='button';btn.setAttribute('aria-label',`Try ${d.name} on body`);
+   btn.style.gridRow=d.shape==='vertical'?'1 / span 2':String(row+1);
+   btn.style.gridColumn=d.shape==='horizontal'?'1 / span 2':String(col+1);
+   // Images load only for the visible page and its neighbours.
+   const img=document.createElement('img');img.alt=d.name;img.decoding='async';img.draggable=false;img.dataset.pending=JSON.stringify([...d.thumb,...d.src]);
+   const no=document.createElement('span');no.textContent=flashLabel(d.number);btn.append(img,no);
+   btn.addEventListener('click',()=>openFlashDesign(d,d.number));grid.appendChild(btn);
   });
   page.appendChild(grid);flashTrack.appendChild(page);
  });
-
  requestAnimationFrame(positionFlashbook);
- Promise.all(Array.from(flashTrack.querySelectorAll('.flashPage:first-child img')).map(im=>im.decode().catch(()=>{}))).then(()=>{if(!flashbook.hidden)requestAnimationFrame(positionFlashbook)});
 }
 function positionFlashbook(){
  const pages=flashTrack.querySelectorAll('.flashPage');if(!pages.length)return;
- const target=pages[flashPage];
+ const target=pages[Math.min(flashPage,pages.length-1)];
  const shift=flashViewport.clientWidth/2-(target.offsetLeft+target.offsetWidth/2);
  flashTrack.style.transform=`translateX(${shift}px)`;
- $('flashCount').textContent=`Page ${flashPage+1} of ${FLASH_PAGES.length}`;
- $('flashPrev').disabled=false;$('flashNext').disabled=false;
-
+ const count=Math.max(1,flashPages.length);
+ $('flashCount').textContent=`Page ${Math.min(flashPage+1,count)} of ${count}`;
+ $('flashPrev').disabled=flashPages.length<2;$('flashNext').disabled=flashPages.length<2;
+ loadNearbyPages();
 }
-function goFlashPage(i){flashPage=((i%FLASH_PAGES.length)+FLASH_PAGES.length)%FLASH_PAGES.length;positionFlashbook()}
+function goFlashPage(i){const count=Math.max(1,flashPages.length);flashPage=((i%count)+count)%count;positionFlashbook()}
 $('flashPrev').onclick=()=>goFlashPage(flashPage-1);$('flashNext').onclick=()=>goFlashPage(flashPage+1);
 flashViewport.addEventListener('pointerdown',e=>{flashTouchStart={x:e.clientX,y:e.clientY}});
 flashViewport.addEventListener('pointerup',e=>{if(!flashTouchStart)return;const dx=e.clientX-flashTouchStart.x,dy=e.clientY-flashTouchStart.y;flashTouchStart=null;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.2){goFlashPage(flashPage+(dx<0?1:-1));window.__flashSuppressClickUntil=performance.now()+400}});
@@ -1051,11 +1164,13 @@ async function openFlashDesign(design,designNumber){
  $('hint').classList.remove('afterPlacement');$('hint').style.visibility='hidden';
  resize();
  try{
-  const response=await fetch(design.src);if(!response.ok)throw new Error('Could not load '+design.src);
+  let response=null;
+  for(const url of design.src){const r=await fetch(url);if(r.ok){response=r;break}}
+  if(!response)throw new Error('Could not load '+design.src.join(' / '));
   const blob=await response.blob();const url=URL.createObjectURL(blob);
   const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=url});
   if(token!==flashLoadToken){URL.revokeObjectURL(url);return}
-  const cropped=cropArtwork(img);URL.revokeObjectURL(url);
+  const cropped=cropArtwork(img);URL.revokeObjectURL(url);artAlpha=makeArtAlpha(cropped);
   imgAspect=cropped.width/cropped.height;
   if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
   // Every newly selected flash starts at 15 cm and 0 degrees.
