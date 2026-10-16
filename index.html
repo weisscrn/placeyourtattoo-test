@@ -195,7 +195,7 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
 
 /* ---------- Landing intro ---------- */
 #introFigure{position:fixed;left:0;top:0;z-index:19;pointer-events:none}
-#introText{position:fixed;left:50%;top:76%;transform:translateX(-50%);transform-origin:50% 50%;z-index:19;width:max-content;white-space:nowrap;pointer-events:none;text-align:center;line-height:1.3;color:var(--text);text-shadow:0 2px 16px #000c;opacity:0;transition:opacity .35s ease,transform .9s cubic-bezier(.45,0,.2,1),text-shadow .9s ease}
+#introText{position:fixed;left:50%;top:87%;transform:translateX(-50%);transform-origin:50% 50%;z-index:19;width:max-content;white-space:nowrap;pointer-events:none;text-align:center;line-height:1.3;color:var(--text);text-shadow:0 2px 16px #000c;opacity:0;transition:opacity .35s ease,transform .9s cubic-bezier(.45,0,.2,1),text-shadow .9s ease}
 #introText.show{opacity:1}
 /* Intro: completely clean, only the turning figure and the text. The pages fade in when the motifs
    fly onto them; title, DE/EN, page count and arrows fade in when they have landed. */
@@ -588,13 +588,17 @@ setCameraViewSelected('full');
 // the scripted Focus / Full Body transitions. Clear both view highlights.
 controls.addEventListener('start',()=>setCameraViewSelected(null));
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}window.addEventListener('resize',resize);resize();
-function prepareMesh(mesh){
+// Written as a generator so the background preparation of the second body can run in small time
+// slices (the page keeps running smoothly); prepareMesh() runs it in one go when it is needed at once.
+function prepareMesh(mesh){const g=prepareMeshSteps(mesh);let r;do{r=g.next()}while(!r.done);return r.value}
+function* prepareMeshSteps(mesh){
   // Build a triangle graph welded by POSITION, not by UV index: GLB splits vertices at UV seams.
   const geo=mesh.geometry,pos=geo.getAttribute('position'),index=geo.index;const n=index?index.count/3:pos.count/3;
   const p=Array.from({length:n},()=>[]),neighbors=Array.from({length:n},()=>[-1,-1,-1]),faceNormals=[],crosses=[];
   const matrix=mesh.matrixWorld;const vertexMap=new Map(),coords=[],triKeys=[],edges=new Map();const eps=Math.max(bodyDiag*1e-7,1e-8);
   function keyFor(v){const x=pos.getX(v),y=pos.getY(v),z=pos.getZ(v),key=`${Math.round(x/eps)},${Math.round(y/eps)},${Math.round(z/eps)}`;if(!vertexMap.has(key)){vertexMap.set(key,coords.length);coords.push(new THREE.Vector3(x,y,z).applyMatrix4(matrix))}return vertexMap.get(key)}
   for(let f=0;f<n;f++){
+    if(f%1200===1199)yield;
     const ids=[0,1,2].map(k=>index?index.getX(f*3+k):f*3+k),keys=ids.map(keyFor);triKeys.push(keys);
     const vs=keys.map(k=>coords[k]);p[f]=vs;
     const cross=new THREE.Vector3().subVectors(vs[1],vs[0]).cross(new THREE.Vector3().subVectors(vs[2],vs[0]));
@@ -605,8 +609,8 @@ function prepareMesh(mesh){
   // Per welded vertex: area-weighted normal, one-ring neighbours and incident faces.
   // Used by the Discrete Exponential Map wrap, which assigns ONE uv per surface vertex.
   const vc=coords.length,vNormals=Array.from({length:vc},()=>new THREE.Vector3()),vAdj=Array.from({length:vc},()=>[]),vFaces=Array.from({length:vc},()=>[]);
-  for(let f=0;f<n;f++){const k=triKeys[f];for(let e=0;e<3;e++){vNormals[k[e]].add(crosses[f]);vFaces[k[e]].push(f)}}
-  for(const ek of edges.keys()){const [a,b]=ek.split(':').map(Number);vAdj[a].push(b);vAdj[b].push(a)}
+  for(let f=0;f<n;f++){if(f%4000===3999)yield;const k=triKeys[f];for(let e=0;e<3;e++){vNormals[k[e]].add(crosses[f]);vFaces[k[e]].push(f)}}
+  let ec=0;for(const ek of edges.keys()){if(++ec%6000===0)yield;const [a,b]=ek.split(':').map(Number);vAdj[a].push(b);vAdj[b].push(a)}
   for(const v of vNormals){if(v.lengthSq()>0)v.normalize();else v.set(0,0,1)}
   return {p,neighbors,normals:faceNormals,keys:triKeys,coords,triCount:n,vNormals,vAdj,vFaces};
 }
@@ -614,12 +618,12 @@ const bodyLoader=new GLTFLoader();
 const bodyAssets=new Map(); // Keep both loaded models and prepared adjacency in memory.
 const bodyPromises=new Map();
 let bodyLoadVersion=0;
-function fetchBody(kind){
+function fetchBody(kind,background){
  if(bodyAssets.has(kind))return Promise.resolve(bodyAssets.get(kind));
  if(bodyPromises.has(kind))return bodyPromises.get(kind);
  const filename=kind==='female'?'body_female.glb':'body_male.glb';
  const pending=new Promise((resolve,reject)=>{
-  bodyLoader.load('./'+filename,g=>{
+  bodyLoader.load('./'+filename,async g=>{
    try{
     const nextModel=g.scene;
     nextModel.updateMatrixWorld(true);
@@ -632,7 +636,7 @@ function fetchBody(kind){
     });
     if(!nextMeshes.length)throw new Error('No meshes in '+filename);
     const nextCache=new Map();
-    for(const m of nextMeshes)nextCache.set(m,prepareMeshForBody(m,dim.length()));
+    for(const m of nextMeshes)nextCache.set(m,background?await prepareMeshForBodySliced(m,dim.length()):prepareMeshForBody(m,dim.length()));
     const asset={model:nextModel,meshes:nextMeshes,adjacency:nextCache,box,center,dim};
     bodyAssets.set(kind,asset);resolve(asset);
    }catch(err){reject(err)}
@@ -671,9 +675,12 @@ function loadBody(kind){
   // Prepare the other model in the background, once, without interrupting interaction.
   const other=kind==='female'?'male':'female';
   if(!bodyPromises.has(other)&&!bodyAssets.has(other)){
-   const preload=()=>fetchBody(other).catch(e=>console.warn('Background model preload failed:',e));
-   if('requestIdleCallback' in window)window.requestIdleCallback(preload,{timeout:3000});
-   else setTimeout(preload,400);
+   const preload=()=>fetchBody(other,true).catch(e=>console.warn('Background model preload failed:',e));
+   // Never during the landing intro: preparing a body blocks the page briefly and made the figure stutter.
+   // Wait until the intro, including the motifs flying onto page 1, is completely over, then 1.5 s more.
+   const whenCalm=()=>{if(introBusy()||document.body.classList.contains('introFly')||document.querySelector('.flyMotif')){setTimeout(whenCalm,400);return}
+    setTimeout(()=>{if('requestIdleCallback' in window)window.requestIdleCallback(preload,{timeout:4000});else preload()},1500)};
+   whenCalm();
   }
  }).catch(e=>{
   if(version!==bodyLoadVersion)return;
@@ -684,6 +691,12 @@ function loadBody(kind){
  });
 }
 function prepareMeshForBody(mesh,diagonal){const previous=bodyDiag;bodyDiag=diagonal;try{return prepareMesh(mesh)}finally{bodyDiag=previous}}
+// Same, spread over frames: at most ~6 ms of work per frame.
+async function prepareMeshForBodySliced(mesh,diagonal){
+ const g=prepareMeshSteps(mesh),previous=bodyDiag;bodyDiag=diagonal;let r;try{r=g.next()}finally{bodyDiag=previous}
+ while(!r.done){await new Promise(res=>requestAnimationFrame(res));const t0=performance.now();do{r=g.next()}while(!r.done&&performance.now()-t0<6)}
+ return r.value;
+}
 $('bodySelect').addEventListener('change',e=>loadBody(e.target.value));
 const bodyRadios=[...document.querySelectorAll('input[name="bodyModelChoice"]')];
 function syncBodyRadios(){const select=$('bodySelect');for(const radio of bodyRadios){radio.checked=radio.value===select.value;radio.disabled=select.disabled;}
@@ -1430,7 +1443,7 @@ function loadNearbyPages(){
  });
  // Quietly fetch the working copies of the page on screen, so a tapped design is ready almost at once
  // (it then blends in while it is still flying).
- (flashPages[flashPage]||[]).forEach(({design:d})=>{const u=d.src[0];if(!prefetched.has(u)){prefetched.add(u);setTimeout(()=>fetch(u,{priority:'low'}).catch(()=>prefetched.delete(u)),1500)}});
+ (flashPages[flashPage]||[]).forEach(({design:d})=>{const u=d.src[0];if(!prefetched.has(u)){prefetched.add(u);setTimeout(function go(){if(introBusy()){setTimeout(go,500);return}fetch(u,{priority:'low'}).catch(()=>prefetched.delete(u))},1500)}});
 }
 async function buildFlashbook(){
  flashPages=layoutFlashPages(await loadFlashList());
@@ -1460,6 +1473,8 @@ async function buildFlashbook(){
 // there facing front as a small hint. A tap skips straight to that end state. The small figure stays
 // with the flashbook (hidden in the 3D view); the intro itself only plays once per page load.
 const landing={canvas:null,renderer:null,scene:null,camera:null,pivot:null,raf:0,state:'wait',angle:0,settleFrom:0,settleTo:0,settleStart:0,timers:[]};
+// True while the landing intro is still waiting for the figure, turning or gliding into its corner.
+function introBusy(){return landing.state==='wait'||landing.state==='spin'||landing.state==='settle'||!!landing.glide}
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
  const cancel=()=>{if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
@@ -1472,12 +1487,14 @@ function startLandingIntro(){
   const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0x000000,0);
   const sc=new THREE.Scene();addStudioLights(sc);
   const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
-  const W=innerWidth,H=Math.round(innerHeight*.66),top=Math.round(innerHeight*.07);
+  // Larger figure (about 72 % of the screen height); the hands still stay inside the screen while it turns.
+  const W=innerWidth,H=Math.round(innerHeight*.78),top=Math.round(innerHeight*.04);
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
   cam.position.set(0,0,asset.dim.y/.92/vf);cam.lookAt(0,0,0);
   document.body.classList.add('hasLandingFigure');
   Object.assign(landing,{canvas:cv,renderer:r,scene:sc,camera:cam,pivot,state:'spin',angle:0,W,H,top,glide:null});
   setLandingRect({x:0,y:top,w:W,h:H});
+  r.compile(sc,cam);r.render(sc,cam); // first frame ready before the turning starts
   const txt=document.createElement('div');txt.id='introText';txt.textContent=t('flash.instruction');document.body.appendChild(txt);landing.text=txt;
   // Same type as the instruction line at the bottom (font, weight, spacing), just larger: as large as
   // the screen width allows, so it can shrink straight into that line.
@@ -1754,5 +1771,6 @@ function render(){requestAnimationFrame(render);
  {const held=dragging||!!pinch;document.body.classList.toggle('tattooHeld',held);if(pinch)selectionHoldUntil=now+300;const want=pinch||now<selectionHoldUntil?1:0;tattooSelection.value+=(want-tattooSelection.value)*.22;if(tattooSelection.value<.002)tattooSelection.value=0}
  if(uvBlend){const k=Math.min(1,(now-uvBlend.start)/220),e=k*k*(3-2*k),a=uvBlend.attr.array,{from,to}=uvBlend;
   for(let i=0;i<a.length;i++)a[i]=from[i]+(to[i]-from[i])*e;uvBlend.attr.needsUpdate=true;if(k>=1)uvBlend=null}
- controls.update();renderer.render(scene,camera);updateConfirmButton()}render();
+ controls.update();if($('flashbook').hidden)renderer.render(scene,camera); // nothing to draw behind the open flashbook
+ updateConfirmButton()}render();
 </script></body></html>
