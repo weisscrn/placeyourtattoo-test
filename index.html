@@ -190,6 +190,42 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 .flashEmpty{margin:auto;font:600 14px Arial,sans-serif;letter-spacing:.08em;color:#797269;text-transform:uppercase}
 .viewerActions{top:calc(8px + env(safe-area-inset-top));right:8px}
 #viewerBack{min-height:35px}
+/* V18 — bottom bar [Adjust | Confirm], skin tone picker under the body switch (phone). */
+#skinPicker{display:none}
+.panelBar{display:flex;gap:8px;align-items:stretch}
+.panelBar #confirmPlacement{flex:1;width:auto!important;margin-top:0!important}
+@media(max-width:720px){
+ aside .mirrorSkinRow .skinline{display:none!important}
+ aside .mirrorSkinRow .mirrorline{flex-direction:row!important;align-items:center!important;justify-content:space-between;width:100%}
+ .panelBar{position:sticky;bottom:0;z-index:7;margin-top:10px;background:#24252a;padding-top:2px}
+ #panelHandle{width:auto!important;margin:0!important;flex:none;gap:6px!important;padding:0 13px!important;font:650 12px Arial,sans-serif}
+ #panelHandle[aria-expanded="true"]{background:rgba(91,135,232,.19)!important;border-color:rgba(144,178,255,.75)!important}
+ body.panelCollapsed aside>*:not(.panelBar){display:none!important}
+ body.panelCollapsed .panelBar{margin-top:0}
+ #skinPicker{position:fixed;left:8px;top:calc(91px + env(safe-area-inset-top));z-index:15;display:flex;align-items:center;gap:6px;padding:4px;border:1px solid #697384;border-radius:999px;background:#24272de8;box-shadow:0 4px 18px #0006}
+ #skinCurrent,#skinOptions button{width:24px;height:24px;padding:0;border-radius:50%;border:1px solid #888;flex:none}
+ #skinCurrent{outline:2px solid #b7d0ff;outline-offset:1px}
+ #skinOptions{display:flex;gap:6px}
+ #skinOptions[hidden]{display:none}
+ #skinOptions button[aria-pressed="true"]{outline:2px solid #b7d0ff;outline-offset:1px}
+}
+/* V17 — phone: full-screen 3D. No panel before placing; after placing only "Adjust" + Confirm,
+   the controls slide in on demand. Body model moved under the Flashbook button. */
+#bodySwitch{position:fixed;left:8px;top:calc(51px + env(safe-area-inset-top));z-index:15;display:flex;border:1px solid #697384;border-radius:9px;overflow:hidden;background:#24272de8;box-shadow:0 4px 18px #0006}
+#bodySwitch button{background:transparent;border:0;border-radius:8px;padding:5px 11px;font:650 15px Arial,sans-serif;color:#e3edff;opacity:.55;line-height:1.2}
+#bodySwitch button[aria-pressed="true"]{opacity:1;background:rgba(91,135,232,.19);box-shadow:inset 0 0 0 1px rgba(144,178,255,.75)}
+#panelHandle{display:none}
+@media(max-width:720px){
+ aside .bodyModelRow{display:none!important}
+ #panelHandle{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin:0 0 8px;padding:7px 10px;background:#24272de8!important;border:1px solid #697384;border-radius:9px;color:#e3edff!important;font:650 12px Arial,sans-serif;letter-spacing:.03em}
+ #panelHandle .chev{width:8px;height:8px;border-left:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg) translate(1px,1px);transition:transform .2s}
+ #panelHandle[aria-expanded="true"] .chev{transform:rotate(225deg) translate(1px,1px)}
+ #panelHandle.glow{animation:panelGlow 1.1s ease-in-out 3}
+ body.panelNone aside{display:none!important}
+ body.panelCollapsed aside{padding-top:8px}
+}
+@keyframes panelGlow{50%{background:rgba(91,135,232,.32);border-color:rgba(144,178,255,.95);box-shadow:0 0 0 4px rgba(183,208,255,.22)}}
+@media(prefers-reduced-motion:reduce){#panelHandle.glow{animation:none}}
 /* V16 — DE/EN switch, top right of the flashbook (same look as the camera buttons, smaller). */
 .flashTop{position:relative}
 .langSwitch{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;border:1px solid #697384;border-radius:8px;overflow:hidden;background:#24272de8}
@@ -262,10 +298,12 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
   <div class="flashInstruction" data-i18n="flash.instruction">TAP A DESIGN TO TRY IT ON</div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">‹</button><span class="flashCount" id="flashCount">Page 1 of 3</span><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">›</button></div>
 </div>
 <button id="viewerBack" type="button" hidden>← Flashbook</button>
+<div id="bodySwitch" role="group" aria-label="Body model"><button type="button" data-body="female" aria-label="Female body">♀</button><button type="button" data-body="male" aria-label="Male body">♂</button></div>
+<div id="skinPicker" role="group" aria-label="Skin tone"><button type="button" id="skinCurrent" aria-expanded="false" aria-label="Skin tone"></button><div id="skinOptions" hidden></div></div>
 
 
 <main><div id="viewer"><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span data-i18n="view.focus">Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span data-i18n="view.full">Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div><div id="placeCoach" hidden aria-live="polite"><strong data-i18n="hint.tapBody">TAP BODY TO PLACE TATTOO</strong></div><div id="placedToast" hidden><span class="toastCheck" aria-hidden="true">✓</span><strong data-i18n="hint.placed">TATTOO PLACED</strong></div></div>
-<aside><div class="bodyModelRow"><span class="bodyModelTitle" data-i18n="panel.bodyModel">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span data-i18n="panel.male">Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span data-i18n="panel.female">Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size"><span data-i18n="panel.width">Tattoo width (cm)</span> <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation"><span data-i18n="panel.rotation">Rotation</span> <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span data-i18n="panel.mirror">Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span data-i18n="panel.skin">Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d" data-i18n="panel.confirm">Confirm Placement →</button><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+<aside><div class="bodyModelRow"><span class="bodyModelTitle" data-i18n="panel.bodyModel">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span data-i18n="panel.male">Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span data-i18n="panel.female">Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size"><span data-i18n="panel.width">Tattoo width (cm)</span> <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation"><span data-i18n="panel.rotation">Rotation</span> <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span data-i18n="panel.mirror">Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span data-i18n="panel.skin">Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><div class="panelBar"><button type="button" id="panelHandle" aria-expanded="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span data-i18n="panel.adjust">Adjust</span></button><button id="confirmPlacement" type="button" disabled style="width:100%;margin-top:12px;background:#b0b0ff;color:#16161d" data-i18n="panel.confirm">Confirm Placement →</button></div><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
@@ -325,7 +363,19 @@ function showPlacedToast(){
 }
 
 // One instruction works for mouse and touch; the gallery can reuse it later.
+let panelState='';
+function setPanelState(next){
+ if(next===panelState)return;
+ const wasNone=panelState===''||panelState==='none';panelState=next;
+ document.body.classList.toggle('panelNone',next==='none');
+ document.body.classList.toggle('panelCollapsed',next==='collapsed');
+ const h=$('panelHandle');h.setAttribute('aria-expanded',String(next==='open'));
+ if(next==='collapsed'&&wasNone){h.classList.remove('glow');void h.offsetWidth;h.classList.add('glow')}
+ // The 3D view takes the freed height (or gives it back) right away.
+ requestAnimationFrame(()=>{resize();if(next==='none'&&!anchor&&model)fitFullBody(false);if(typeof updateConfirmOverlay==='function')updateConfirmOverlay()});
+}
 function updatePlacementHint(){
+ setPanelState(anchor?(panelState==='open'?'open':'collapsed'):'none');
  const hint=$('hint');
  if(!tex){hint.classList.remove('afterPlacement');hint.textContent=t('hint.choose');showPlacementCoach();return}
  if(!model||!meshes.length){hint.classList.remove('afterPlacement');hint.textContent=t('hint.loading');showPlacementCoach();return}
@@ -338,7 +388,7 @@ const I18N={
  en:{'flash.instruction':'TAP A DESIGN TO TRY IT ON','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
   'view.focus':'Focus','view.full':'Full Body',
   'hint.tapBody':'TAP BODY TO PLACE TATTOO','hint.placed':'TATTOO PLACED','hint.drag':'DRAG TO MOVE · PINCH TO ZOOM','hint.tapBodyLong':'Tap the body to place your tattoo.','hint.choose':'Choose a design to begin','hint.loading':'Loading body…','hint.keep':'KEEP HOLDING',
-  'panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement →',
+  'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement →',
   'booking.title':'New Booking Request','booking.flash':'Flash','booking.size':'Approximate size','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram & paste message','booking.save':'Save Image','booking.own':'Own upload',
   'budget.flex':'Flexible / not sure','budget.lt200':'Under €200','budget.200':'€200–300','budget.300':'€300–500','budget.500':'€500–800','budget.800':'€800–1,200','budget.1200':'€1,200+',
   'region.Chest':'Chest','region.Left chest':'Left chest','region.Right chest':'Right chest','region.Abdomen':'Abdomen','region.Ribs / side':'Ribs / side','region.Upper back':'Upper back','region.Lower back':'Lower back','region.Shoulder':'Shoulder','region.Upper arm':'Upper arm','region.Forearm':'Forearm','region.Hand':'Hand','region.Thigh':'Thigh','region.Calf':'Calf','region.Foot':'Foot','region.Neck':'Neck','region.Other / not sure':'Other / not sure',
@@ -347,7 +397,7 @@ const I18N={
  de:{'flash.instruction':'TIPPE AUF EIN MOTIV ZUM ANPROBIEREN','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
   'view.focus':'Fokus','view.full':'Ganzer Körper',
   'hint.tapBody':'TIPPE AUF DEN KÖRPER','hint.placed':'TATTOO PLATZIERT','hint.drag':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ZOOMEN','hint.tapBodyLong':'Tippe auf den Körper, um dein Tattoo zu platzieren.','hint.choose':'Wähle ein Motiv aus','hint.loading':'Körper lädt…','hint.keep':'GEDRÜCKT HALTEN',
-  'panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen →',
+  'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen →',
   'booking.title':'Neue Buchungsanfrage','booking.flash':'Flash','booking.size':'Ungefähre Größe','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden & Nachricht einfügen','booking.save':'Bild speichern','booking.own':'Own upload',
   'budget.flex':'Flexibel / weiß nicht','budget.lt200':'Unter 200 €','budget.200':'200–300 €','budget.300':'300–500 €','budget.500':'500–800 €','budget.800':'800–1.200 €','budget.1200':'1.200 €+',
   'region.Chest':'Brust','region.Left chest':'Linke Brust','region.Right chest':'Rechte Brust','region.Abdomen':'Bauch','region.Ribs / side':'Rippen / Seite','region.Upper back':'Oberer Rücken','region.Lower back':'Unterer Rücken','region.Shoulder':'Schulter','region.Upper arm':'Oberarm','region.Forearm':'Unterarm','region.Hand':'Hand','region.Thigh':'Oberschenkel','region.Calf':'Wade','region.Foot':'Fuß','region.Neck':'Hals / Nacken','region.Other / not sure':'Andere / weiß nicht',
@@ -468,7 +518,20 @@ function setCameraViewSelected(mode){
  }
 }
 $('focusTattoo').onclick=()=>{if(!tattoo||!anchor)return;focusTattoo();setCameraViewSelected('focus')};
-$('resetView').onclick=()=>{if(initialView)moveCameraTo(initialView.position,initialView.target);setCameraViewSelected('full')};
+// Frame the whole body in whatever space the 3D view has right now (full screen or with the panel).
+function fullBodyView(){
+ if(!regionBox)return initialView;
+ const c=regionBox.getCenter(new THREE.Vector3()),d=regionBox.getSize(new THREE.Vector3());
+ const vf=2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+ const distance=Math.max(d.y/vf,d.x/(vf*camera.aspect),d.z*2)*1.12;
+ return {position:c.clone().add(new THREE.Vector3(0,0,distance)),target:c};
+}
+function fitFullBody(animate){
+ const v=fullBodyView();if(!v)return;initialView=v;
+ if(animate)moveCameraTo(v.position,v.target);
+ else{focusGoal=null;camera.position.copy(v.position);controls.target.copy(v.target);controls.update()}
+}
+$('resetView').onclick=()=>{fitFullBody(true);setCameraViewSelected('full')};
 setCameraViewSelected('full');
 // OrbitControls fires 'start' for mouse/touch orbit and wheel zoom, not for
 // the scripted Focus / Full Body transitions. Clear both view highlights.
@@ -550,6 +613,7 @@ function loadBody(kind){
   const distance=Math.max(dim.y/vf,dim.x/(vf*camera.aspect),dim.z*2)*1.5;
   camera.position.copy(center).add(new THREE.Vector3(0,0,distance));camera.near=Math.max(distance/2000,.0001);camera.far=distance*100;camera.updateProjectionMatrix();controls.update();
   initialView={position:camera.position.clone(),target:controls.target.clone()};
+  if(!anchor)requestAnimationFrame(()=>{resize();fitFullBody(false)});
   $('bodySelect').disabled=false;syncBodyRadios();$('bodyInfo').textContent=kind==='female'?'Female Body selected':'Male Body selected';overlay.textContent='';
   status(tex?'Body loaded. Click or tap on the body to place your tattoo.':'Body loaded. Choose a PNG to begin.');updatePlacementHint();
   // Prepare the other model in the background, once, without interrupting interaction.
@@ -570,7 +634,9 @@ function loadBody(kind){
 function prepareMeshForBody(mesh,diagonal){const previous=bodyDiag;bodyDiag=diagonal;try{return prepareMesh(mesh)}finally{bodyDiag=previous}}
 $('bodySelect').addEventListener('change',e=>loadBody(e.target.value));
 const bodyRadios=[...document.querySelectorAll('input[name="bodyModelChoice"]')];
-function syncBodyRadios(){const select=$('bodySelect');for(const radio of bodyRadios){radio.checked=radio.value===select.value;radio.disabled=select.disabled;}}
+function syncBodyRadios(){const select=$('bodySelect');for(const radio of bodyRadios){radio.checked=radio.value===select.value;radio.disabled=select.disabled;}
+ document.querySelectorAll('#bodySwitch button').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.body===select.value));b.disabled=select.disabled});}
+document.querySelectorAll('#bodySwitch button').forEach(b=>b.addEventListener('click',()=>{const select=$('bodySelect');if(select.disabled||select.value===b.dataset.body)return;select.value=b.dataset.body;select.dispatchEvent(new Event('change',{bubbles:true}));syncBodyRadios()}));
 syncBodyRadios();
 for(const radio of bodyRadios)radio.addEventListener('change',()=>{if(!radio.checked)return;const select=$('bodySelect');if(select.disabled)return;select.value=radio.value;select.dispatchEvent(new Event('change',{bubbles:true}));syncBodyRadios();});
 
@@ -873,7 +939,15 @@ $('rotation').addEventListener('input',()=>{$('rotationValue').textContent=$('ro
 $('rotationDeg').addEventListener('change',()=>{const n=Math.max(-180,Math.min(180,Math.round(Number($('rotationDeg').value)||0)));$('rotationDeg').value=n;$('rotation').value=n;$('rotationValue').textContent=n+'°';if(anchor&&tex)wrap(false)});
 for(const [id,key] of [['flipH','horizontal'],['flipV','vertical']]){ $(id).addEventListener('click',()=>{if(key==='horizontal')flipHorizontal=!flipHorizontal;else flipVertical=!flipVertical;const active=key==='horizontal'?flipHorizontal:flipVertical;$(id).classList.toggle('active',active);$(id).setAttribute('aria-pressed',String(active));if(anchor&&tex)wrap(false)}); }
 updateDimensions();
-const presetButtons=[...document.querySelectorAll('#skinpresets button')];function updateSkinSelection(){presetButtons.forEach(b=>b.classList.toggle('selected',b.dataset.color.toLowerCase()===$('skin').value.toLowerCase()))}
+const presetButtons=[...document.querySelectorAll('#skinpresets button')];function updateSkinSelection(){presetButtons.forEach(b=>b.classList.toggle('selected',b.dataset.color.toLowerCase()===$('skin').value.toLowerCase()));updateSkinPicker()}
+// Skin tone picker in the 3D view: shows the current tone; tap opens the five tones, a tone closes it.
+const skinOptions=$('skinOptions');
+presetButtons.forEach(p=>{const b=document.createElement('button');b.type='button';b.dataset.color=p.dataset.color;b.style.background=p.dataset.color;b.setAttribute('aria-label',p.getAttribute('aria-label'));
+ b.addEventListener('click',()=>{p.click();setSkinPickerOpen(false)});skinOptions.appendChild(b)});
+function setSkinPickerOpen(open){skinOptions.hidden=!open;$('skinCurrent').hidden=open;$('skinCurrent').setAttribute('aria-expanded',String(open))}
+function updateSkinPicker(){const c=$('skin').value.toLowerCase();$('skinCurrent').style.background=c;skinOptions.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.color.toLowerCase()===c)))}
+$('skinCurrent').addEventListener('click',()=>setSkinPickerOpen(true));
+updateSkinPicker();
 presetButtons.forEach(b=>b.addEventListener('click',()=>{$('skin').value=b.dataset.color;meshes.forEach(m=>m.material.color.set(b.dataset.color));updateSkinSelection()}));
 $('skin').addEventListener('input',updateSkinSelection);
 for(const id of ['size','rotation'])$(id).addEventListener('change',()=>{if(anchor&&tex)wrap(false)});
@@ -1253,6 +1327,7 @@ async function openFlashDesign(design,designNumber){
   status(`Design #${String(selectedDesignNumber).padStart(3,'0')} selected. Tap the body to place it.`);
  }catch(err){console.error(err);status('Could not load flash. Check the flashes folder.');}
 }
+$('panelHandle').onclick=()=>{$('panelHandle').classList.remove('glow');setPanelState(panelState==='open'?'collapsed':'open')};
 $('viewerBack').onclick=()=>{requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
 buildFlashbook();
 document.querySelectorAll('.langSwitch button').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.lang)));
