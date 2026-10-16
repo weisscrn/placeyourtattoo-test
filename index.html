@@ -43,7 +43,16 @@ button.active,button[aria-pressed="true"],.viewerActions button.viewSelected,#pa
 #confirmPlacement,.bookingSend,#igOpen{display:flex;align-items:center;justify-content:center;gap:8px;transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),opacity var(--dur) var(--ease);background:var(--primary);color:var(--on-primary);border:0;border-radius:var(--radius);padding:12px 14px;font:700 13px var(--font);letter-spacing:.02em;text-decoration:none}
 #confirmPlacement:active,.bookingSend:active,#igOpen:active{background:var(--primary-press)}
 select,textarea,input[type=number]{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);padding:9px 10px;font:16px var(--font)}
-input[type=range]{width:100%;height:24px;accent-color:var(--primary)}
+/* Sliders: thin line (white up to the knob), white round knob with a soft shadow around it.
+   --p (0–100 %) is kept up to date in JS. Rotation shows a mark at 0° in the middle instead of a fill. */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;margin:0;background:transparent;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:linear-gradient(90deg,var(--primary) 0 var(--p),rgba(255,255,255,.2) var(--p))}
+input[type=range]::-moz-range-track{height:2px;border-radius:1px;background:linear-gradient(90deg,var(--primary) 0 var(--p),rgba(255,255,255,.2) var(--p))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-9px;border-radius:50%;background:var(--primary);border:0;box-shadow:0 0 0 6px rgba(255,255,255,.07),0 2px 10px rgba(0,0,0,.55);transition:box-shadow var(--dur) var(--ease)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--primary);border:0;box-shadow:0 0 0 6px rgba(255,255,255,.07),0 2px 10px rgba(0,0,0,.55)}
+input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 9px rgba(255,255,255,.12),0 2px 12px rgba(0,0,0,.6)}
+#rotation::-webkit-slider-runnable-track{background:linear-gradient(90deg,rgba(255,255,255,.2) 0 calc(50% - 1px),rgba(255,255,255,.55) calc(50% - 1px) calc(50% + 1px),rgba(255,255,255,.2) calc(50% + 1px))}
+#rotation::-moz-range-track{background:linear-gradient(90deg,rgba(255,255,255,.2) 0 calc(50% - 1px),rgba(255,255,255,.55) calc(50% - 1px) calc(50% + 1px),rgba(255,255,255,.2) calc(50% + 1px))}
 input[type=color]{width:58px;height:35px;border:0;background:none;cursor:pointer}
 .value{float:right;font-weight:650}
 .measurement{font-size:12px;color:var(--muted);margin-top:5px}
@@ -210,9 +219,13 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
 .bookingTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .bookingTop strong{font-size:15px}
 #closeBooking{display:grid;place-items:center;width:var(--h-float);height:var(--h-float);padding:0}
-.bookingDialog img{width:100%;max-height:21dvh;object-fit:contain;background:var(--book);border-radius:var(--radius)}
-.bookingDetails{display:flex;justify-content:space-between;gap:12px;margin-top:5px}
-.bookingDetails span{color:var(--muted)}
+.bookingSummary{display:flex;gap:14px;align-items:stretch;margin-bottom:4px}
+.bookingSummary img{width:46%;flex:none;height:min(34dvh,240px);object-fit:cover;object-position:50% 40%;background:var(--book);border-radius:var(--radius)}
+.bookingFacts{display:flex;flex-direction:column;gap:3px;min-width:0;padding-top:2px}
+.bookingFacts strong{font-size:22px;letter-spacing:.02em}
+.bookingFacts span{font-size:13px;color:var(--muted)}
+.bookingCap{font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--muted);margin:10px 0 2px}
+.bookingFacts .bookingCap{margin-top:0}
 .bookingDialog label{margin:7px 0 3px;color:var(--muted);font-size:13px}
 .bookingDialog select,.bookingDialog textarea{padding:7px 10px}
 .bookingDialog textarea{resize:none}
@@ -221,6 +234,19 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
 #downloadBooking{font-size:13px}
 #shareMessage{margin:8px 0 0;font-size:12px;color:var(--muted)}
 #shareMessage:empty{display:none}
+/* Phone: the request fills the whole screen (8 px from the edges), so nothing of the 3D view's buttons
+   peeks out above or below it; the picture gets taller and the two actions sit at the bottom. */
+@media(max-width:720px){
+ #bookingOverlay{padding:calc(8px + env(safe-area-inset-top)) 8px calc(8px + env(safe-area-inset-bottom))}
+ .bookingDialog{width:100%;height:100%;max-height:none;display:flex;flex-direction:column;padding:14px 16px 16px}
+ /* Fields and buttons always keep their full height; only the picture gives way on short screens. */
+ .bookingDialog>*{flex-shrink:0}
+ .bookingDialog>.bookingSummary{flex:0 1 min(40dvh,320px);min-height:150px}
+ .bookingSummary img{height:100%;min-height:0}
+ .bookingDialog select{height:44px;padding:0 12px;line-height:normal}
+ .bookingDialog textarea{min-height:64px;line-height:1.35}
+ .bookingActions{margin-top:auto;padding-top:12px}
+}
 
 /* Step card before Instagram opens */
 #igSteps,#igDone{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;padding:16px;background:#000c}
@@ -263,9 +289,9 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
   <div class="bookingTop"><strong data-i18n="booking.title">New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-  <img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
-  <div class="bookingDetails"><span data-i18n="booking.flash">Flash</span><strong id="bookingFlash"></strong></div>
-  <div class="bookingDetails"><span data-i18n="booking.size">Approximate size</span><strong id="bookingSize"></strong></div>
+  <div class="bookingSummary"><img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
+   <div class="bookingFacts"><div class="bookingCap" data-i18n="booking.yourTattoo">YOUR TATTOO</div><strong id="bookingFlash"></strong><span id="bookingSize"></span><span id="bookingPlace"></span></div></div>
+  <div class="bookingCap" data-i18n="booking.yourDetails">YOUR DETAILS</div>
   <label for="bookingRegionSelect" data-i18n="booking.placement">Placement (suggested, editable)</label>
   <select id="bookingRegionSelect">
    <option value="Chest" data-i18n="region.Chest">Chest</option><option value="Left chest" data-i18n="region.Left chest">Left chest</option><option value="Right chest" data-i18n="region.Right chest">Right chest</option>
@@ -399,7 +425,7 @@ const I18N={
   'view.focus':'Focus','view.full':'Full Body',
   'hint.tapBody':'TAP BODY TO PLACE TATTOO','hint.placed':'TATTOO PLACED','hint.drag':'DRAG TO MOVE · PINCH TO ZOOM','hint.tapBodyLong':'Tap the body to place your tattoo.','hint.choose':'Choose a design to begin','hint.loading':'Loading body…','hint.keep':'KEEP HOLDING','hint.grab':'DRAG TO MOVE · TWO FINGERS TO ADJUST',
   'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement →',
-  'booking.title':'New Booking Request','booking.flash':'Flash','booking.size':'Approximate size','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram','booking.save':'Save Image','booking.own':'Own upload',
+  'booking.title':'Your request','booking.yourTattoo':'YOUR TATTOO','booking.yourDetails':'YOUR DETAILS','booking.flash':'Flash','booking.size':'Approximate size','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram','booking.save':'Save Image','booking.own':'Own upload',
   'budget.flex':'Flexible / not sure','budget.lt200':'Under €200','budget.200':'€200–300','budget.300':'€300–500','budget.500':'€500–800','budget.800':'€800–1,200','budget.1200':'€1,200+',
   'region.Chest':'Chest','region.Left chest':'Left chest','region.Right chest':'Right chest','region.Abdomen':'Abdomen','region.Ribs / side':'Ribs / side','region.Upper back':'Upper back','region.Lower back':'Lower back','region.Shoulder':'Shoulder','region.Upper arm':'Upper arm','region.Forearm':'Forearm','region.Hand':'Hand','region.Thigh':'Thigh','region.Calf':'Calf','region.Foot':'Foot','region.Neck':'Neck','region.Other / not sure':'Other / not sure',
   'msg.title':'NEW TATTOO BOOKING REQUEST','msg.hi':"Hi @{a}! I'd like to book a tattoo.",'msg.flash':'Flash','msg.placement':'Placement','msg.size':'Approximate size','msg.budget':'Maximum budget','msg.message':'Message',
@@ -408,7 +434,7 @@ const I18N={
   'view.focus':'Fokus','view.full':'Ganzer Körper',
   'hint.tapBody':'TIPPE AUF DEN KÖRPER','hint.placed':'TATTOO PLATZIERT','hint.drag':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ZOOMEN','hint.tapBodyLong':'Tippe auf den Körper, um dein Tattoo zu platzieren.','hint.choose':'Wähle ein Motiv aus','hint.loading':'Körper lädt…','hint.keep':'GEDRÜCKT HALTEN','hint.grab':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ANPASSEN',
   'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen →',
-  'booking.title':'Neue Buchungsanfrage','booking.flash':'Flash','booking.size':'Ungefähre Größe','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden','booking.save':'Bild speichern','booking.own':'Own upload',
+  'booking.title':'Deine Anfrage','booking.yourTattoo':'DEIN TATTOO','booking.yourDetails':'DEINE ANGABEN','booking.flash':'Flash','booking.size':'Ungefähre Größe','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden','booking.save':'Bild speichern','booking.own':'Own upload',
   'budget.flex':'Flexibel / weiß nicht','budget.lt200':'Unter 200 €','budget.200':'200–300 €','budget.300':'300–500 €','budget.500':'500–800 €','budget.800':'800–1.200 €','budget.1200':'1.200 €+',
   'region.Chest':'Brust','region.Left chest':'Linke Brust','region.Right chest':'Rechte Brust','region.Abdomen':'Bauch','region.Ribs / side':'Rippen / Seite','region.Upper back':'Oberer Rücken','region.Lower back':'Unterer Rücken','region.Shoulder':'Schulter','region.Upper arm':'Oberarm','region.Forearm':'Unterarm','region.Hand':'Hand','region.Thigh':'Oberschenkel','region.Calf':'Wade','region.Foot':'Fuß','region.Neck':'Hals / Nacken','region.Other / not sure':'Andere / weiß nicht',
   'msg.title':'NEUE TATTOO-ANFRAGE','msg.hi':'Hi @{a}! Ich würde gern ein Tattoo buchen.','msg.flash':'Flash','msg.placement':'Stelle','msg.size':'Ungefähre Größe','msg.budget':'Maximales Budget','msg.message':'Nachricht',
@@ -1160,6 +1186,8 @@ bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)booking
 window.addEventListener('keydown',e=>{if(e.key==='Escape')bookingOverlay.hidden=true});
 function downloadBlob(blob,filename){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
 const bookingRegions=['Chest','Left chest','Right chest','Abdomen','Ribs / side','Upper back','Lower back','Shoulder','Upper arm','Forearm','Hand','Thigh','Calf','Foot','Neck'];
+function syncBookingPlace(){const sel=$('bookingRegionSelect');$('bookingPlace').textContent=sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:''}
+$('bookingRegionSelect').addEventListener('change',syncBookingPlace);
 function setSuggestedRegion(){
  const raw=$('regionValue').textContent.trim();
  const select=$('bookingRegionSelect');
@@ -1196,7 +1224,7 @@ $('confirmPlacement').onclick=async()=>{
   const w=Number($('size').value);
   $('bookingSize').textContent=`${num(w)} × ${num(w/imgAspect)} cm`;
   $('bookingFlash').textContent=selectedDesignNumber?flashLabel(selectedDesignNumber):t('booking.own');
-  setSuggestedRegion();
+  setSuggestedRegion();syncBookingPlace();
   $('shareMessage').textContent='';bookingOverlay.hidden=false;
  }catch(err){console.error(err);status('Could not capture the preview on this device.');}
 };
@@ -1523,6 +1551,7 @@ function resolveLanding(){if(landingResolve){const r=landingResolve;landingResol
 // The motif flies exactly as it is (no outline). Until the wrap is ready (a moment; designs of the
 // visible page are prefetched) a copy of the motif waits in place.
 let morph=null;
+const rangeInputs=[...document.querySelectorAll('input[type=range]')];
 function flyThumbToBody(img,from){
  cancelMorph();
  if(!from||!from.w||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -1710,6 +1739,7 @@ function render(){requestAnimationFrame(render);
  }
  stepCamTween(now);
  updateMorph(now);
+ for(const r of rangeInputs){const p=(r.value-r.min)/(r.max-r.min)*100;if(r._p!==p){r._p=p;r.style.setProperty('--p',p+'%')}}
  if(tattooFadeStart){tattooFade=Math.min(1,(now-tattooFadeStart)/380);if(tattooFade>=1)tattooFadeStart=0}
  if(tattoo)tattoo.material.opacity=tattooFade;
  if(focusGoal){camera.position.lerp(focusGoal.position,.13);controls.target.lerp(focusGoal.target,.13);if(camera.position.distanceTo(focusGoal.position)<bodyHeight*.0001&&controls.target.distanceTo(focusGoal.target)<bodyHeight*.0001){camera.position.copy(focusGoal.position);controls.target.copy(focusGoal.target);focusGoal=null}}
