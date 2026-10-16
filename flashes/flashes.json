@@ -1,15 +1,15 @@
 [
-  {"number":13,"file":"13_horizontal.png","shape":"horizontal"},
-  {"number":12,"file":"12.png","shape":"single"},
-  {"number":11,"file":"11.png","shape":"single"},
-  {"number":10,"file":"10_horizontal.png","shape":"horizontal"},
-  {"number":9,"file":"09_horizontal.png","shape":"horizontal"},
-  {"number":8,"file":"08_full.png","shape":"full"},
-  {"number":7,"file":"07.png","shape":"single"},
-  {"number":6,"file":"06.png","shape":"single"},
-  {"number":5,"file":"05.png","shape":"single"},
-  {"number":4,"file":"04.png","shape":"single"},
-  {"number":3,"file":"03_horizontal.png","shape":"horizontal"},
-  {"number":2,"file":"02_horizontal.png","shape":"horizontal"},
-  {"number":1,"file":"01.png","shape":"single"}
+  {"number":13,"file":"13_horizontal.png","shape":"horizontal","work":true},
+  {"number":12,"file":"12.png","shape":"single","work":true},
+  {"number":11,"file":"11.png","shape":"single","work":true},
+  {"number":10,"file":"10_horizontal.png","shape":"horizontal","work":true},
+  {"number":9,"file":"09_horizontal.png","shape":"horizontal","work":true},
+  {"number":8,"file":"08_full.png","shape":"full","work":true},
+  {"number":7,"file":"07.png","shape":"single","work":true},
+  {"number":6,"file":"06.png","shape":"single","work":true},
+  {"number":5,"file":"05.png","shape":"single","work":true},
+  {"number":4,"file":"04.png","shape":"single","work":true},
+  {"number":3,"file":"03_horizontal.png","shape":"horizontal","work":true},
+  {"number":2,"file":"02_horizontal.png","shape":"horizontal","work":true},
+  {"number":1,"file":"01.png","shape":"single","work":true}
 ]

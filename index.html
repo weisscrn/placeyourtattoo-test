@@ -194,6 +194,9 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
    and 16 px text in form fields so Safari does not zoom in when one is focused. */
 html,body,button,a,select,input,textarea,label{touch-action:manipulation}
 #bookingOverlay .bookingDialog select,#bookingOverlay .bookingDialog textarea{font-size:16px}
+/* The move/adjust hint shows only while a finger is on the tattoo. */
+#hint.afterPlacement{transition:opacity .25s ease}
+body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
 /* V18 — bottom bar [Adjust | Confirm], skin tone picker under the body switch (phone). */
 #skinPicker{display:none}
 .panelBar{display:flex;gap:8px;align-items:stretch}
@@ -285,21 +288,36 @@ html,body,button,a,select,input,textarea,label{touch-action:manipulation}
 .mirrorSkinRow .mirrorline{align-items:flex-start}.mirrorSkinRow .skinline{align-items:flex-end}
 .mirrorSkinRow .skinline .skinpresets{min-height:38px}
 /* V13 — edge-rotation info pill: below the camera buttons, neutral glass instead of blue. */
-#edgeHint{display:flex;align-items:center;gap:7px;position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:4;pointer-events:none;opacity:0;transition:opacity .18s ease;white-space:nowrap;padding:9px 12px;border-radius:10px;line-height:1.3;background:rgba(23,24,27,.55);border:1px solid rgba(255,255,255,.16);color:#e3edff;font-family:Arial,sans-serif;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.06em;box-shadow:0 4px 14px #0004;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#edgeHint{display:flex;align-items:center;gap:7px;position:absolute;top:calc(60px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:4;pointer-events:none;opacity:0;transition:opacity .18s ease;white-space:nowrap;padding:9px 12px;border-radius:10px;line-height:1.3;background:rgba(38,61,101,.83);border:1px solid rgba(140,174,255,.48);color:#e5eeff;font-family:Arial,sans-serif;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.06em;box-shadow:0 4px 14px #0004;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* Same tile size as the DRAG TO MOVE hint: the larger arrow must not make the tile taller. */
 #edgeHint svg{width:16px;height:16px;margin:-1.5px 0;flex:none}
 /* V12 — selected controls match the body model selector. */
 .bodyModelChoice:has(input:checked){color:#b7d0ff}
 .mirroricons button.active{background:#30333a!important;color:#b7d0ff!important;border-color:#8caaf4!important;box-shadow:none!important}
 .mirroricons button[aria-pressed="true"]{background:#30333a!important;color:#b7d0ff!important;border-color:#8caaf4!important;box-shadow:none!important}
+/* V19 — landing intro: the figure turns over a see-through flashbook, then settles bottom left. */
+#introFigure{position:fixed;left:0;top:0;z-index:19;pointer-events:none}
+/* One line in exactly the type of the instruction line below, only larger. */
+#introText{position:fixed;left:50%;top:76%;transform:translateX(-50%);width:max-content;white-space:nowrap;z-index:19;pointer-events:none;text-align:center;line-height:1.3;color:#d9e5ff;text-shadow:0 2px 16px #000c;opacity:0;transition:opacity .35s ease,transform .9s cubic-bezier(.45,0,.2,1),text-shadow .9s ease;transform-origin:50% 50%}
+#flashbook .flashInstruction{transition:opacity .25s ease}
+body.landingIntro #flashbook .flashInstruction,body.introTextTravel #flashbook .flashInstruction{opacity:0}
+/* Room for the small figure at the left of the bottom bar. */
+body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
+#introText span{font-weight:350;letter-spacing:.08em}
+#introText.show{opacity:1}
+#flashbook[hidden]~#introFigure,#flashbook[hidden]~#introText{display:none}
+#flashbook:not([hidden])~main #viewer canvas{visibility:hidden}
+body.landingIntro #flashbook{opacity:.2}
+#flashbook{transition:opacity .6s ease}
+body.landingIntro #viewer,body.landingIntro #bodySwitch,body.landingIntro #skinPicker,body.landingIntro aside{visibility:hidden}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
-<body>
+<body class="landingIntro">
 <div id="flashbook" aria-label="Tattoo flashbook">
   <div class="flashTop"><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1><div class="langSwitch" role="group" aria-label="Language / Sprache"><button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button></div></div>
   <div class="flashStage"><div class="flashViewport" id="flashViewport"><div class="flashTrack" id="flashTrack"></div></div></div>
-  <div class="flashInstruction" data-i18n="flash.instruction">TAP A DESIGN TO TRY IT ON</div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">‹</button><span class="flashCount" id="flashCount">Page 1 of 3</span><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">›</button></div>
+  <div class="flashInstruction" data-i18n="flash.instruction">TRY ON YOUR NEXT TATTOO</div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">‹</button><span class="flashCount" id="flashCount">Page 1 of 3</span><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">›</button></div>
 </div>
 <button id="viewerBack" type="button" hidden>← Flashbook</button>
 <div id="bodySwitch" role="group" aria-label="Body model"><button type="button" data-body="female" aria-label="Female body">♀</button><button type="button" data-body="male" aria-label="Male body">♂</button></div>
@@ -351,7 +369,8 @@ let selectedFlashReady=false,toastTimer=null,coachWasReady=false;
 let figurePopStart=0,figurePopPrevious=1;
 function startFigurePop(){figurePopStart=performance.now();figurePopPrevious=1;}
 function showPlacementCoach(){
- const ready=selectedFlashReady&&!!tex&&!anchor&&!!model&&meshes.length>0&&flashbook.hidden;
+ // Designs are placed automatically, so the "tap the body" coach is no longer shown.
+ const ready=false;
  $('placeCoach').hidden=!ready;
  $('hint').style.visibility=ready?'hidden':'';
  if(ready&&!coachWasReady){$('placedToast').hidden=true;const c=$('placeCoach');c.classList.remove('coachReplay');void c.offsetWidth;c.classList.add('coachReplay');const v=$('viewer');v.classList.remove('bodyPop');void v.offsetWidth;v.classList.add('bodyPop');startFigurePop();}
@@ -383,24 +402,24 @@ function updatePlacementHint(){
  const hint=$('hint');
  if(!tex){hint.classList.remove('afterPlacement');hint.textContent=t('hint.choose');showPlacementCoach();return}
  if(!model||!meshes.length){hint.classList.remove('afterPlacement');hint.textContent=t('hint.loading');showPlacementCoach();return}
- hint.textContent=anchor?t('hint.drag'):t('hint.tapBodyLong');hint.classList.toggle('afterPlacement',!!anchor);showPlacementCoach();
+ hint.textContent=anchor?t('hint.grab'):t('hint.tapBodyLong');hint.classList.toggle('afterPlacement',!!anchor);showPlacementCoach();
 }
 
 // Language: German or English for the whole page (customer-facing texts and the request that is
 // sent to the artist). Default follows the phone's language; the choice is remembered.
 const I18N={
- en:{'flash.instruction':'TAP A DESIGN TO TRY IT ON','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
+ en:{'flash.instruction':'TRY ON YOUR NEXT TATTOO','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
   'view.focus':'Focus','view.full':'Full Body',
-  'hint.tapBody':'TAP BODY TO PLACE TATTOO','hint.placed':'TATTOO PLACED','hint.drag':'DRAG TO MOVE · PINCH TO ZOOM','hint.tapBodyLong':'Tap the body to place your tattoo.','hint.choose':'Choose a design to begin','hint.loading':'Loading body…','hint.keep':'KEEP HOLDING',
+  'hint.tapBody':'TAP BODY TO PLACE TATTOO','hint.placed':'TATTOO PLACED','hint.drag':'DRAG TO MOVE · PINCH TO ZOOM','hint.tapBodyLong':'Tap the body to place your tattoo.','hint.choose':'Choose a design to begin','hint.loading':'Loading body…','hint.keep':'KEEP HOLDING','hint.grab':'DRAG TO MOVE · TWO FINGERS TO ADJUST',
   'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement →',
   'booking.title':'New Booking Request','booking.flash':'Flash','booking.size':'Approximate size','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram & paste message','booking.save':'Save Image','booking.own':'Own upload',
   'budget.flex':'Flexible / not sure','budget.lt200':'Under €200','budget.200':'€200–300','budget.300':'€300–500','budget.500':'€500–800','budget.800':'€800–1,200','budget.1200':'€1,200+',
   'region.Chest':'Chest','region.Left chest':'Left chest','region.Right chest':'Right chest','region.Abdomen':'Abdomen','region.Ribs / side':'Ribs / side','region.Upper back':'Upper back','region.Lower back':'Lower back','region.Shoulder':'Shoulder','region.Upper arm':'Upper arm','region.Forearm':'Forearm','region.Hand':'Hand','region.Thigh':'Thigh','region.Calf':'Calf','region.Foot':'Foot','region.Neck':'Neck','region.Other / not sure':'Other / not sure',
   'msg.title':'NEW TATTOO BOOKING REQUEST','msg.hi':"Hi @{a}! I'd like to book a tattoo.",'msg.flash':'Flash','msg.placement':'Placement','msg.size':'Approximate size','msg.budget':'Maximum budget','msg.message':'Message',
   'card.flash':'FLASH','card.size':'APPROXIMATE SIZE','card.placement':'PLACEMENT','card.budget':'MAXIMUM BUDGET','card.artist':'FOR ARTIST','card.message':'MESSAGE TO ARTIST','card.error':'Could not create the image.'},
- de:{'flash.instruction':'TIPPE AUF EIN MOTIV ZUM ANPROBIEREN','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
+ de:{'flash.instruction':'PROBIER DEIN NÄCHSTES TATTOO AN','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
   'view.focus':'Fokus','view.full':'Ganzer Körper',
-  'hint.tapBody':'TIPPE AUF DEN KÖRPER','hint.placed':'TATTOO PLATZIERT','hint.drag':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ZOOMEN','hint.tapBodyLong':'Tippe auf den Körper, um dein Tattoo zu platzieren.','hint.choose':'Wähle ein Motiv aus','hint.loading':'Körper lädt…','hint.keep':'GEDRÜCKT HALTEN',
+  'hint.tapBody':'TIPPE AUF DEN KÖRPER','hint.placed':'TATTOO PLATZIERT','hint.drag':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ZOOMEN','hint.tapBodyLong':'Tippe auf den Körper, um dein Tattoo zu platzieren.','hint.choose':'Wähle ein Motiv aus','hint.loading':'Körper lädt…','hint.keep':'GEDRÜCKT HALTEN','hint.grab':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ANPASSEN',
   'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen →',
   'booking.title':'Neue Buchungsanfrage','booking.flash':'Flash','booking.size':'Ungefähre Größe','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden & Nachricht einfügen','booking.save':'Bild speichern','booking.own':'Own upload',
   'budget.flex':'Flexibel / weiß nicht','budget.lt200':'Unter 200 €','budget.200':'200–300 €','budget.300':'300–500 €','budget.500':'500–800 €','budget.800':'800–1.200 €','budget.1200':'1.200 €+',
@@ -427,6 +446,10 @@ function setLanguage(next){
  if(typeof positionFlashbook==='function'&&typeof flashTrack!=='undefined'){const empty=flashTrack.querySelector('.flashEmpty');if(empty)empty.textContent=t('flash.empty');positionFlashbook()}
  updatePlacementHint();edgeHint.dataset.dir='';
 }
+// Two-finger tattoo gesture state (declared early: loadBody runs before the gesture code).
+let pinch=null,pinchRaf=0,pinchLast=0;
+// Intro camera ride state (declared early: loadBody runs before the functions further down).
+let camTween=null,introTimers=[],introActive=false,introPlacePending=false;
 let flipHorizontal=false,flipVertical=false;
 let initialView=null,focusGoal=null;
 let regionBox=null;
@@ -459,11 +482,13 @@ function updateRegion(){
  out.textContent=region;
 }
 
-// Mobile auto-orbit only while a tattoo is actively being dragged near the viewer edges.
+// Auto-orbit while a tattoo is dragged onto the side of the body (its surface turns away from the
+// camera), so the body turns and the tattoo comes back into view. A narrow strip at the screen edge
+// still turns the body too (needed when zoomed in close).
 let dragClient=null,edgeSpeed=0,edgeClock=performance.now(),lastEdgeProjection=0;
-const EDGE_ZONE=0.36, MAX_ORBIT_SPEED=2.8; // faster edge orbit on mouse and touch
+const EDGE_ZONE=0.1, MAX_ORBIT_SPEED=2.8, SIDE_ORBIT_SPEED=1.2; // faster edge orbit on mouse and touch
 const edgeHint=document.createElement('div');
-// Neutral glass pill below the camera buttons: an info, not a control (no blue accent).
+// Blue tile below the camera buttons, same look as the DRAG TO MOVE hint at the bottom.
 edgeHint.id='edgeHint';
 // Rotation arrows larger than the text; inline SVG so they look identical on every phone.
 const rotateIcon=d=>'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+d+'"/></svg>';
@@ -471,14 +496,24 @@ const ROTATE_ICON_LEFT=rotateIcon('M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5'),ROTATE_I
 viewer.appendChild(edgeHint);
 function edgeVelocity(clientX){
  const r=renderer.domElement.getBoundingClientRect();
- const zone=Math.min(r.width*EDGE_ZONE,240);
+ const zone=Math.min(r.width*EDGE_ZONE,60);
  const left=(r.left+zone-clientX)/zone,right=(clientX-(r.right-zone))/zone;
  const signed=left>0?-Math.min(1,left):right>0?Math.min(1,right):0;
  return Math.sign(signed)*Math.pow(Math.abs(signed),1.15)*MAX_ORBIT_SPEED;
 }
+// Starts once the surface under the tattoo faces less than ~63° towards the camera, full speed at ~84°.
+function bodySideVelocity(){
+ const toCam=camera.position.clone().sub(anchor.point).normalize(),n=anchor.normal;
+ const facing=n.dot(toCam);if(facing>=.45)return 0;
+ const right=new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,0);
+ return Math.sign(n.dot(right))*Math.pow(Math.min(1,(.45-facing)/.35),1.15)*SIDE_ORBIT_SPEED;
+}
 function orbitDuringTattooDrag(dt){
- if(!dragging||!dragClient||!anchor)return;
- const speed=edgeVelocity(dragClient.clientX);edgeSpeed=speed;
+ if(!dragging||!dragClient||!anchor||pinch)return;
+ const side=bodySideVelocity(),edge=edgeVelocity(dragClient.clientX);
+ // Ease in and out instead of jumping to full speed.
+ const want=Math.abs(edge)>Math.abs(side)?edge:side;
+ const speed=Math.abs(want-edgeSpeed)<.02&&want===0?0:edgeSpeed+(want-edgeSpeed)*Math.min(1,dt*5);edgeSpeed=speed;
  // Keep the last text while fading out, so the pill does not collapse; the chevron shows the direction.
  if(Math.abs(speed)>0.001){const dir=speed<0?'left':'right';if(edgeHint.dataset.dir!==dir){edgeHint.dataset.dir=dir;edgeHint.innerHTML=dir==='left'?ROTATE_ICON_LEFT+'<span>'+t('hint.keep')+'</span>':'<span>'+t('hint.keep')+'</span>'+ROTATE_ICON_RIGHT}}
  edgeHint.style.opacity=Math.abs(speed)>0.001?"1":"0";
@@ -521,7 +556,7 @@ function setCameraViewSelected(mode){
   $(id).setAttribute('aria-pressed',String(active));
  }
 }
-$('focusTattoo').onclick=()=>{if(!tattoo||!anchor)return;focusTattoo();setCameraViewSelected('focus')};
+$('focusTattoo').onclick=()=>{if(!tattoo||!anchor)return;camTween=null;focusTattoo();setCameraViewSelected('focus')};
 // Frame the whole body in whatever space the 3D view has right now (full screen or with the panel).
 function fullBodyView(){
  if(!regionBox)return initialView;
@@ -535,7 +570,7 @@ function fitFullBody(animate){
  if(animate)moveCameraTo(v.position,v.target);
  else{focusGoal=null;camera.position.copy(v.position);controls.target.copy(v.target);controls.update()}
 }
-$('resetView').onclick=()=>{fitFullBody(true);setCameraViewSelected('full')};
+$('resetView').onclick=()=>{camTween=null;fitFullBody(true);setCameraViewSelected('full')};
 setCameraViewSelected('full');
 // OrbitControls fires 'start' for mouse/touch orbit and wheel zoom, not for
 // the scripted Focus / Full Body transitions. Clear both view highlights.
@@ -603,6 +638,7 @@ function loadBody(kind){
  overlay.textContent=`Loading ${filename}…`;
  status(`Loading ${filename}…`);
  cancelTattooDrag();
+ const hadTattoo=!!anchor||introPlacePending;stopIntro();
  coachWasReady=false;anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;setCameraViewSelected('full');updatePlacementHint();
  fetchBody(kind).then(asset=>{
   if(version!==bodyLoadVersion)return;
@@ -617,7 +653,7 @@ function loadBody(kind){
   const distance=Math.max(dim.y/vf,dim.x/(vf*camera.aspect),dim.z*2)*1.5;
   camera.position.copy(center).add(new THREE.Vector3(0,0,distance));camera.near=Math.max(distance/2000,.0001);camera.far=distance*100;camera.updateProjectionMatrix();controls.update();
   initialView={position:camera.position.clone(),target:controls.target.clone()};
-  if(!anchor)requestAnimationFrame(()=>{resize();fitFullBody(false)});
+  if(!anchor)requestAnimationFrame(()=>{resize();fitFullBody(false);if(tex&&selectedFlashReady){if(hadTattoo)autoPlaceOnChest();else placeWithIntro()}});
   $('bodySelect').disabled=false;syncBodyRadios();$('bodyInfo').textContent=kind==='female'?'Female Body selected':'Male Body selected';overlay.textContent='';
   status(tex?'Body loaded. Click or tap on the body to place your tattoo.':'Body loaded. Choose a PNG to begin.');updatePlacementHint();
   // Prepare the other model in the background, once, without interrupting interaction.
@@ -766,6 +802,8 @@ function* arapRefineSteps(data,dem,f0,P,orient,motifSize,inRegion){
 // Both GLB bodies are modelled at real scale in metres (male 1.75 m, female 1.65 m), so a
 // tattoo width in cm converts directly and is physically the same size on either body.
 const SCENE_UNITS_PER_CM=.01;
+// Frame shown around the artwork while it is held (0 = hidden, 1 = fully visible; animated).
+const tattooSelection={value:0};let selectionHoldUntil=0;
 let demCache=null,arapJob=null,uvBlend=null,shownDemKey=null;
 function wrap(preview=false){
  if(!anchor||!tex)return;
@@ -891,7 +929,7 @@ function wrap(preview=false){
  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeVertexNormals();
  // Shader clips each triangle to the tattoo rectangle. No empty area is drawn outside the PNG.
  const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.03,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
- m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>`)};
+ m.onBeforeCompile=shader=>{shader.uniforms.uSel=tattooSelection;shader.fragmentShader='uniform float uSel;\n'+shader.fragmentShader.replace('#include <map_fragment>',`if (vMapUv.x < 0.0 || vMapUv.x > 1.0 || vMapUv.y < 0.0 || vMapUv.y > 1.0) discard;\n#include <map_fragment>\nif(uSel>0.001){float fw=max(max(fwidth(vMapUv.x),fwidth(vMapUv.y)),1e-6);float d=min(min(vMapUv.x,1.0-vMapUv.x),min(vMapUv.y,1.0-vMapUv.y))/fw;float edge=(1.0-smoothstep(.8,1.8,d))*uSel*.55;diffuseColor=vec4(mix(diffuseColor.rgb,vec3(1.0),edge),max(diffuseColor.a,edge));}`)};
  tattoo=new THREE.Mesh(g,m);tattoo.renderOrder=2;scene.add(tattoo);$('remove').disabled=false;$('moveMode').disabled=false;$('focusTattoo').disabled=false;
  if(blendFromDem){const attr=g.getAttribute('uv');uvBlend={attr,from:Float32Array.from(uvsFrom),to:Float32Array.from(uvs),start:performance.now()};attr.array.set(uvBlend.from);attr.needsUpdate=true}
  shownDemKey=refined?null:demKey;
@@ -956,12 +994,68 @@ presetButtons.forEach(b=>b.addEventListener('click',()=>{$('skin').value=b.datas
 $('skin').addEventListener('input',updateSkinSelection);
 for(const id of ['size','rotation'])$(id).addEventListener('change',()=>{if(anchor&&tex)wrap(false)});
 $('remove').onclick=()=>{anchor=null;dragging=false;clear();setMode('orbit');status('Tattoo removed. Click or tap on the body to place it again.');updatePlacementHint()};
-function moveAnchor(e,preview){const hit=hitBody(e);if(!hit)return false;const newNormal=worldNormal(hit);
+function moveAnchor(e,preview){
+ let hit=hitBody(e);
+ // While dragging, the tattoo slides over the skin: it cannot hop across a gap onto another body part
+ // (e.g. the hand hanging next to the waist). It stops at the outline instead, and the body turns.
+ if(anchor&&dragging&&(!hit||hit.point.distanceTo(anchor.point)>bodyHeight*.017)){const m=bodyEdgeHit(e);if(m&&m.gap)hit=m.hit}
+ if(!hit)return false;placeFromHit(hit,preview);return true}
+// Walks on screen from the tattoo towards the finger; if the body is left on the way (a gap), returns
+// the last point on the body before it (refined), i.e. the outline of the body.
+function bodyEdgeHit(e){
+ const s=screenPoint(anchor.point);if(!hitBody({clientX:s.x,clientY:s.y}))return null;
+ const at=m=>hitBody({clientX:s.x+(e.clientX-s.x)*m,clientY:s.y+(e.clientY-s.y)*m});
+ const n=Math.min(24,Math.max(2,Math.ceil(Math.hypot(e.clientX-s.x,e.clientY-s.y)/6)));
+ let lo=0,hi=1,best=null,gap=false;
+ for(let i=1;i<=n;i++){const h=at(i/n);if(!h){hi=i/n;gap=true;break}best=h;lo=i/n}
+ if(!gap)return {gap:false};
+ for(let i=0;i<5;i++){const m=(lo+hi)/2,h=at(m);if(h){best=h;lo=m}else hi=m}
+ return {gap:true,hit:best&&best.point.distanceTo(anchor.point)<bodyHeight*.08?best:null};
+}
+function placeFromHit(hit,preview){const newNormal=worldNormal(hit);
  // Rebuild the tangent basis from the fixed world-up vector on every move.
  // Parallel-transporting the old basis accumulates unwanted twisting around limbs.
  // The rotation slider remains the only source of deliberate artwork rotation.
  const basis=tangentBasis(newNormal);
- if(!anchor)anchor={};anchor.basis=basis;anchor.point=hit.point.clone();anchor.normal=newNormal;anchor.object=hit.object;anchor.faceIndex=hit.faceIndex;wrap(preview);updatePlacementHint();updateRegion();return true}
+ if(!anchor)anchor={};anchor.basis=basis;anchor.point=hit.point.clone();anchor.normal=newNormal;anchor.object=hit.object;anchor.faceIndex=hit.faceIndex;wrap(preview);updatePlacementHint();updateRegion()}
+// A newly chosen design lands on the upper belly automatically (centre front, current size), then the
+// camera moves in. Also used after switching between the female and male body.
+let autoFocusTimer=0;
+function autoPlaceOnChest(){
+ if(!tex||!model||!meshes.length||!regionBox)return false;
+ const b=regionBox,c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());
+ const rc=new THREE.Raycaster(new THREE.Vector3(c.x,b.min.y+s.y*.62,b.max.z+s.z+1),new THREE.Vector3(0,0,-1));
+ const hit=rc.intersectObjects(meshes,false)[0];if(!hit)return false;
+ placeFromHit(hit,false);setMode('move');
+ return true;
+}
+// Smooth camera move with ease-in-out (slower and calmer than the normal view change).
+function tweenCameraTo(v,ms,ease){focusGoal=null;camTween={p0:camera.position.clone(),t0:controls.target.clone(),p1:v.position.clone(),t1:v.target.clone(),start:performance.now(),ms,ease}}
+function stepCamTween(now){
+ if(!camTween)return;const k=Math.min(1,(now-camTween.start)/camTween.ms),e=camTween.ease==='out'?1-Math.pow(1-k,3):k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+ camera.position.lerpVectors(camTween.p0,camTween.p1,e);controls.target.lerpVectors(camTween.t0,camTween.t1,e);
+ if(k>=1)camTween=null;
+}
+// Intro after choosing a flash. Any tap ends it at once in the full body view.
+function stopIntro(){introTimers.forEach(clearTimeout);introTimers=[];introActive=false;introPlacePending=false;camTween=null}
+function finishIntroNow(){
+ const place=introPlacePending;stopIntro();
+ if(place)autoPlaceOnChest();
+ fitFullBody(false);setCameraViewSelected('full');
+}
+function placeWithIntro(){
+ stopIntro();fitFullBody(false);setCameraViewSelected('full');
+ introActive=true;introPlacePending=true;
+ const at=(ms,fn)=>introTimers.push(setTimeout(fn,ms));
+ at(300,()=>{introPlacePending=false;if(!autoPlaceOnChest()){stopIntro();return}
+  at(250,()=>{focusTattoo();const goal=focusGoal;focusGoal=null;if(!goal){stopIntro();return}
+   setCameraViewSelected('focus');tweenCameraTo(goal,600,'out');
+   at(600+700,()=>{const v=fullBodyView();if(v){initialView=v;tweenCameraTo(v,500)}setCameraViewSelected('full');
+    at(500,()=>{introActive=false;introTimers=[]})})})});
+}
+// Capture phase: the tap only ends the intro, it does not also start an orbit or a tattoo drag.
+renderer.domElement.addEventListener('pointerdown',e=>{if(!introActive)return;finishIntroNow();e.stopImmediatePropagation();e.preventDefault()},true);
+window.addEventListener('pointerdown',e=>{if(introActive&&e.target!==renderer.domElement)finishIntroNow()},true);
 // Grab only where the artwork actually has ink. Transparent areas (inside an oval, between
 // wings) rotate the body instead. A finger gets a few pixels of slack around fine lines.
 let artAlpha=null;
@@ -993,9 +1087,12 @@ function canGrabTattoo(e){
 let press=null;
 renderer.domElement.addEventListener('pointerdown',e=>{focusGoal=null;
  if(e.button!==0)return;
- // Never hijack multi-touch: OrbitControls handles pinch gestures.
+ if(e.pointerType==='touch')touchPoints.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ // A second finger while the first holds the tattoo: the gesture belongs to the tattoo.
+ // Otherwise multi-touch stays with OrbitControls (camera pinch zoom).
  if(e.pointerType==='touch' && activeTouches.size>0){
    activeTouches.add(e.pointerId);
+   if(dragging&&!pinch&&touchPoints.has(dragId)){startPinch(dragId,e.pointerId);e.preventDefault();return}
    if(dragging)cancelTattooDrag();
    press=null;
    return;
@@ -1007,8 +1104,37 @@ renderer.domElement.addEventListener('pointerdown',e=>{focusGoal=null;
    const p=screenPoint(anchor.point);grabOffset={x:p.x-e.clientX,y:p.y-e.clientY};dragging=true;dragId=e.pointerId;dragClient={clientX:e.clientX,clientY:e.clientY};controls.enabled=false;renderer.domElement.classList.add('drag');renderer.domElement.setPointerCapture(e.pointerId);e.preventDefault();
  }
 });
-const activeTouches=new Set();
+const activeTouches=new Set(),touchPoints=new Map();
+// Two-finger tattoo gesture (like a sticker): distance = size, twist = rotation, midpoint = position.
+function startPinch(a,b){
+ const p=touchPoints.get(a),q=touchPoints.get(b);
+ if(raf)cancelAnimationFrame(raf);raf=0;queued=null;edgeSpeed=0;edgeHint.style.opacity='0';
+ pinch={a,b,d0:Math.max(Math.hypot(q.x-p.x,q.y-p.y),1),ang0:Math.atan2(q.y-p.y,q.x-p.x),size0:Number($('size').value),rot0:Number($('rotation').value),
+  mid0:{x:(p.x+q.x)/2,y:(p.y+q.y)/2},anchor0:screenPoint(anchor.point)};
+ try{renderer.domElement.setPointerCapture(b)}catch(err){}
+}
+function schedulePinch(){if(pinchRaf)return;pinchRaf=requestAnimationFrame(()=>{pinchRaf=0;if(!pinch)return;
+ if(performance.now()-pinchLast<60){schedulePinch();return}pinchLast=performance.now();applyPinch(true)})}
+function applyPinch(preview){
+ const p=touchPoints.get(pinch.a),q=touchPoints.get(pinch.b);if(!p||!q)return;
+ const ratio=Math.hypot(q.x-p.x,q.y-p.y)/pinch.d0;
+ const size=Math.min(65,Math.max(2,Math.round(pinch.size0*ratio*2)/2));
+ let rot=pinch.rot0-(Math.atan2(q.y-p.y,q.x-p.x)-pinch.ang0)*180/Math.PI;rot=Math.round(((rot+540)%360)-180);
+ $('size').value=size;$('rotation').value=rot;$('rotationDeg').value=rot;$('rotationValue').textContent=rot+'°';updateDimensions();
+ const mid={x:(p.x+q.x)/2,y:(p.y+q.y)/2};
+ if(!moveAnchor({clientX:pinch.anchor0.x+mid.x-pinch.mid0.x,clientY:pinch.anchor0.y+mid.y-pinch.mid0.y},preview))wrap(preview);
+}
+function endPinch(liftedId){
+ const keep=liftedId===pinch.a?pinch.b:pinch.a;
+ if(pinchRaf)cancelAnimationFrame(pinchRaf);pinchRaf=0;
+ pinch=null;wrap(false);
+ if(keep===dragId&&touchPoints.has(dragId)){
+  // The finger on the tattoo stays down: continue a normal one-finger drag from here.
+  const p=touchPoints.get(dragId),s=screenPoint(anchor.point);grabOffset={x:s.x-p.x,y:s.y-p.y};dragClient={clientX:p.x,clientY:p.y};
+ }else cancelTattooDrag();
+}
 function cancelTattooDrag(){
+ if(pinch){if(pinchRaf)cancelAnimationFrame(pinchRaf);pinchRaf=0;pinch=null}
  dragging=false;dragId=null;dragClient=null;edgeSpeed=0;
  renderer.domElement.classList.remove('drag');edgeHint.style.opacity='0';
  if(raf)cancelAnimationFrame(raf);raf=0;queued=null;
@@ -1017,16 +1143,19 @@ function cancelTattooDrag(){
 function dragEvent(e){return {clientX:e.clientX+grabOffset.x,clientY:e.clientY+grabOffset.y}}
 function queueDrag(e){queued={clientX:e.clientX,clientY:e.clientY};if(raf)return;raf=requestAnimationFrame(()=>{raf=0;if(!dragging||!queued)return;if(performance.now()-lastTime<105){raf=requestAnimationFrame(()=>{raf=0;if(dragging&&queued){const ev=queued;queued=null;lastTime=performance.now();moveAnchor(dragEvent(ev),true)}});return}const ev=queued;queued=null;lastTime=performance.now();moveAnchor(dragEvent(ev),true)})}
 renderer.domElement.addEventListener('pointermove',e=>{
+ if(touchPoints.has(e.pointerId))touchPoints.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(pinch&&(e.pointerId===pinch.a||e.pointerId===pinch.b)){schedulePinch();e.preventDefault();return}
  if(dragging&&e.pointerId===dragId){dragClient={clientX:e.clientX,clientY:e.clientY};queueDrag(e);e.preventDefault()}
 });
-function finish(e){activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;edgeHint.style.opacity="0";renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;const last=queued;queued=null;
+function finish(e){touchPoints.delete(e.pointerId);if(pinch&&(e.pointerId===pinch.a||e.pointerId===pinch.b)){activeTouches.delete(e.pointerId);endPinch(e.pointerId);press=null;return}
+ activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;edgeHint.style.opacity="0";renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;const last=queued;queued=null;
  // Fingers slide a few pixels while lifting: keep the last dragged position (plus a pending
  // move that the throttle had not applied yet) and only upgrade the quality.
  if(last)moveAnchor(dragEvent(last),false);else wrap(false);controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;status('Tattoo moved. Grab it again or switch to Rotate Body.');press=null;return}
  if(!press)return;const d=Math.hypot(e.clientX-press.x,e.clientY-press.y);press=null;if(e.type!=='pointerup'||d>5||!tex||!meshes.length)return;if(hitTattoo(e))return;if(e.pointerType==='touch'&&anchor)return;if(moveAnchor(e,false)){setMode('move');status('Tattoo placed. Drag your tattoo to adjust its position.');showPlacedToast()}}
 renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.addEventListener('pointercancel',finish);
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
-window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear()});
+window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear();touchPoints.clear()});
 
 // Booking UI / export; independent of Continuous UV wrapping.
 let bookingPNG=null,bookingCardPNG=null;
@@ -1205,7 +1334,7 @@ $('sendInstagram').addEventListener('click',async e=>{
 // plus previews in flashes/thumbs/. Newest first, 2 x 2 fields per page; a flash that does not
 // fit the space left on a page is moved to the next page and the following flashes that do fit
 // fill the gap. The number shown is the file's number and never changes.
-const FLASH_DIR='./flashes/',THUMB_DIR='./flashes/thumbs/';
+const FLASH_DIR='./flashes/',THUMB_DIR='./flashes/thumbs/',WORK_DIR='./flashes/work/';
 const flashLabel=n=>'#'+String(n).padStart(3,'0');
 let flashPages=[],flashPage=0,flashTouchStart=null;
 const flashbook=$('flashbook'),flashTrack=$('flashTrack'),flashViewport=$('flashViewport');
@@ -1213,7 +1342,7 @@ async function loadFlashList(){
  try{
   const r=await fetch(FLASH_DIR+'flashes.json',{cache:'no-store'});
   if(r.ok){const list=await r.json();
-   return list.map(e=>({number:e.number,shape:e.shape||'single',name:'Flash '+flashLabel(e.number),src:[FLASH_DIR+e.file],thumb:[THUMB_DIR+e.file]}))
+   return list.map(e=>({number:e.number,shape:e.shape||'single',name:'Flash '+flashLabel(e.number),src:e.work?[WORK_DIR+e.file,FLASH_DIR+e.file]:[FLASH_DIR+e.file],thumb:[THUMB_DIR+e.file]}))
      .sort((a,b)=>b.number-a.number)}
  }catch(err){console.warn('flashes.json missing or invalid, probing numbered PNGs instead',err)}
  return probeFlashes();
@@ -1284,6 +1413,100 @@ async function buildFlashbook(){
  });
  requestAnimationFrame(positionFlashbook);
 }
+// Landing intro (first open only): the male figure turns large over a see-through flashbook, the
+// instruction appears, then the figure glides to the bottom left next to the page arrow and stays
+// there facing front as a small hint. A tap skips straight to that end state. The small figure stays
+// with the flashbook (hidden in the 3D view); the intro itself only plays once per page load.
+const landing={canvas:null,renderer:null,scene:null,camera:null,pivot:null,raf:0,state:'wait',angle:0,settleFrom:0,settleTo:0,settleStart:0,timers:[]};
+function startLandingIntro(){
+ // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
+ const cancel=()=>{if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
+ const skip=()=>{if(landing.state==='wait'){landing.state='skip';document.body.classList.remove('landingIntro')}};
+ landing.skip=skip;setTimeout(skip,6000);
+ fetchBody('male').then(asset=>{
+  if(landing.state==='off'||!flashbook)return;
+  const quiet=landing.state==='skip'||flashbook.hidden||!!selectedDesignNumber;
+  const cv=document.createElement('canvas');cv.id='introFigure';cv.setAttribute('aria-hidden','true');document.body.appendChild(cv);
+  const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0x000000,0);
+  const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xffffff,0x77777a,2.25));const l=new THREE.DirectionalLight(0xffffff,2.1);l.position.set(4,7,6);sc.add(l);
+  const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
+  const W=innerWidth,H=Math.round(innerHeight*.66),top=Math.round(innerHeight*.07);
+  const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
+  cam.position.set(0,0,asset.dim.y/.92/vf);cam.lookAt(0,0,0);
+  document.body.classList.add('hasLandingFigure');
+  Object.assign(landing,{canvas:cv,renderer:r,scene:sc,camera:cam,pivot,state:'spin',angle:0,W,H,top,glide:null});
+  setLandingRect({x:0,y:top,w:W,h:H});
+  const txt=document.createElement('div');txt.id='introText';txt.textContent=t('flash.instruction');document.body.appendChild(txt);landing.text=txt;
+  // Same type as the instruction line at the bottom (font, weight, spacing), just larger: as large as
+  // the screen width allows, so it can shrink straight into that line.
+  {const line=document.querySelector('#flashbook .flashInstruction'),cs=getComputedStyle(line),rg=document.createRange();rg.selectNodeContents(line);
+   const k=Math.min(1.8,(innerWidth-32)/Math.max(1,rg.getBoundingClientRect().width));
+   Object.assign(txt.style,{fontFamily:cs.fontFamily,fontWeight:cs.fontWeight,textTransform:cs.textTransform,fontSize:parseFloat(cs.fontSize)*k+'px',letterSpacing:(parseFloat(cs.letterSpacing)||0)*k+'px'})}
+  document.body.classList.add('landingIntro');
+  if(quiet||matchMedia('(prefers-reduced-motion: reduce)').matches){finishLandingIntro();return}
+  runLandingLoop();
+  const at=(ms,fn)=>landing.timers.push(setTimeout(fn,ms));
+  at(800,()=>txt.classList.add('show'));
+  at(2800,()=>moveLandingFigure(true));
+ }).catch(cancel);
+}
+function setLandingRect(q){
+ const cv=landing.canvas,w=Math.max(1,Math.round(q.w)),h=Math.max(1,Math.round(q.h));
+ cv.style.left=q.x+'px';cv.style.top=q.y+'px';cv.style.width=w+'px';cv.style.height=h+'px';
+ if(cv.width!==Math.round(w*landing.renderer.getPixelRatio())||cv.height!==Math.round(h*landing.renderer.getPixelRatio()))landing.renderer.setSize(w,h,false);
+ landing.camera.aspect=w/h;landing.camera.updateProjectionMatrix();
+}
+function runLandingLoop(){
+ if(landing.raf||!landing.renderer)return;let last=performance.now();
+ const loop=now=>{landing.raf=0;if(!landing.renderer)return;const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(landing.state==='spin')landing.angle+=dt*1.6;
+  else if(landing.state==='settle'){const k=Math.min(1,(now-landing.settleStart)/1100),e=1-Math.pow(1-k,3);landing.angle=landing.settleFrom+(landing.settleTo-landing.settleFrom)*e;if(k>=1){landing.state='still';landing.angle=0}}
+  const g=landing.glide;
+  if(g){const k=Math.min(1,(now-g.start)/900),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2,m=(p,q)=>p+(q-p)*e;
+   setLandingRect({x:m(g.from.x,g.to.x),y:m(g.from.y,g.to.y),w:m(g.from.w,g.to.w),h:m(g.from.h,g.to.h)});if(k>=1)landing.glide=null}
+  landing.pivot.rotation.y=landing.angle;landing.renderer.render(landing.scene,landing.camera);
+  if(landing.state!=='still'||landing.glide)landing.raf=requestAnimationFrame(loop)};
+ landing.raf=requestAnimationFrame(loop);
+}
+// Small spot left of the "previous page" arrow; the figure's feet line up with the arrow's bottom edge.
+function landingCorner(){
+ // Nearly the full height of the dark bar below the flashbook page, at the far left.
+ const st=document.querySelector('#flashbook .flashStage').getBoundingClientRect(),bb=document.querySelector('#flashbook .flashBottom').getBoundingClientRect();
+ const h=Math.max(44,Math.min(110,bb.bottom-st.bottom-7)),w=h*.85,cx=6+h*.27;
+ return {x:cx-w/2,y:st.bottom+3,w,h};
+}
+function moveLandingFigure(animate){
+ if(!landing.canvas)return;
+ landing.timers.forEach(clearTimeout);landing.timers=[];
+ const to=landingCorner();
+ document.body.classList.remove('landingIntro');
+ const txt=landing.text,line=document.querySelector('#flashbook .flashInstruction');
+ if(animate&&txt.classList.contains('show')&&line){
+  // Shrink the big text onto the instruction line at the bottom, then hand over to it.
+  const r=document.createRange();r.selectNodeContents(line);const to=r.getBoundingClientRect(),from=txt.getBoundingClientRect();
+  const sc=to.width/from.width;
+  document.body.classList.add('introTextTravel');
+  txt.style.textShadow='0 1px 6px #0006';
+  txt.style.transform=`translate(-50%,0) translate(${to.left+to.width/2-(from.left+from.width/2)}px,${to.top+to.height/2-(from.top+from.height/2)}px) scale(${sc})`;
+  landing.timers.push(setTimeout(()=>{txt.classList.remove('show');document.body.classList.remove('introTextTravel')},850));
+ }else{txt.classList.remove('show');document.body.classList.remove('introTextTravel')}
+ if(!animate){landing.glide=null;landing.state='still';landing.angle=0;setLandingRect(to);landing.pivot.rotation.y=0;landing.renderer.render(landing.scene,landing.camera);return}
+ // Keep turning while it glides, then come to rest facing front.
+ const turn=Math.PI*2,cv=landing.canvas;landing.settleFrom=landing.angle;landing.settleTo=Math.ceil((landing.angle+.8)/turn)*turn;landing.settleStart=performance.now();landing.state='settle';
+ landing.glide={start:performance.now(),from:{x:parseFloat(cv.style.left),y:parseFloat(cv.style.top),w:parseFloat(cv.style.width),h:parseFloat(cv.style.height)},to};
+ runLandingLoop();
+}
+function finishLandingIntro(){if(landing.state==='spin')moveLandingFigure(false)}
+function removeLandingFigure(){
+ if(!landing.canvas)return;document.body.classList.remove('hasLandingFigure');landing.timers.forEach(clearTimeout);if(landing.raf)cancelAnimationFrame(landing.raf);
+ document.body.classList.remove('landingIntro');landing.canvas.remove();landing.text.remove();
+ landing.renderer.dispose();landing.renderer.forceContextLoss();Object.assign(landing,{canvas:null,renderer:null,raf:0,state:'off'});
+}
+// A tap during the intro only ends it (no design is opened through the see-through flashbook).
+document.addEventListener('pointerdown',e=>{if(landing.state==='wait'){landing.skip();e.stopPropagation();e.preventDefault();window.__flashSuppressClickUntil=performance.now()+500;return}
+ if(landing.state!=='spin')return;e.stopPropagation();e.preventDefault();finishLandingIntro();window.__flashSuppressClickUntil=performance.now()+500},true);
+addEventListener('resize',()=>{if(landing.canvas&&landing.state!=='spin')moveLandingFigure(false)});
+startLandingIntro();
 function positionFlashbook(){
  const pages=flashTrack.querySelectorAll('.flashPage');if(!pages.length)return;
  const target=pages[Math.min(flashPage,pages.length-1)];
@@ -1305,13 +1528,14 @@ let selectedDesignNumber=null;
 let flashLoadToken=0;
 async function openFlashDesign(design,designNumber){
  if((window.__flashSuppressClickUntil||0)>performance.now())return;
- selectedDesignNumber=designNumber;
+ selectedDesignNumber=designNumber;if(landing.state==='wait')landing.skip();else finishLandingIntro();
  // Only the most recently tapped design may finish loading (fast double taps on a phone).
  const token=++flashLoadToken;
  flashbook.hidden=true;$('viewerBack').hidden=false;requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
  // Remove the previous tattoo and artwork immediately, not after the new PNG has loaded:
  // otherwise the old design stays visible (and can even be placed again) while loading.
  cancelTattooDrag();anchor=null;arapJob=null;uvBlend=null;clear();
+ stopIntro();fitFullBody(false);setCameraViewSelected('full');
  if(tex){tex.dispose();tex=null}
  $('hint').classList.remove('afterPlacement');$('hint').style.visibility='hidden';
  resize();
@@ -1329,11 +1553,12 @@ async function openFlashDesign(design,designNumber){
   $('size').value=15;$('rotation').value=0;$('rotationDeg').value=0;$('rotationValue').textContent='0°';
   $('preview').src=cropped.toDataURL('image/png');updateDimensions();
   anchor=null;clear();setMode('orbit');setCameraViewSelected('full');selectedFlashReady=true;updatePlacementHint();
+  placeWithIntro();
   status(`Design #${String(selectedDesignNumber).padStart(3,'0')} selected. Tap the body to place it.`);
  }catch(err){console.error(err);status('Could not load flash. Check the flashes folder.');}
 }
 $('panelHandle').onclick=()=>{$('panelHandle').classList.remove('glow');setPanelState(panelState==='open'?'collapsed':'open')};
-$('viewerBack').onclick=()=>{requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
+$('viewerBack').onclick=()=>{stopIntro();requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
 buildFlashbook();
 document.querySelectorAll('.langSwitch button').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.lang)));
 applyLanguage();updateDimensions();
@@ -1350,11 +1575,13 @@ function render(){requestAnimationFrame(render);
   figurePopPrevious=distanceFactor;
   if(t>=1){figurePopStart=0;figurePopPrevious=1;}
  }
+ stepCamTween(now);
  if(focusGoal){camera.position.lerp(focusGoal.position,.13);controls.target.lerp(focusGoal.target,.13);if(camera.position.distanceTo(focusGoal.position)<bodyHeight*.0001&&controls.target.distanceTo(focusGoal.target)<bodyHeight*.0001){camera.position.copy(focusGoal.position);controls.target.copy(focusGoal.target);focusGoal=null}}
  if(arapJob){const job=arapJob;
   if(!anchor||demCache!==job.dem)arapJob=null;
   else{const t0=performance.now();let r;do{r=job.gen.next()}while(!r.done&&performance.now()-t0<8);
    if(r.done){arapJob=null;job.dem.refined=r.value||{U:job.dem.U,V:job.dem.V,iterations:0,verts:0,faces:0,ms:0};job.dem.refinedTheta=job.theta;wrap(dragging)}}}
+ {const held=dragging||!!pinch;document.body.classList.toggle('tattooHeld',held);if(pinch)selectionHoldUntil=now+300;const want=pinch||now<selectionHoldUntil?1:0;tattooSelection.value+=(want-tattooSelection.value)*.22;if(tattooSelection.value<.002)tattooSelection.value=0}
  if(uvBlend){const k=Math.min(1,(now-uvBlend.start)/220),e=k*k*(3-2*k),a=uvBlend.attr.array,{from,to}=uvBlend;
   for(let i=0;i<a.length;i++)a[i]=from[i]+(to[i]-from[i])*e;uvBlend.attr.needsUpdate=true;if(k>=1)uvBlend=null}
  controls.update();renderer.render(scene,camera);updateConfirmButton()}render();
