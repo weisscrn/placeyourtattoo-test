@@ -1690,7 +1690,8 @@ async function openFlashDesign(design,designNumber,sourceImg){
  selectedDesignNumber=designNumber;if(landing.state==='wait')landing.skip();else finishLandingIntro();
  // Only the most recently tapped design may finish loading (fast double taps on a phone).
  const token=++flashLoadToken;
- flashbook.hidden=true;$('viewerBack').hidden=false;setPanelState(panelState==='open'?'open':'collapsed');requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
+ // A newly chosen design always starts with the full 3D view (Adjust closed).
+ flashbook.hidden=true;$('viewerBack').hidden=false;setPanelState('collapsed');requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
  // Remove the previous tattoo and artwork immediately, not after the new PNG has loaded:
  // otherwise the old design stays visible (and can even be placed again) while loading.
  cancelTattooDrag();anchor=null;arapJob=null;uvBlend=null;clear();
@@ -1721,7 +1722,8 @@ async function openFlashDesign(design,designNumber,sourceImg){
  }catch(err){console.error(err);status('Could not load flash. Check the flashes folder.');}
 }
 $('panelHandle').onclick=()=>{$('panelHandle').classList.remove('glow');setPanelState(panelState==='open'?'collapsed':'open')};
-$('viewerBack').onclick=()=>{stopIntro();cancelMorph();requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
+$('viewerBack').onclick=()=>{stopIntro();cancelMorph();if(panelState==='open')setPanelState('collapsed'); // closes behind the flashbook
+requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
 buildFlashbook();
 document.querySelectorAll('.langSwitch button').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.lang)));
 applyLanguage();updateDimensions();
