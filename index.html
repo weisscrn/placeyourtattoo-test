@@ -1709,8 +1709,11 @@ async function openFlashDesign(design,designNumber,sourceImg){
   const cropped=cropArtwork(img);URL.revokeObjectURL(url);artAlpha=makeArtAlpha(cropped);
   imgAspect=cropped.width/cropped.height;
   if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
-  // Every newly selected flash starts at 15 cm and 0 degrees.
-  $('size').value=15;$('rotation').value=0;$('rotationDeg').value=0;$('rotationValue').textContent='0°';
+  // Every newly selected flash starts with its SHORTER side at 15 cm (tall design: 15 cm wide; wide
+  // design: 15 cm high, the width follows from its proportions) and 0 degrees. The slider sets the width.
+  // The longer side is capped at 30 cm (very long designs are scaled down to that, the other side follows).
+  {const a=imgAspect,longer=15*Math.max(a,1/a),k=Math.min(1,30/longer),w=15*Math.max(1,a)*k;
+   $('size').value=k<1?Math.floor(w*2+1e-6)/2:Math.ceil(w*2-1e-6)/2}$('rotation').value=0;$('rotationDeg').value=0;$('rotationValue').textContent='0°';
   $('preview').src=cropped.toDataURL('image/png');updateDimensions();
   anchor=null;clear();setMode('orbit');setCameraViewSelected('full');selectedFlashReady=true;updatePlacementHint();
   placeWithIntro();
