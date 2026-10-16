@@ -176,8 +176,7 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
 .flashGrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:clamp(7px,1.6vw,14px)}
 .flashItem{position:relative;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:3px 3px 22px;background:transparent;border:0;border-radius:5px;cursor:pointer;transition:transform .2s,background .2s}
 .flashItem:hover,.flashItem:focus-visible{background:#d8d1c25e;transform:scale(1.035);outline:0}
-.flashItem img{transition:transform .18s var(--ease),filter .18s var(--ease)}
-.flashItem:active img{transform:translateY(-4px) scale(1.04);filter:contrast(1.08) drop-shadow(0 8px 10px rgba(0,0,0,.22))}
+/* No lift on press: the tapped motif itself flies onto the body from exactly where it is. */
 .flashItem img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:contrast(1.08)}
 .flashItem span{position:absolute;bottom:3px;right:5px;padding:2px 4px;border-radius:3px;background:#eee8dccc;color:#57524b;font:700 10px var(--font);letter-spacing:.05em}
 .flashEmpty{margin:auto;font:600 14px var(--font);letter-spacing:.08em;color:#797269;text-transform:uppercase}
