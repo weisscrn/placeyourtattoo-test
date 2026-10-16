@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>CRAYKROW FLASHBOOK</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#17181b;color:#f1f1f3;font:14px system-ui,Arial,sans-serif}header{height:58px;display:flex;align-items:center;gap:16px;padding:0 22px;border-bottom:1px solid #35363a}header strong{font-size:21px}header small{color:#a5a6af}main{display:flex;height:calc(100dvh - 58px)}#viewer{flex:1;min-width:0;position:relative;overflow:hidden}aside{width:326px;background:#222329;padding:22px;overflow:auto;border-left:1px solid #36373b}h2{font-size:17px;margin:0 0 16px}label{display:block;margin:16px 0 8px}input[type=file]{max-width:100%}input[type=range]{width:100%;accent-color:#a9a9ff}#preview{height:142px;width:100%;object-fit:contain;background:#303137;border-radius:9px;padding:12px;margin-top:12px}.buttons{display:flex;gap:8px;margin-top:15px}button{background:#414249;color:#eee;border:0;border-radius:7px;padding:12px;cursor:pointer;font-weight:650}button.active{background:#b0b0ff;color:#16161d}button:disabled{opacity:.4;cursor:default}.buttons button{flex:1}#remove{width:100%;margin-top:20px;background:#e7e7eb;color:#17171b}.value{float:right;color:#b0b0ff}#message{margin-top:16px;font-size:12px;color:#c9cad3;line-height:1.55}#debug{font:11px/1.55 monospace;white-space:pre-wrap;color:#b0b0ff;margin-top:12px}#overlay{position:absolute;left:16px;top:15px;pointer-events:none;color:#ddd;font-size:12px}#hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);pointer-events:none;background:#19191dbb;border-radius:6px;padding:8px 12px;color:#d5d5df;white-space:nowrap;font-size:12px}#hint{max-width:calc(100% - 24px);text-align:center;white-space:normal;line-height:1.4;z-index:3}#viewer canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}#viewer canvas.move{cursor:grab}#viewer canvas.drag{cursor:grabbing}
@@ -190,6 +190,10 @@ body{background:#17181b}aside,.bookingDialog{background:#24252a}button{backgroun
 .flashEmpty{margin:auto;font:600 14px Arial,sans-serif;letter-spacing:.08em;color:#797269;text-transform:uppercase}
 .viewerActions{top:calc(8px + env(safe-area-inset-top));right:8px}
 #viewerBack{min-height:35px}
+/* iPhone: no double-tap zoom anywhere (taps stay instant; the 3D canvas keeps its own pinch zoom),
+   and 16 px text in form fields so Safari does not zoom in when one is focused. */
+html,body,button,a,select,input,textarea,label{touch-action:manipulation}
+#bookingOverlay .bookingDialog select,#bookingOverlay .bookingDialog textarea{font-size:16px}
 /* V18 — bottom bar [Adjust | Confirm], skin tone picker under the body switch (phone). */
 #skinPicker{display:none}
 .panelBar{display:flex;gap:8px;align-items:stretch}
