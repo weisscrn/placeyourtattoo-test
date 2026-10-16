@@ -89,7 +89,6 @@ aside{width:326px;background:var(--panel);padding:15px 17px 16px;overflow:auto;b
 #message{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.55}
 .panelBar{display:flex;gap:8px;align-items:stretch;margin-top:12px}
 .panelBar #confirmPlacement{flex:1}
-#confirmPlacement.coversControls{opacity:.38;pointer-events:none}
 #panelHandle{display:none}
 
 /* ---------- Floating controls over the 3D view ---------- */
@@ -1127,12 +1126,9 @@ window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches
 // Booking UI / export; independent of Continuous UV wrapping.
 let bookingPNG=null,bookingCardPNG=null;
 function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&tattoo); }
-// The button is sticky at the bottom of the panel. While it still covers controls (panel not
-// scrolled to the end) it is faded and lets taps through; at the end it sits below them, solid.
-const panel=document.querySelector('aside');
-function updateConfirmOverlay(){const covers=panel.scrollHeight-panel.clientHeight-panel.scrollTop>2;$('confirmPlacement').classList.toggle('coversControls',covers)}
-panel.addEventListener('scroll',updateConfirmOverlay,{passive:true});window.addEventListener('resize',updateConfirmOverlay);
-requestAnimationFrame(updateConfirmOverlay);
+// Confirm Placement is always usable once a design is on the body (the panel no longer scrolls, so
+// the old "fade while it covers controls" rule is gone; Safari applied it while the panel was closed).
+function updateConfirmOverlay(){}
 const bookingOverlay=$('bookingOverlay');
 $('closeBooking').onclick=()=>{bookingOverlay.hidden=true;$('igSteps').hidden=true};
 bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)bookingOverlay.hidden=true});
