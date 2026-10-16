@@ -1200,7 +1200,7 @@ $('sendInstagram').addEventListener('click',async e=>{
 });
 
 // Flashbook. The flashes folder holds the artwork PNGs, named by number: 01.png (one field),
-// 01_horizontal.png (a whole row) or 01_vertikal.png (a whole column). The thumbnail script
+// 01_horizontal.png (a whole row), 01_vertikal.png (a whole column) or 01_full.png (the whole page). The thumbnail script
 // ("Vorschaubilder erstellen.bat") writes flashes/flashes.json with every flash and its shape,
 // plus previews in flashes/thumbs/. Newest first, 2 x 2 fields per page; a flash that does not
 // fit the space left on a page is moved to the next page and the following flashes that do fit
@@ -1234,6 +1234,7 @@ async function probeFlashes(){
 // Fill 2 x 2 pages in order. If the next flash does not fit the free fields, the next later flash
 // that does fit is pulled forward; the skipped one opens the following page.
 function findSpot(free,shape){
+ if(shape==='full')return free[0][0]&&free[0][1]&&free[1][0]&&free[1][1]?{row:0,col:0,cells:[[0,0],[0,1],[1,0],[1,1]]}:null;
  if(shape==='horizontal'){for(let r=0;r<2;r++)if(free[r][0]&&free[r][1])return {row:r,col:0,cells:[[r,0],[r,1]]};return null}
  if(shape==='vertical'){for(let c=0;c<2;c++)if(free[0][c]&&free[1][c])return {row:0,col:c,cells:[[0,c],[1,c]]};return null}
  for(let r=0;r<2;r++)for(let c=0;c<2;c++)if(free[r][c])return {row:r,col:c,cells:[[r,c]]};return null;
@@ -1272,8 +1273,8 @@ async function buildFlashbook(){
   const grid=document.createElement('div');grid.className='flashGrid';
   items.forEach(({design:d,row,col})=>{
    const btn=document.createElement('button');btn.className='flashItem';btn.type='button';btn.setAttribute('aria-label',`Try ${d.name} on body`);
-   btn.style.gridRow=d.shape==='vertical'?'1 / span 2':String(row+1);
-   btn.style.gridColumn=d.shape==='horizontal'?'1 / span 2':String(col+1);
+   btn.style.gridRow=d.shape==='vertical'||d.shape==='full'?'1 / span 2':String(row+1);
+   btn.style.gridColumn=d.shape==='horizontal'||d.shape==='full'?'1 / span 2':String(col+1);
    // Images load only for the visible page and its neighbours.
    const img=document.createElement('img');img.alt=d.name;img.decoding='async';img.draggable=false;img.dataset.pending=JSON.stringify([...d.thumb,...d.src]);
    const no=document.createElement('span');no.textContent=flashLabel(d.number);btn.append(img,no);

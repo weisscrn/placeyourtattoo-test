@@ -4,7 +4,7 @@
   {"number":11,"file":"11.png","shape":"single"},
   {"number":10,"file":"10_horizontal.png","shape":"horizontal"},
   {"number":9,"file":"09_horizontal.png","shape":"horizontal"},
-  {"number":8,"file":"08_vertikal.png","shape":"vertical"},
+  {"number":8,"file":"08_full.png","shape":"full"},
   {"number":7,"file":"07.png","shape":"single"},
   {"number":6,"file":"06.png","shape":"single"},
   {"number":5,"file":"05.png","shape":"single"},
