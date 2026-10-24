@@ -1704,7 +1704,7 @@ function introBusy(){return landing.state==='wait'||landing.state==='spin'||land
 // Intro: the tattoos start as purple stencils and turn into black ink one after another while the figure
 // turns; then the motifs fly onto page 1, the big figure fades where it is and the small one appears.
 function introSetInk(v){if(landing.suit)landing.suit.children.forEach(m=>m.userData.ink.value=v)}
-function introSetFade(v){if(landing.fig)landing.fig.traverse(o=>{if(o.isMesh)o.material.opacity=v})}
+function introSetFade(v){if(landing.fig)landing.fig.traverse(o=>{if(o.isMesh)o.material.opacity=v});if(landing.shadow)landing.shadow.material.opacity=.9*v}
 function introResetSuit(){landing.flyRun=(landing.flyRun||0)+1;if(landing.suit)landing.suit.children.forEach(m=>{m.position.set(0,0,0);m.quaternion.identity();m.scale.setScalar(1);m.material.opacity=1})}
 // All tattoos leave the body at once: each one lifts off outwards (away from the body's axis) and a little
 // towards the viewer, grows slightly, fades — while the page motifs come out of the figure.
@@ -1715,11 +1715,13 @@ function introTattoosFlyOff(ms){
   d.x+=(Math.random()-.5)*.9;d.y=(Math.random()-.45)*1.1;d.z+=.25+Math.random()*.5;d.normalize();
   Object.assign(m.userData,{c,d,dist:h*(.5+Math.random()*.8),delay:Math.random()*.25,dur:.55+Math.random()*.45,
    axis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),turn:(Math.random()-.5)*2.4,grow:.15+Math.random()*.35})});
+ list.map(m=>m).sort((a,b)=>(b.userData.c.z-a.userData.c.z)||(b.geometry.boundingSphere.radius-a.geometry.boundingSphere.radius)).slice(0,3).forEach((m,i)=>{
+  const u=m.userData;u.through=true;u.d=new THREE.Vector3((Math.random()-.5)*.35,(Math.random()-.5)*.25,1).normalize();u.dist=h*(2.1+i*.15);u.delay=.05+i*.08;u.dur=.75+Math.random()*.2;u.grow=.4;u.turn*=.4});
  const step=now=>{if(run!==landing.flyRun)return;const T=(now-t0)/ms;let busy=false;
   list.forEach(m=>{const u=m.userData,k=Math.min(1,Math.max(0,(T-u.delay)/u.dur));if(k<1)busy=true;const e=1-Math.pow(1-k,3),sc=1+u.grow*e;
    q.setFromAxisAngle(u.axis,u.turn*e);m.quaternion.copy(q);m.scale.setScalar(sc);
    v.copy(u.c).multiplyScalar(sc).applyQuaternion(q);m.position.copy(u.c).sub(v).addScaledVector(u.d,e*u.dist);
-   m.material.opacity=1-Math.pow(k,1.6)});
+   m.material.opacity=u.through?1-Math.pow(k,5):1-Math.pow(k,1.6)});
   if(landing.renderer&&landing.state==='still')landing.renderer.render(landing.scene,landing.camera);
   if(busy&&landing.canvas)requestAnimationFrame(step)};
  requestAnimationFrame(step);
@@ -1734,10 +1736,29 @@ function introFadeAndAppear(){
  if(!landing.canvas)return;const cv=landing.canvas,t0=performance.now();
  const fade=now=>{const k=Math.min(1,(now-t0)/550);introSetFade((1-k)*(1-k));if(k<1&&landing.canvas)requestAnimationFrame(fade);else appear()};requestAnimationFrame(fade);
  const appear=()=>{if(!landing.canvas)return;
-  landing.glide=null;landing.state='still';landing.angle=0;landing.pivot.rotation.y=0;introSetInk(1);introSetFade(1);introResetSuit();
+  landing.glide=null;landing.state='still';landing.angle=0;landing.pivot.rotation.y=0;introSetInk(1);introSetFade(1);introResetSuit();introCameraHome();if(landing.shadow)landing.shadow.visible=false;
   cv.style.transition='none';cv.style.opacity='0';cv.style.transform='scale(.8)';setLandingRect(landingCorner());landing.renderer.render(landing.scene,landing.camera);
   document.body.classList.remove('landingIntro');
   requestAnimationFrame(()=>{cv.style.transition='opacity .9s ease,transform .9s cubic-bezier(.3,1.5,.5,1)';cv.style.opacity='1';cv.style.transform='none'})};
+}
+// Intro light: one strong side light that wanders over the turning body, two back lights drawing a bright
+// edge around the silhouette, very little fill — the black ink stands out, the background stays clean.
+function addIntroLights(sc){
+ sc.add(new THREE.HemisphereLight(0xffffff,0x2a2725,.55));
+ const key=new THREE.DirectionalLight(0xfff0e2,3.4);key.position.set(5,4,2.5);sc.add(key);
+ const fill=new THREE.DirectionalLight(0xdfe6ff,.25);fill.position.set(-6,1,4);sc.add(fill);
+ const rimL=new THREE.DirectionalLight(0xffffff,3.2);rimL.position.set(-5,4,-5);sc.add(rimL);
+ const rimR=new THREE.DirectionalLight(0xfff6ee,2.4);rimR.position.set(5,3,-6);sc.add(rimR);
+}
+// Camera: starts close on the chest (only ink and skin), pulls back calmly in 2.6 s to the whole figure, seen from a
+// little below (hero view).
+function introCamera(now){
+ const c=landing.camPlan;if(!c||!landing.spinStart)return;
+ const t=Math.min(1,Math.max(0,(now-landing.spinStart)/2600)),e=.5-.5*Math.cos(Math.PI*t);
+ landing.camera.position.lerpVectors(c.p0,c.p1,e);c.tgt.lerpVectors(c.t0,c.t1,e);landing.camera.lookAt(c.tgt);
+}
+function introCameraHome(){
+ const c=landing.camPlan;if(!c)return;landing.camPlan=null;landing.camera.position.set(0,0,c.D);landing.camera.lookAt(0,0,0);
 }
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
@@ -1749,7 +1770,7 @@ function startLandingIntro(){
   const quiet=landing.state==='skip'||flashbook.hidden||!!selectedDesignNumber;
   const cv=document.createElement('canvas');cv.id='introFigure';cv.setAttribute('aria-hidden','true');document.body.appendChild(cv);
   const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0x000000,0);
-  const sc=new THREE.Scene();addStudioLights(sc);
+  const sc=new THREE.Scene();addIntroLights(sc);
   const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
   // Tattooed figure (made in _gestalten_*.html): the finished tattoos are put on as they are.
   fig.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true}});landing.fig=fig;landing.bodyH=asset.dim.y;
@@ -1758,6 +1779,11 @@ function startLandingIntro(){
   const W=innerWidth,H=Math.round(innerHeight*.86),top=Math.round((innerHeight-H)/2);
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
   cam.position.set(0,0,asset.dim.y/.92/vf);cam.lookAt(0,0,0);
+  {const h=asset.dim.y,D=h/.92/vf;landing.camPlan={D,p0:new THREE.Vector3(0,h*.21,h*.45),t0:new THREE.Vector3(0,h*.21,0),p1:new THREE.Vector3(0,-h*.11,D*1.05),t1:new THREE.Vector3(0,h*.03,0),tgt:new THREE.Vector3()};
+   cam.position.copy(landing.camPlan.p0);cam.lookAt(landing.camPlan.t0);
+   // soft shadow on the floor, so the figure stands in the room instead of floating
+   const sh=new THREE.Mesh(new THREE.PlaneGeometry(h*.5,h*.26),new THREE.MeshBasicMaterial({map:groundShadow.material.map,transparent:true,depthWrite:false,opacity:.9}));
+   sh.rotation.x=-Math.PI/2;sh.position.y=-h/2+h*.002;sh.renderOrder=-1;sc.add(sh);landing.shadow=sh}
   document.body.classList.add('hasLandingFigure');
   Object.assign(landing,{canvas:cv,renderer:r,scene:sc,camera:cam,pivot,state:'spin',angle:0,W,H,top,glide:null});
   setLandingRect({x:0,y:top,w:W,h:H});
@@ -1794,7 +1820,7 @@ function runLandingLoop(){
   const g=landing.glide;
   if(g){const k=Math.min(1,(now-g.start)/900),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2,m=(p,q)=>p+(q-p)*e;
    setLandingRect({x:m(g.from.x,g.to.x),y:m(g.from.y,g.to.y),w:m(g.from.w,g.to.w),h:m(g.from.h,g.to.h)});if(k>=1)landing.glide=null}
-  landing.pivot.rotation.y=landing.angle;landing.renderer.render(landing.scene,landing.camera);
+  introCamera(now);landing.pivot.rotation.y=landing.angle;landing.renderer.render(landing.scene,landing.camera);
   if(landing.state!=='still'||landing.glide)landing.raf=requestAnimationFrame(loop)};
  landing.raf=requestAnimationFrame(loop);
 }
@@ -1807,7 +1833,7 @@ function landingCorner(){
 }
 function moveLandingFigure(animate){
  if(!landing.canvas)return;
- introSetInk(1);introSetFade(1);introResetSuit();landing.canvas.style.opacity='';landing.canvas.style.transform='';
+ introSetInk(1);introSetFade(1);introResetSuit();introCameraHome();if(landing.shadow)landing.shadow.visible=false;landing.canvas.style.opacity='';landing.canvas.style.transform='';
  landing.timers.forEach(clearTimeout);landing.timers=[];
  const to=landingCorner();
  if(animate){if(!landing.flown){document.body.classList.add('introFly');flyMotifsToPage()}}else{document.body.classList.remove('introFly');document.querySelectorAll('.flyMotif').forEach(e=>e.remove())}
