@@ -1776,7 +1776,7 @@ function startLandingIntro(){
   fig.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true}});landing.fig=fig;landing.bodyH=asset.dim.y;
   introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}});
   // Larger figure (about 72 % of the screen height); the hands still stay inside the screen while it turns.
-  const W=innerWidth,H=Math.round(innerHeight*.86),top=Math.round((innerHeight-H)/2);
+  const W=innerWidth,H=innerHeight,top=0;
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
   cam.position.set(0,0,asset.dim.y/.92/vf);cam.lookAt(0,0,0);
   {const h=asset.dim.y,D=h/.92/vf;landing.camPlan={D,p0:new THREE.Vector3(0,h*.21,h*.45),t0:new THREE.Vector3(0,h*.21,0),p1:new THREE.Vector3(0,-h*.11,D*1.05),t1:new THREE.Vector3(0,h*.03,0),tgt:new THREE.Vector3()};
