@@ -766,7 +766,7 @@ async function prepareMeshForBodySliced(mesh,diagonal){
  while(!r.done){await new Promise(res=>requestAnimationFrame(res));const t0=performance.now();do{r=g.next()}while(!r.done&&performance.now()-t0<6)}
  return r.value;
 }
-$('bodySelect').addEventListener('change',e=>loadBody(e.target.value));
+$('bodySelect').addEventListener('change',e=>{try{localStorage.setItem('bodyKind',e.target.value)}catch(err){}loadBody(e.target.value)});
 const bodyRadios=[...document.querySelectorAll('input[name="bodyModelChoice"]')];
 function syncBodyRadios(){const select=$('bodySelect');for(const radio of bodyRadios){radio.checked=radio.value===select.value;radio.disabled=select.disabled;}
  document.querySelectorAll('#bodySwitch button').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.body===select.value));b.disabled=select.disabled});}
@@ -774,7 +774,34 @@ document.querySelectorAll('#bodySwitch button').forEach(b=>b.addEventListener('c
 syncBodyRadios();
 for(const radio of bodyRadios)radio.addEventListener('change',()=>{if(!radio.checked)return;const select=$('bodySelect');if(select.disabled)return;select.value=radio.value;select.dispatchEvent(new Event('change',{bubbles:true}));syncBodyRadios();});
 
-loadBody('male');
+// Intro tattoos: intro_<body>.json (shapes) + intro_<body>.jpg (all motifs, white = ink). Missing files: plain figure.
+function loadIntroSuit(kind){
+ return Promise.all([fetch('./intro_'+kind+'.json').then(r=>r.ok?r.json():null),
+  new Promise(res=>new THREE.TextureLoader().load('./intro_'+kind+'.jpg',res,undefined,()=>res(null)))]).then(([d,tex])=>{
+  if(!d||!tex)return null;
+  tex.colorSpace=THREE.NoColorSpace;tex.anisotropy=4;
+  const bin=b=>{const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer};
+  const P=new Uint16Array(bin(d.pos)),U=new Uint16Array(bin(d.uv)),I=d.idx32?new Uint32Array(bin(d.idx)):new Uint16Array(bin(d.idx));
+  const group=new THREE.Group();let pv=0,pi=0;
+  for(const t of d.tattoos){
+   const pos=new Float32Array(t.verts*3),uv=new Float32Array(t.verts*2);
+   for(let i=0;i<t.verts;i++){for(let a=0;a<3;a++)pos[i*3+a]=d.min[a]+P[(pv+i)*3+a]/65535*d.size[a];
+    uv[i*2]=U[(pv+i)*2]/65535*3-1;uv[i*2+1]=U[(pv+i)*2+1]/65535*3-1}
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));
+   g.setIndex(Array.from(I.subarray(pi,pi+t.tris)));
+   const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+   const rect={value:new THREE.Vector4(...t.rect)},inkU={value:1};
+   m.onBeforeCompile=sh=>{sh.uniforms.uRect=rect;sh.uniforms.uInk=inkU;sh.fragmentShader='uniform vec4 uRect;uniform float uInk;\n'+sh.fragmentShader.replace('#include <map_fragment>',
+    'if(vMapUv.x<0.0||vMapUv.x>1.0||vMapUv.y<0.0||vMapUv.y>1.0)discard;\nfloat ink=texture2D(map,uRect.xy+vMapUv*uRect.zw,-0.8).r;\ndiffuseColor=vec4(mix(vec3(.12,.035,.33),vec3(.004,.003,.003),uInk),min(1.0,ink*mix(1.7,2.2,uInk))*opacity);\nif(diffuseColor.a<.03)discard;')};
+   const mesh=new THREE.Mesh(g,m);mesh.renderOrder=2;mesh.userData.ink=inkU;group.add(mesh);
+   pv+=t.verts;pi+=t.tris}
+  return group}).catch(()=>null);
+}
+// Start with the body chosen last (♀/♂); on the very first visit at random. The intro shows the same one.
+const START_BODY=(()=>{try{const k=localStorage.getItem('bodyKind');if(k==='male'||k==='female')return k}catch(e){}return Math.random()<.5?'male':'female'})();
+$('bodySelect').value=START_BODY;syncBodyRadios();
+loadBody(START_BODY);
+const introSuit=loadIntroSuit(START_BODY);
 $('skin').addEventListener('input',e=>meshes.forEach(m=>m.material.color.set(e.target.value)));
 function mouseRay(e){const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pointer,camera)}
 function hitBody(e){mouseRay(e);return ray.intersectObjects(meshes,false)[0]||null}
@@ -1262,9 +1289,13 @@ function updateConfirmButton(){ $('confirmPlacement').disabled=!(anchor&&tex&&ta
 // the old "fade while it covers controls" rule is gone; Safari applied it while the panel was closed).
 function updateConfirmOverlay(){}
 const bookingOverlay=$('bookingOverlay');
-$('closeBooking').onclick=()=>{bookingOverlay.hidden=true;$('igSteps').hidden=true;$('igDone').hidden=true};
-bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)bookingOverlay.hidden=true});
-window.addEventListener('keydown',e=>{if(e.key==='Escape')bookingOverlay.hidden=true});
+// Each screen has its own step in the browser history, so the back gesture (swipe from the left edge) goes
+// request -> 3D view -> flashbook -> leaves the page, exactly like the X and the "Flashbook" button.
+function hideBooking(){bookingOverlay.hidden=true;$('igSteps').hidden=true;$('igDone').hidden=true}
+function leaveBooking(){if(history.state&&history.state.v==='booking')history.back();else hideBooking()}
+$('closeBooking').onclick=leaveBooking;
+bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)leaveBooking()});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!bookingOverlay.hidden)leaveBooking()});
 function downloadBlob(blob,filename){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
 const bookingRegions=['Chest','Left chest','Right chest','Abdomen','Ribs / side','Upper back','Lower back','Shoulder','Upper arm','Forearm','Hand','Thigh','Calf','Foot','Neck'];
 function syncBookingPlace(){const sel=$('bookingRegionSelect');$('bookingPlace').textContent=sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:''}
@@ -1308,7 +1339,7 @@ $('confirmPlacement').onclick=async()=>{
   $('bookingFlash').textContent=selectedDesignNumber?flashLabel(selectedDesignNumber):t('booking.own');
   setSuggestedRegion();syncBookingPlace();
   renderBookingFavs();
-  $('shareMessage').textContent='';bookingOverlay.hidden=false;
+  $('shareMessage').textContent='';bookingOverlay.hidden=false;if(!history.state||history.state.v!=='booking')history.pushState({v:'booking'},'');
  }catch(err){console.error(err);status('Could not capture the preview on this device.');}
 };
 function drawWrapped(ctx,str,x,y,maxWidth,lineHeight,maxLines=12){
@@ -1670,20 +1701,61 @@ function updateAlsoLine(){const l=alsoList();$('bookingAlso').textContent=l?`${t
 const landing={canvas:null,renderer:null,scene:null,camera:null,pivot:null,raf:0,state:'wait',angle:0,settleFrom:0,settleTo:0,settleStart:0,timers:[]};
 // True while the landing intro is still waiting for the figure, turning or gliding into its corner.
 function introBusy(){return landing.state==='wait'||landing.state==='spin'||landing.state==='settle'||!!landing.glide}
+// Intro: the tattoos start as purple stencils and turn into black ink one after another while the figure
+// turns; then the motifs fly onto page 1, the big figure fades where it is and the small one appears.
+function introSetInk(v){if(landing.suit)landing.suit.children.forEach(m=>m.userData.ink.value=v)}
+function introSetFade(v){if(landing.fig)landing.fig.traverse(o=>{if(o.isMesh)o.material.opacity=v})}
+function introResetSuit(){landing.flyRun=(landing.flyRun||0)+1;if(landing.suit)landing.suit.children.forEach(m=>{m.position.set(0,0,0);m.quaternion.identity();m.scale.setScalar(1);m.material.opacity=1})}
+// All tattoos leave the body at once: each one lifts off outwards (away from the body's axis) and a little
+// towards the viewer, grows slightly, fades — while the page motifs come out of the figure.
+function introTattoosFlyOff(ms){
+ if(!landing.suit)return;const h=landing.bodyH||1.7,list=landing.suit.children,t0=performance.now(),q=new THREE.Quaternion(),v=new THREE.Vector3(),run=landing.flyRun=(landing.flyRun||0)+1;
+ list.forEach(m=>{m.geometry.computeBoundingSphere();const c=m.geometry.boundingSphere.center.clone(),cp=c.clone().add(landing.suit.position);
+  const d=new THREE.Vector3(cp.x,0,cp.z);if(d.lengthSq()<1e-6)d.set(0,0,1);d.normalize();
+  d.x+=(Math.random()-.5)*.9;d.y=(Math.random()-.45)*1.1;d.z+=.25+Math.random()*.5;d.normalize();
+  Object.assign(m.userData,{c,d,dist:h*(.5+Math.random()*.8),delay:Math.random()*.25,dur:.55+Math.random()*.45,
+   axis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),turn:(Math.random()-.5)*2.4,grow:.15+Math.random()*.35})});
+ const step=now=>{if(run!==landing.flyRun)return;const T=(now-t0)/ms;let busy=false;
+  list.forEach(m=>{const u=m.userData,k=Math.min(1,Math.max(0,(T-u.delay)/u.dur));if(k<1)busy=true;const e=1-Math.pow(1-k,3),sc=1+u.grow*e;
+   q.setFromAxisAngle(u.axis,u.turn*e);m.quaternion.copy(q);m.scale.setScalar(sc);
+   v.copy(u.c).multiplyScalar(sc).applyQuaternion(q);m.position.copy(u.c).sub(v).addScaledVector(u.d,e*u.dist);
+   m.material.opacity=1-Math.pow(k,1.6)});
+  if(landing.renderer&&landing.state==='still')landing.renderer.render(landing.scene,landing.camera);
+  if(busy&&landing.canvas)requestAnimationFrame(step)};
+ requestAnimationFrame(step);
+}
+
+function introInkOneByOne(ms){
+ const t0=performance.now();let list=[],n=1;
+ const step=now=>{if(!list.length&&landing.suit){list=landing.suit.children.slice().sort(()=>Math.random()-.5);n=list.length}const k=(now-t0)/ms;list.forEach((m,i)=>{const a=i/n*.75;m.userData.ink.value=Math.min(1,Math.max(0,(k-a)/.25))});
+  if(k<1&&landing.state==='spin')requestAnimationFrame(step)};requestAnimationFrame(step);
+}
+function introFadeAndAppear(){
+ if(!landing.canvas)return;const cv=landing.canvas,t0=performance.now();
+ const fade=now=>{const k=Math.min(1,(now-t0)/550);introSetFade((1-k)*(1-k));if(k<1&&landing.canvas)requestAnimationFrame(fade);else appear()};requestAnimationFrame(fade);
+ const appear=()=>{if(!landing.canvas)return;
+  landing.glide=null;landing.state='still';landing.angle=0;landing.pivot.rotation.y=0;introSetInk(1);introSetFade(1);introResetSuit();
+  cv.style.transition='none';cv.style.opacity='0';cv.style.transform='scale(.8)';setLandingRect(landingCorner());landing.renderer.render(landing.scene,landing.camera);
+  document.body.classList.remove('landingIntro');
+  requestAnimationFrame(()=>{cv.style.transition='opacity .9s ease,transform .9s cubic-bezier(.3,1.5,.5,1)';cv.style.opacity='1';cv.style.transform='none'})};
+}
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
  const cancel=()=>{if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
  const skip=()=>{if(landing.state==='wait'){landing.state='skip';document.body.classList.remove('landingIntro')}};
  landing.skip=skip;setTimeout(skip,6000);
- fetchBody('male').then(asset=>{
+ fetchBody(START_BODY).then(asset=>{
   if(landing.state==='off'||!flashbook)return;
   const quiet=landing.state==='skip'||flashbook.hidden||!!selectedDesignNumber;
   const cv=document.createElement('canvas');cv.id='introFigure';cv.setAttribute('aria-hidden','true');document.body.appendChild(cv);
   const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0x000000,0);
   const sc=new THREE.Scene();addStudioLights(sc);
   const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
+  // Tattooed figure (made in _gestalten_*.html): the finished tattoos are put on as they are.
+  fig.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true}});landing.fig=fig;landing.bodyH=asset.dim.y;
+  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}});
   // Larger figure (about 72 % of the screen height); the hands still stay inside the screen while it turns.
-  const W=innerWidth,H=Math.round(innerHeight*.78),top=Math.round(innerHeight*.04);
+  const W=innerWidth,H=Math.round(innerHeight*.86),top=Math.round((innerHeight-H)/2);
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
   cam.position.set(0,0,asset.dim.y/.92/vf);cam.lookAt(0,0,0);
   document.body.classList.add('hasLandingFigure');
@@ -1698,12 +1770,14 @@ function startLandingIntro(){
    Object.assign(txt.style,{fontFamily:cs.fontFamily,fontWeight:cs.fontWeight,textTransform:cs.textTransform,fontSize:parseFloat(cs.fontSize)*k+'px',letterSpacing:(parseFloat(cs.letterSpacing)||0)*k+'px'})}
   document.body.classList.add('landingIntro');
   if(quiet||matchMedia('(prefers-reduced-motion: reduce)').matches){finishLandingIntro();return}
+  landing.spinStart=performance.now();landing.angle0=0;landing.angle=0;landing.spinW=Math.PI*2/3.0;
   runLandingLoop();
   const at=(ms,fn)=>landing.timers.push(setTimeout(fn,ms));
   // No big text during the turn (user: only the figure); the instruction line appears with the flashbook.
-  at(1700,()=>{document.body.classList.add('introFly');landing.flown=true;flyMotifsToPage()});
-  at(2100,()=>document.body.classList.add('introPaper'));
-  at(2200,()=>moveLandingFigure(true));
+  at(3000,()=>introTattoosFlyOff(1000));
+  at(3000,()=>{document.body.classList.add('introFly');landing.flown=true;flyMotifsToPage()});
+  at(3050,introFadeAndAppear);
+  at(3500,()=>document.body.classList.add('introPaper'));
  }).catch(cancel);
 }
 function setLandingRect(q){
@@ -1715,7 +1789,7 @@ function setLandingRect(q){
 function runLandingLoop(){
  if(landing.raf||!landing.renderer)return;let last=performance.now();
  const loop=now=>{landing.raf=0;if(!landing.renderer)return;const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(landing.state==='spin')landing.angle+=dt*1.6;
+  if(landing.state==='spin')landing.angle=landing.spinStart?landing.angle0+landing.spinW*(now-landing.spinStart)/1000:landing.angle+dt*1.6;
   else if(landing.state==='settle'){const k=Math.min(1,(now-landing.settleStart)/1100),e=1-Math.pow(1-k,3);landing.angle=landing.settleFrom+(landing.settleTo-landing.settleFrom)*e;if(k>=1){landing.state='still';landing.angle=0}}
   const g=landing.glide;
   if(g){const k=Math.min(1,(now-g.start)/900),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2,m=(p,q)=>p+(q-p)*e;
@@ -1733,6 +1807,7 @@ function landingCorner(){
 }
 function moveLandingFigure(animate){
  if(!landing.canvas)return;
+ introSetInk(1);introSetFade(1);introResetSuit();landing.canvas.style.opacity='';landing.canvas.style.transform='';
  landing.timers.forEach(clearTimeout);landing.timers=[];
  const to=landingCorner();
  if(animate){if(!landing.flown){document.body.classList.add('introFly');flyMotifsToPage()}}else{document.body.classList.remove('introFly');document.querySelectorAll('.flyMotif').forEach(e=>e.remove())}
@@ -1836,7 +1911,7 @@ function flyMotifsToPage(){
  const page=flashTrack.querySelector('.flashPage');if(!page||!landing.canvas){document.body.classList.remove('introFly');return}
  const fig=landing.canvas.getBoundingClientRect(),H=fig.height,cx=fig.left+fig.width/2,top=fig.top;
  // Spots on the body (relative to the figure height), in the order the motifs leave it.
- const spots=[[0,.3],[-.07,.42],[.07,.42],[0,.55],[-.05,.7],[.05,.7]];
+ const spots=[[0,.44],[-.025,.47],[.025,.47],[0,.5],[-.02,.43],[.02,.43]]; // all from the middle of the figure
  const items=[...page.querySelectorAll('.flashItem')];let last=0;
  items.forEach((item,i)=>{
   const img=item.querySelector('img');if(!img||!img.complete||!img.naturalWidth){item.classList.add('landed');return}
@@ -1844,8 +1919,8 @@ function flyMotifsToPage(){
   const fromW=H*.09,fromH=fromW*to.h/to.w,fromX=cx+sx*H-fromW/2,fromY=top+sy*H-fromH/2;
   const el=document.createElement('img');el.className='flyMotif';el.src=img.currentSrc||img.src;el.alt='';
   Object.assign(el.style,{left:to.x+'px',top:to.y+'px',width:to.w+'px',height:to.h+'px'});document.body.appendChild(el);
-  const startT=`translate(${fromX-to.x}px,${fromY-to.y}px) scale(${fromW/to.w})`,delay=i*180,dur=2000;last=Math.max(last,delay+dur);
-  const anim=el.animate([{transform:startT,opacity:0},{transform:startT,opacity:1,offset:.12},{transform:'none',opacity:1}],{duration:dur,delay,easing:'cubic-bezier(.45,.05,.25,1)',fill:'both'});
+  const startT=`translate(${fromX-to.x}px,${fromY-to.y}px) scale(${fromW/to.w})`,delay=60+i*90,dur=1700;last=Math.max(last,delay+dur);
+  const anim=el.animate([{transform:startT,opacity:0},{transform:startT,opacity:1,offset:.04},{transform:'translate(0px,0px) scale(1.06)',opacity:1,offset:.86},{transform:'translate(0px,0px) scale(1)',opacity:1}],{duration:dur,delay,easing:'cubic-bezier(.3,.55,.2,1)',fill:'both'});
   anim.onfinish=()=>{item.classList.add('landed');el.remove()};
  });
  setTimeout(()=>{document.body.classList.remove('introFly');document.querySelectorAll('.flyMotif').forEach(e=>e.remove())},last+60);
@@ -1907,7 +1982,7 @@ async function openFlashDesign(design,designNumber,sourceImg){
  // Only the most recently tapped design may finish loading (fast double taps on a phone).
  const token=++flashLoadToken;
  // A newly chosen design always starts with the full 3D view (Adjust closed).
- flashbook.hidden=true;$('viewerBack').hidden=false;setPanelState('collapsed');requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
+ flashbook.hidden=true;$('viewerBack').hidden=false;setPanelState('collapsed');if(!history.state||history.state.v!=='3d')history.pushState({v:'3d'},'');requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
  // Remove the previous tattoo and artwork immediately, not after the new PNG has loaded:
  // otherwise the old design stays visible (and can even be placed again) while loading.
  cancelTattooDrag();anchor=null;arapJob=null;uvBlend=null;clear();
@@ -1938,8 +2013,12 @@ async function openFlashDesign(design,designNumber,sourceImg){
  }catch(err){console.error(err);status('Could not load flash. Check the flashes folder.');}
 }
 $('panelHandle').onclick=()=>{$('panelHandle').classList.remove('glow');setPanelState(panelState==='open'?'collapsed':'open')};
-$('viewerBack').onclick=()=>{stopIntro();cancelMorph();closeFavStrip();if(panelState==='open')setPanelState('collapsed'); // closes behind the flashbook
-requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)};
+function showFlashbookAgain(){stopIntro();cancelMorph();closeFavStrip();if(panelState==='open')setPanelState('collapsed'); // closes behind the flashbook
+requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)}
+$('viewerBack').onclick=()=>{if(history.state&&history.state.v==='3d')history.back();else showFlashbookAgain()};
+window.addEventListener('popstate',()=>{const v=history.state&&history.state.v;
+ if(!bookingOverlay.hidden&&v!=='booking'){hideBooking();if(v!=='3d'&&flashbook.hidden)showFlashbookAgain();return}
+ if(flashbook.hidden&&v!=='3d'&&v!=='booking')showFlashbookAgain()});
 buildFlashbook();
 document.querySelectorAll('.langSwitch button').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.lang)));
 applyLanguage();updateDimensions();
