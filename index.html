@@ -32,6 +32,7 @@
 *{box-sizing:border-box}
 html{-webkit-tap-highlight-color:transparent}
 html,body,button,a,select,input,textarea,label{touch-action:manipulation}
+b,strong{font-weight:650}
 body{margin:0;background:var(--book);color:var(--text);font:14px var(--font)}
 p{color:var(--muted);line-height:1.55;font-size:12px}
 label{display:block;margin:12px 0 6px}
@@ -43,10 +44,11 @@ button:active,.bookingSend:active,#igOpen:active{background:var(--surface-press)
 .flashItem:active,.poItem:active{transform:none;background:transparent}
 button:disabled{opacity:.4;cursor:default}
 button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--line-strong);outline-offset:2px}
-button.active,button[aria-pressed="true"],.viewerActions button.viewSelected,#panelHandle[aria-expanded="true"]{background:var(--selected);border-color:var(--line-strong);color:#fff}
+button.active,button[aria-pressed="true"],.viewerActions button.viewSelected,#panelHandle[aria-expanded="true"]{background:var(--selected);border-color:var(--line-strong);color:var(--text)}
 /* Primary: one per view. */
-#confirmPlacement,.bookingSend,#igOpen{display:flex;align-items:center;justify-content:center;gap:8px;transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),opacity var(--dur) var(--ease);background:var(--primary);color:var(--on-primary);border:0;border-radius:var(--radius);padding:12px 14px;font:700 13px var(--font);letter-spacing:.02em;text-decoration:none}
+#confirmPlacement,.bookingSend,#igOpen{display:flex;align-items:center;justify-content:center;gap:8px;transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),opacity var(--dur) var(--ease);background:var(--primary);color:var(--on-primary);border:0;border-radius:var(--radius);padding:12px 14px;font:700 12px var(--font);letter-spacing:.02em;text-decoration:none}
 #confirmPlacement:active,.bookingSend:active,#igOpen:active{background:var(--primary-press)}
+#confirmPlacement::after,#igOpen::after{content:'';flex:none;width:16px;height:16px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2.12%202.12%2019.76%2019.76' fill='none' stroke='black' stroke-width='1.48' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2.12%202.12%2019.76%2019.76' fill='none' stroke='black' stroke-width='1.48' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat}
 select,textarea,input[type=number]{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);padding:9px 10px;font:16px var(--font)}
 /* Sliders: thin line (white up to the knob), white round knob with a soft shadow around it.
    --p (0–100 %) is kept up to date in JS. Rotation shows a mark at 0° in the middle instead of a fill. */
@@ -60,7 +62,7 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 9px rgba(255,255
 #rotation::-moz-range-track{background:linear-gradient(90deg,rgba(255,255,255,.2) 0 calc(50% - 1px),rgba(255,255,255,.55) calc(50% - 1px) calc(50% + 1px),rgba(255,255,255,.2) calc(50% + 1px))}
 input[type=color]{width:58px;height:35px;border:0;background:none;cursor:pointer}
 .value{float:right;font-weight:650}
-.measurement{font-size:12px;color:var(--muted);margin-top:5px}
+.measurement{font-size:10px;color:var(--muted);margin-top:5px}
 
 /* ---------- Layout: 3D view + control panel ---------- */
 main{display:flex;height:100dvh}
@@ -100,6 +102,8 @@ aside{width:326px;background:var(--panel);padding:15px 17px 16px;overflow:auto;b
 .skinpresets button.selected{outline:2px solid #fff;outline-offset:2px}
 .colorline{display:flex;align-items:center;justify-content:space-between}
 #remove{width:100%;margin-top:10px;font-size:12px}
+aside label,.mirrorline>span{font-size:12px;font-weight:400}
+aside label .value{font-size:12px;font-weight:650}
 #message{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.55}
 .panelBar{display:flex;gap:8px;align-items:stretch;margin-top:12px}
 .panelBar #confirmPlacement{flex:1}
@@ -110,31 +114,27 @@ aside{width:326px;background:var(--panel);padding:15px 17px 16px;overflow:auto;b
 .viewerActions{position:absolute;right:var(--edge);top:calc(var(--edge) + env(safe-area-inset-top));z-index:8;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 #resetView{order:-1}
 .viewerActions button,#viewerBack,#bodySwitch,#skinPicker,.langSwitch,.favChip,.flashBottom button{background:var(--glass);border:1px solid var(--line);box-shadow:0 4px 16px #0006;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.viewerActions button{display:flex;align-items:center;justify-content:center;gap:6px;height:var(--h-float);padding:0 11px;font-size:11px}
+button svg [stroke],button svg circle,button svg path,button svg rect,.igCheck svg path,.bookingSend svg circle,.bookingSend svg path,.bookingSend svg rect{vector-effect:non-scaling-stroke;stroke-width:1.2px}
+#flipH,#flipV{display:grid;place-items:center;width:var(--h-float);height:var(--h-float);padding:0}
+#panelHandle,#flipH,#flipV,#moveMode,#orbitMode,#remove{background:var(--glass);border:1px solid var(--line);color:var(--text);box-shadow:0 4px 16px #0006}
+#panelHandle[aria-expanded="true"],#flipH[aria-pressed="true"],#flipV[aria-pressed="true"],#moveMode.active,#orbitMode.active{background:var(--selected);border-color:var(--line-strong);color:var(--text)}
+.viewerActions button{display:flex;align-items:center;justify-content:center;gap:6px;height:var(--h-float);padding:0 11px;font-size:12px}
 .viewerActions button svg{flex:none}
 #viewerBack{position:fixed;left:var(--edge);top:calc(var(--edge) + env(safe-area-inset-top));z-index:16;height:var(--h-float);padding:0 11px;border-radius:var(--radius);color:var(--text);font:650 12px var(--font)}
+#viewerBack{display:flex;align-items:center;gap:6px}
 /* ♀ | ♂: one tile as high and wide as the Flashbook button; both halves fill it completely,
    symbols in the icon stroke weight (drawn, so they sit exactly in the centre on every phone), a hairline between them. */
-#bodySwitch{position:fixed;left:var(--edge);top:calc(var(--edge) + var(--h-float) + 8px + env(safe-area-inset-top));z-index:15;display:grid;grid-template-columns:1fr 1fr;width:95px;height:var(--h-float);padding:0;overflow:hidden;border-radius:var(--radius)}
+#bodySwitch{position:fixed;left:var(--edge);top:calc(var(--edge) + var(--h-float) + 8px + env(safe-area-inset-top));z-index:15;display:grid;grid-template-columns:1fr 1fr;width:calc(2 * var(--h-float) + 1px);height:var(--h-float);padding:0;overflow:hidden;border-radius:var(--radius)}
 #bodySwitch button{display:grid;place-items:center;width:100%;height:100%;padding:0;margin:0;background:transparent;border:0;border-radius:0;color:var(--muted)}
 #bodySwitch button+button{border-left:1px solid var(--line)}
 #bodySwitch svg{display:block}
-#bodySwitch button[aria-pressed="true"]{background:var(--selected);color:#fff}
+#bodySwitch button[aria-pressed="true"]{background:var(--selected);color:var(--text)}
 #skinPicker{display:none}
 
 /* Hints: dark glass, white type */
-#hint,#edgeHint,#stripInfo,#placedToast,#placeCoach{background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);color:#fff;box-shadow:0 6px 20px #0006;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);pointer-events:none}
-#hint:empty{display:none}
-#hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:3;max-width:calc(100% - 24px);padding:8px 12px;text-align:center;line-height:1.4;font-size:12px}
-#hint.afterPlacement{width:max-content;max-width:calc(100% - 20px);padding:9px 12px;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.02em;white-space:nowrap;line-height:1.3;transition:opacity var(--dur) var(--ease)}
-body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
-#edgeHint{position:absolute;top:calc(var(--edge) + var(--h-float) + 8px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:7px;padding:9px 12px;white-space:nowrap;line-height:1.3;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.06em;opacity:0;transition:opacity var(--dur) var(--ease)}
-#stripInfo{position:absolute;bottom:102px; /* just above the strip */left:50%;transform:translateX(-50%);z-index:9;padding:9px 12px;white-space:nowrap;line-height:1.3;font-size:clamp(10px,2.8vw,13px);font-weight:650;letter-spacing:.06em;opacity:0;transition:opacity var(--dur) var(--ease)}
+#stripInfo{background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);color:var(--text);box-shadow:0 6px 20px #0006;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);pointer-events:none}
+#stripInfo{position:absolute;bottom:102px; /* just above the strip */left:50%;transform:translateX(-50%);z-index:9;padding:9px 12px;white-space:nowrap;line-height:1.3;font-size:12px;font-weight:650;letter-spacing:.06em;opacity:0;transition:opacity var(--dur) var(--ease)}
 #stripInfo.show{opacity:1}
-#edgeHint svg{width:16px;height:16px;margin:-1.5px 0;flex:none}
-#placedToast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10;display:flex;align-items:center;gap:9px;padding:12px 17px;font-size:15px;font-weight:700;white-space:nowrap}
-#placedToast .toastCheck{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:var(--on-primary);font-size:14px;font-weight:900}
-#placeCoach{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:9;padding:9px 12px;white-space:nowrap;font-size:13px}
 
 /* ---------- Phone ---------- */
 @media(max-width:720px){
@@ -147,9 +147,8 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
  .mirrorSkinRow{margin-top:6px}
  aside .mirrorSkinRow .mirrorline{flex-direction:row;align-items:center;justify-content:space-between;width:100%}
  .panelBar{position:sticky;bottom:0;z-index:7;margin-top:8px;padding-top:2px;background:var(--panel)}
- #panelHandle{display:flex;align-items:center;justify-content:center;gap:6px;flex:none;height:var(--h-bar);padding:0 14px;font-size:12px}
+ #panelHandle{display:flex;align-items:center;justify-content:center;gap:6px;flex:none;height:var(--h-bar);padding:0 11px;font-size:12px}
  .panelBar #confirmPlacement{height:var(--h-bar);padding-top:0;padding-bottom:0}
- #panelHandle.glow{animation:panelGlow 1.1s ease-in-out 3}
  body.panelNone aside{display:none!important}
  /* The panel is anchored at the bottom (bar always visible) and its height animates (set in JS). */
  aside{display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;transition:max-height .45s var(--ease)}
@@ -162,16 +161,17 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
  #skinCurrent,#skinOptions button[aria-pressed="true"]{outline:2px solid #fff;outline-offset:1px}
  #skinOptions{display:flex;gap:6px}
 }
-@keyframes panelGlow{50%{background:var(--selected);border-color:var(--line-strong);box-shadow:0 0 0 4px rgba(255,255,255,.12)}}
+
 
 /* ---------- Flashbook ---------- */
 #flashbook{position:fixed;inset:0;z-index:18;height:100dvh;padding-top:0;background:var(--book);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
 .flashTop{position:relative;box-sizing:border-box;padding:calc(6px + env(safe-area-inset-top)) var(--edge) 6px;margin:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
-.flashTitle{margin:0;text-align:center;font:600 clamp(19px,4.8vw,28px)/1.2 var(--font);letter-spacing:.13em}
+.flashTitle{margin:0;text-align:center;font:650 16px/1.2 var(--font);letter-spacing:.08em} /* logo: 16 on every screen */
 .flashTitle span{font-weight:350;letter-spacing:.08em}
-.langSwitch{justify-self:end;display:flex;gap:2px;padding:2px;border-radius:var(--radius)}
-.langSwitch button{background:transparent;border:1px solid transparent;border-radius:8px;height:30px;padding:0 8px;font:650 10px var(--font);letter-spacing:.04em;color:var(--muted)}
-.langSwitch button[aria-pressed="true"]{background:var(--selected);border-color:var(--line-strong);color:#fff}
+.langSwitch{justify-self:end;display:grid;grid-template-columns:31px 31px;height:var(--h-float);padding:0;overflow:hidden;border-radius:var(--radius)}
+.langSwitch button{background:transparent;border:0;border-radius:0;height:100%;margin:0;padding:0;font:650 12px var(--font);letter-spacing:.04em;color:var(--muted)}
+.langSwitch button+button{border-left:1px solid var(--line)}
+.langSwitch button[aria-pressed="true"]{background:var(--selected);color:var(--text)}
 .flashStage{position:relative;flex:1;min-height:0;display:flex;align-items:stretch}
 .flashViewport{flex:1;min-width:0;min-height:0;width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;overflow:hidden;touch-action:pan-y}
 /* Page change settles with a slight spring. */
@@ -189,7 +189,7 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
 .flashItem:focus-visible{outline:2px solid #57524b;outline-offset:-2px}
 /* No lift on press: the tapped motif itself flies onto the body from exactly where it is. */
 .flashItem img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:contrast(1.08);mix-blend-mode:multiply}
-.flashItem .no{position:absolute;bottom:3px;right:5px;padding:2px 4px;color:#57524b;font:700 10px var(--font);letter-spacing:.05em}
+.flashItem .no{position:absolute;bottom:3px;right:5px;padding:2px 4px;color:#57524b;font:650 10px var(--font);letter-spacing:.05em}
 /* Heart: own tap area at the bottom left; tapping it saves the design without opening it. */
 .flashItem .fav{position:absolute;left:0;bottom:0;width:34px;height:28px;display:grid;place-items:center;color:#7b7168;z-index:2}
 .flashItem .fav svg{width:16px;height:16px}
@@ -199,13 +199,13 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
 .favChip.pop,#favView.pop{animation:chipPop .4s var(--ease)}
 @keyframes chipPop{35%{transform:scale(1.18)}}
 @keyframes heartPop{40%{transform:scale(1.45)}}
-.flashEmpty{margin:auto;font:600 14px var(--font);letter-spacing:.08em;color:#797269;text-transform:uppercase}
-.flashInstruction{box-sizing:border-box;height:32px;margin:0;padding:0 10px 6px;display:flex;align-items:flex-end;justify-content:center;text-align:center;font:750 12px var(--font);letter-spacing:.13em;color:var(--text);transition:opacity .25s ease}
+.flashEmpty{margin:auto;font:650 14px var(--font);letter-spacing:.08em;color:#797269;text-transform:uppercase}
+.flashInstruction{box-sizing:border-box;height:32px;margin:0;padding:0 10px 6px;display:flex;align-items:flex-end;justify-content:center;text-align:center;font:650 12px var(--font);letter-spacing:.13em;color:var(--text);transition:opacity .25s ease}
 /* Page arrows as small as the floating buttons, so the flash page gets the height. */
-.flashBottom{box-sizing:border-box;height:calc(var(--bar-h) - 32px + env(safe-area-inset-bottom));display:grid;grid-template-columns:44px minmax(116px,auto) 44px;align-items:center;justify-content:center;gap:16px;padding:0 var(--edge) env(safe-area-inset-bottom)}
-.flashBottom .flashSide{width:44px;height:var(--h-float);display:flex;align-items:center;justify-content:center;padding:0;font:650 16px/1 var(--font)}
-.flashCount{display:flex;align-items:center;justify-content:center;gap:7px;min-width:116px;height:var(--h-float);padding:0 14px;text-align:center;font:400 13px var(--font);letter-spacing:.025em;color:var(--text)}
-.favChip{justify-self:start;display:flex;align-items:center;gap:6px;height:var(--h-float);padding:0 11px;border-radius:var(--radius);color:var(--text);font:650 11px var(--font)}
+.flashBottom{box-sizing:border-box;height:calc(var(--bar-h) - 32px + env(safe-area-inset-bottom));display:grid;grid-template-columns:var(--h-float) minmax(116px,auto) var(--h-float);align-items:center;justify-content:center;gap:16px;padding:0 var(--edge) env(safe-area-inset-bottom)}
+.flashBottom .flashSide{width:var(--h-float);height:var(--h-float);display:flex;align-items:center;justify-content:center;padding:0;font:650 12px/1 var(--font)}
+.flashCount{display:flex;align-items:center;justify-content:center;gap:6px;min-width:116px;height:var(--h-float);padding:0 11px;text-align:center;font:650 12px var(--font);letter-spacing:.02em;color:var(--text)} /* same type as the other floating buttons */
+.favChip{justify-self:start;display:flex;align-items:center;gap:6px;height:var(--h-float);padding:0 11px;border-radius:var(--radius);color:var(--text);font:650 12px var(--font)}
 .favChip.has svg{color:var(--heart)}
 .favChip[aria-pressed="true"]{background:var(--glass);border-color:var(--line)}
 /* Overview of all pages (tap "Page x of y"); scrolls, tap a page to jump there. */
@@ -224,7 +224,7 @@ body:not(.tattooHeld) #hint.afterPlacement{opacity:0}
 /* Only one page: no page bar at all (hidden buttons left ghost edges in iOS Safari); its height stays. */
 body.onePage .flashBottom,body.overviewOpen .flashBottom{display:none}
 body.onePage #flashbook .flashInstruction,body.overviewOpen #flashbook .flashInstruction{height:calc(var(--bar-h) + env(safe-area-inset-bottom));align-items:center;padding-bottom:env(safe-area-inset-bottom)}
-.poNum{text-align:center;font:700 12px var(--font);color:var(--text)}
+.poNum{text-align:center;font:650 10px var(--font);color:var(--text)}
 /* The instruction lifts gently every few seconds so it is clear the motifs are tappable. */
 @keyframes hintLift{0%,72%,100%{transform:none}82%{transform:translateY(-3px) scale(1.05)}}
 body:not(.landingIntro):not(.introTextTravel):not(.favMode) #flashbook:not(:has(#pageOverview:not([hidden]))) .flashInstruction span{display:inline-block;animation:hintLift 3.2s ease-in-out infinite}
@@ -248,20 +248,24 @@ body:not(.landingIntro):not(.introTextTravel):not(.favMode) #flashbook:not(:has(
 .favPick img{width:100%;height:100%;object-fit:contain;padding:4px;mix-blend-mode:multiply}
 .favPick.on{opacity:1;border-color:var(--line-strong)}
 .favPick.on:after{content:'✓';position:absolute;top:3px;right:3px;width:15px;height:15px;border-radius:4px;background:var(--primary);color:var(--on-primary);font:900 10px/15px var(--font);text-align:center}
-.favPick i{position:absolute;left:0;right:0;bottom:1px;font:700 8px var(--font);font-style:normal;color:#5a5048;text-align:center}
+.favPick i{position:absolute;left:0;right:0;bottom:1px;font:650 8px var(--font);font-style:normal;color:#5a5048;text-align:center}
 .alsoLine{font-size:12px;color:var(--text);min-height:0}
+.alsoLine.warn{color:#e8b4a0;font-weight:650}
 .alsoLine:empty{display:none}
 @media(max-width:720px){
  .flashPage{flex-basis:calc(100vw - 2 * var(--edge) - 20px);width:calc(100vw - 2 * var(--edge) - 20px);height:97%;padding:10px}
  .flashTrack{gap:10px}
  .flashGrid{gap:5px}
 }
-@media(max-width:420px){.flashTitle{font-size:16px;letter-spacing:.08em}}
 
 /* ---------- Landing intro ---------- */
 #introFigure{position:fixed;left:0;top:0;z-index:19;pointer-events:none}
 #introText{position:fixed;left:50%;top:87%;transform:translateX(-50%);transform-origin:50% 50%;z-index:19;width:max-content;white-space:nowrap;pointer-events:none;text-align:center;line-height:1.3;color:var(--text);text-shadow:0 2px 16px #000c;opacity:0;transition:opacity .35s ease,transform .9s cubic-bezier(.45,0,.2,1),text-shadow .9s ease}
 #introText.show{opacity:1}
+/* "hottest tats in town" in craykrow's handwriting under the turning figure. Three drawings lying exactly on top
+   of each other: 1 clean, 2 smeared, 3 smeared more; they blend into each other (sharpening in, smearing away). */
+#introLogo{position:fixed;left:50%;top:87.5%;width:min(122vw,560px);aspect-ratio:1400/280;transform:translate(-41.4%,-50%);z-index:19;pointer-events:none;filter:drop-shadow(0 2px 10px #0009)}
+#introLogo img{position:absolute;inset:0;width:100%;height:100%;opacity:0}
 /* Intro: completely clean, only the turning figure and the text. The pages fade in when the motifs
    fly onto them; title, DE/EN, page count and arrows fade in when they have landed. */
 .flashTop,.flashBottom{transition:opacity .5s var(--ease)}
@@ -275,29 +279,29 @@ body.landingIntro .flashItem img,body.introFly .flashItem:not(.landed) img{opaci
 body.landingIntro #viewer,body.landingIntro #bodySwitch,body.landingIntro #skinPicker,body.landingIntro aside{visibility:hidden}
 body.landingIntro #flashbook .flashInstruction,body.introTextTravel #flashbook .flashInstruction{opacity:0}
 body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
-#flashbook[hidden]~#introFigure,#flashbook[hidden]~#introText{display:none}
+#flashbook[hidden]~#introFigure,#flashbook[hidden]~#introText,#flashbook[hidden]~#introLogo{display:none}
 #flashbook:not([hidden])~main #viewer canvas{visibility:hidden}
 
 /* ---------- Booking request ---------- */
 #bookingOverlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:8px 14px;background:#000b}
 .bookingDialog{animation:cardIn .3s var(--ease) both;width:min(440px,100%);max-height:calc(100dvh - 16px);overflow:auto;padding:12px 15px 14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
 .bookingTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.bookingTop strong{font-size:15px}
-#closeBooking{display:grid;place-items:center;width:36px;height:36px;padding:0}
+.bookingTop strong{font-size:16px}
+#closeBooking{display:grid;place-items:center;width:36px;height:36px;padding:0;background:none;border:0;box-shadow:none;color:var(--text)} /* just the cross */
 .bookingSummary{display:flex;gap:14px;align-items:stretch;margin-bottom:4px}
 .bookingSummary img{width:46%;flex:none;height:min(34dvh,240px);object-fit:cover;object-position:50% 40%;background:var(--book);border-radius:var(--radius)}
 .bookingFacts{display:flex;flex-direction:column;gap:3px;min-width:0;padding-top:2px}
 .bookingFacts strong{font-size:22px;letter-spacing:.02em}
-.bookingFacts span{font-size:13px;color:var(--muted)}
-.bookingCap{font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--muted);margin:8px 0 2px}
+.bookingFacts span{font-size:12px;color:var(--muted)}
+.bookingCap{font-size:12px;font-weight:650;letter-spacing:.13em;color:var(--muted);margin:8px 0 2px}
 .bookingFacts .bookingCap{margin-top:0}
 .bookingDialog label{margin:5px 0 2px;color:var(--muted);font-size:12px}
-.bookingDialog select,.bookingDialog textarea{padding:7px 10px;font-size:13px}
-.bookingDialog textarea::placeholder{font-size:13px}
+.bookingDialog select,.bookingDialog textarea{padding:7px 10px;font-size:12px}
+.bookingDialog select{-webkit-appearance:none;appearance:none;padding-right:33px;background:var(--field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='3.53 3.53 16.94 16.94' fill='none' stroke='%23cdc4ba' stroke-width='1.27' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center/16px 16px}
+.bookingDialog textarea::placeholder{font-size:12px}
 .bookingDialog textarea{resize:none}
 .bookingActions{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.bookingActions .bookingSend,#downloadBooking{height:var(--h-bar);padding:0 14px}
-#downloadBooking{font-size:13px}
+.bookingActions .bookingSend{height:var(--h-bar);padding:0 14px}
 #shareMessage{margin:8px 0 0;font-size:12px;color:var(--muted)}
 #shareMessage:empty{display:none}
 /* Phone: the request fills the whole screen (8 px from the edges), so nothing of the 3D view's buttons
@@ -309,7 +313,7 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
  .bookingDialog>*{flex-shrink:0}
  .bookingDialog>.bookingSummary{flex:0 1 min(40dvh,320px);min-height:96px}
  .bookingSummary img{height:100%;min-height:0}
- .bookingDialog select{height:38px;padding:0 12px;line-height:normal}
+ .bookingDialog select{height:38px;padding:0 33px 0 11px;line-height:normal}
  .bookingDialog textarea{min-height:52px;line-height:1.35}
  .bookingActions{margin-top:auto;padding-top:8px}
 }
@@ -317,45 +321,61 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
 /* Step card before Instagram opens */
 #igSteps,#igDone{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;padding:16px;background:#000c}
 .igCard{animation:cardIn .3s var(--ease) both;width:min(400px,100%);padding:20px 18px 16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
-.igHead{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:17px}
+.igHead{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:16px}
 .igCheck{width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:50%;background:#fff;color:var(--on-primary)}
 #igSteps.failed .igCheck{display:none}
-.igNext{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.13em;color:var(--muted)}
-.igList{margin:0 0 18px;padding:0 0 0 20px;display:grid;gap:9px;font-size:15px;line-height:1.45}
-.igList li::marker{font-weight:700}
-.igList b{color:#fff}
+.igList{margin:0 0 18px;padding:0 0 0 20px;display:grid;gap:14px;font-size:12px;line-height:1.45}
+.igList li::marker{font-weight:650}
+.igList b{color:var(--text)}
+.igList i{color:var(--muted);font-style:normal}
+#igStepSave{position:relative;padding-right:44px}
+#igStepSave span{cursor:pointer}
+#igSave{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border-radius:min(var(--radius),10px);background:var(--primary);border:0;color:var(--on-primary)}
+#igSave:active{transform:translateY(-50%) scale(.92)}
+#igSave.done{opacity:.55}
 #igManual{margin:0 0 14px}
 #igOpen{width:100%}
-.igText{margin:0 0 10px;font-size:15px;line-height:1.5;color:var(--text)}
-.igMuted{font-size:13px;color:var(--muted);margin-bottom:18px}
-#igDoneClose{width:100%;height:var(--h-bar);background:var(--primary);color:var(--on-primary);border:0;font-weight:700}
+.igText{margin:0 0 10px;font-size:12px;line-height:1.5;color:var(--text)}
+.igMuted{font-size:12px;color:var(--muted);margin-bottom:18px}
+#igDoneClose{width:100%;height:var(--h-bar);background:var(--primary);color:var(--on-primary);border:0;font:700 12px var(--font)}
 #igDoneClose:active{background:var(--primary-press)}
-#igAgain{display:block;text-align:center;margin:10px auto 0;padding:6px 10px;color:var(--muted);font:600 13px var(--font);text-decoration:none}
-#igBack{display:block;margin:10px auto 0;background:none;border:0;padding:6px 10px;color:var(--muted);font-size:13px}
+#igAgain{display:block;text-align:center;margin:10px auto 0;padding:6px 10px;color:var(--muted);font:650 12px var(--font);text-decoration:none}
+#igBack{display:block;margin:10px auto 0;background:none;border:0;padding:6px 10px;color:var(--muted);font-size:12px}
 
 @keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.98)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script>
+// Computer (wide screen): the page shows itself in a phone-sized frame in the middle, so everything looks and
+// works exactly like on the phone (intro, flashbook, 3D view, request) without a second layout.
+if(innerWidth>720&&window.top===window.self&&!/[?&]frame=1/.test(location.search)){window.__desktopFrame=true;document.documentElement.classList.add('desktopFrame');
+ addEventListener('DOMContentLoaded',()=>{const f=document.createElement('iframe');f.src=location.pathname+'?frame=1'+location.hash;f.title=document.title;f.allow='clipboard-write; web-share';document.body.appendChild(f);f.focus()})}
+</script>
+<style>
+html.desktopFrame,html.desktopFrame body{height:100%;margin:0;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#4a443e 0%,#36312d 55%,#2a2623 100%)}
+html.desktopFrame body>*:not(iframe){display:none!important}
+html.desktopFrame iframe{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:430px;height:min(932px,calc(100vh - 32px));border:0;border-radius:22px;box-shadow:0 30px 90px #000b,0 0 0 1px #ffffff14;background:#4a443e}
 </style>
 <script type="importmap">{"imports":{"three":"./lib/three/build/three.module.js","three/addons/":"./lib/three/examples/jsm/"}}</script>
 </head>
 <body class="landingIntro">
 <div id="flashbook" aria-label="Tattoo flashbook">
-  <div class="flashTop"><button type="button" id="favChip" class="favChip" aria-pressed="false" aria-label="Saved designs"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favCount">0</span></button><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1><div class="langSwitch" role="group" aria-label="Language / Sprache"><button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button></div></div>
+  <div class="flashTop"><button type="button" id="favChip" class="favChip" aria-pressed="false" aria-label="Saved designs"><svg viewBox="-1.65 -1.15 27.30 27.30" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favCount">0</span></button><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1><div class="langSwitch" role="group" aria-label="Language / Sprache"><button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button></div></div>
   <div class="flashStage"><div class="flashViewport" id="flashViewport"><div class="flashTrack" id="flashTrack"></div></div>
    <div id="pageOverview" hidden role="dialog" aria-label="Choose a page"><div class="poGrid" id="pageOverviewGrid"></div></div></div>
-  <div class="flashInstruction"><span data-i18n="flash.instruction">TAP YOUR NEXT TATTOO</span></div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page">←</button><button type="button" class="flashCount" id="flashCount" aria-haspopup="dialog">Page 1 of 3</button><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page">→</button></div>
+  <div class="flashInstruction"><span data-i18n="flash.instruction">TAP YOUR NEXT TATTOO</span></div><div class="flashBottom"><button type="button" id="flashPrev" class="flashSide flashSidePrev" aria-label="Previous page"><svg viewBox="2.12 2.12 19.76 19.76" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg></button><button type="button" class="flashCount" id="flashCount" aria-haspopup="dialog">Page 1 of 3</button><button type="button" id="flashNext" class="flashSide flashSideNext" aria-label="Next page"><svg viewBox="2.12 2.12 19.76 19.76" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button></div>
 </div>
-<button id="viewerBack" type="button" hidden>← Flashbook</button>
-<div id="bodySwitch" role="group" aria-label="Body model"><button type="button" data-body="female" aria-label="Female body"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M8.5 18h7"/></svg></button><button type="button" data-body="male" aria-label="Male body"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="14" r="5"/><path d="M13.6 10.4 20 4M15 4h5v5"/></svg></button></div>
+<button id="viewerBack" type="button" hidden><svg viewBox="2.12 2.12 19.76 19.76" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg>Flashbook</button>
+<div id="bodySwitch" role="group" aria-label="Body model"><button type="button" data-body="female" aria-label="Female body"><svg viewBox="0.00 0.50 24.00 24.00" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M8.5 18h7"/></svg></button><button type="button" data-body="male" aria-label="Male body"><svg viewBox="1.91 0.91 21.18 21.18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="14" r="5"/><path d="M13.6 10.4 20 4M15 4h5v5"/></svg></button></div>
 <div id="skinPicker" role="group" aria-label="Skin tone"><button type="button" id="skinCurrent" aria-expanded="false" aria-label="Skin tone"></button><div id="skinOptions" hidden></div></div>
 
 
-<main><div id="viewer"><div id="favStrip" hidden></div><div id="stripInfo" aria-live="polite"></div><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="favView" aria-expanded="false" aria-label="Saved designs"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favViewCount">0</span></button><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span data-i18n="view.focus">Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span data-i18n="view.full">Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div><div id="hint">Choose a tattoo PNG to begin</div><div id="placeCoach" hidden aria-live="polite"><strong data-i18n="hint.tapBody">TAP BODY TO PLACE TATTOO</strong></div><div id="placedToast" hidden><span class="toastCheck" aria-hidden="true">✓</span><strong data-i18n="hint.placed">TATTOO PLACED</strong></div></div>
-<aside><div class="bodyModelRow"><span class="bodyModelTitle" data-i18n="panel.bodyModel">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span data-i18n="panel.male">Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span data-i18n="panel.female">Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size"><span data-i18n="panel.width">Tattoo width (cm)</span> <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation"><span data-i18n="panel.rotation">Rotation</span> <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span data-i18n="panel.mirror">Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20" stroke-dasharray="2 3"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20" stroke-dasharray="2 3"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span data-i18n="panel.skin">Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><div class="panelBar"><button type="button" id="panelHandle" aria-expanded="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span data-i18n="panel.adjust">Adjust</span></button><button id="confirmPlacement" type="button" disabled data-i18n="panel.confirm">Confirm Placement →</button></div><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
+<main><div id="viewer"><div id="favStrip" hidden></div><div id="stripInfo" aria-live="polite"></div><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="favView" aria-expanded="false" aria-label="Saved designs"><svg viewBox="-1.65 -1.15 27.30 27.30" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favViewCount">0</span></button><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="-0.71 -0.71 25.41 25.41" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span data-i18n="view.focus">Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="-0.71 -0.71 25.41 25.41" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span data-i18n="view.full">Full Body</span></button></div><div id="overlay">Loading body_male.glb…</div></div>
+<aside><div class="bodyModelRow"><span class="bodyModelTitle" data-i18n="panel.bodyModel">Body model</span><div class="bodyModelChoices" role="radiogroup" aria-label="Body model"><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="male" checked><span data-i18n="panel.male">Male Body</span></label><label class="bodyModelChoice"><input type="radio" name="bodyModelChoice" value="female"><span data-i18n="panel.female">Female Body</span></label></div></div><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><div class="measurement" id="bodyInfo" hidden>Loading male body…</div><div class="testUpload"><label for="upload">Upload tattoo PNG <span class="testTag">TEST</span></label><input id="upload" type="file" accept="image/png,image/webp"><img id="preview" alt="Tattoo preview" hidden></div><div class="buttons"><button id="moveMode" disabled>Move Tattoo</button><button id="orbitMode" class="active">Rotate Body</button></div><label for="size"><span data-i18n="panel.width">Tattoo width (cm)</span> <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation"><span data-i18n="panel.rotation">Rotation</span> <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span data-i18n="panel.mirror">Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="-2.12 -2.12 28.24 28.24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 6.5v2M12 11v2M12 15.5v2M12 20v2"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="-2.12 -2.12 28.24 28.24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2M6.5 12h2M11 12h2M15.5 12h2M20 12h2"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span data-i18n="panel.skin">Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><button id="remove" disabled hidden>Remove tattoo</button><div class="panelBar"><button type="button" id="panelHandle" aria-expanded="false"><svg viewBox="0.71 0.71 22.59 22.59" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span data-i18n="panel.adjust">Adjust</span></button><button id="confirmPlacement" type="button" disabled data-i18n="panel.confirm">Confirm Placement →</button></div><div id="message" aria-live="polite">Choose a PNG and tap the body. On mobile: drag the tattoo to move it, drag bare skin to rotate, pinch to zoom. Drag the tattoo near the left/right edge to rotate automatically.</div><div id="debug" hidden></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
  <div class="bookingDialog">
-  <div class="bookingTop"><strong data-i18n="booking.title">New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="bookingTop"><strong data-i18n="booking.title">New Booking Request</strong><button id="closeBooking" type="button" aria-label="Close"><svg viewBox="3.53 3.53 16.94 16.94" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="bookingSummary"><img id="bookingScreenshot" alt="Tattoo placement focused screenshot">
    <div class="bookingFacts"><div class="bookingCap" data-i18n="booking.yourTattoo">YOUR TATTOO</div><strong id="bookingFlash"></strong><span id="bookingSize"></span><span id="bookingPlace"></span></div></div>
   <div id="bookingFavs" hidden><div class="bookingCap" data-i18n="booking.alsoFav">ALSO SAVED · ADD TO REQUEST</div><div class="favRow" id="bookingFavRow"></div><div class="alsoLine" id="bookingAlso"></div></div>
@@ -374,12 +394,12 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
   <select id="bookingBudget"><option value="" data-i18n="budget.flex">Flexible / not sure</option><option value="lt200" data-i18n="budget.lt200">Under €200</option><option value="200-300" data-i18n="budget.200">€200–300</option><option value="300-500" data-i18n="budget.300">€300–500</option><option value="500-800" data-i18n="budget.500">€500–800</option><option value="800-1200" data-i18n="budget.800">€800–1,200</option><option value="1200+" data-i18n="budget.1200">€1,200+</option></select>
   <label for="bookingNote" data-i18n="booking.message">Message to artist (optional)</label>
   <textarea id="bookingNote" rows="2" maxlength="800" data-i18n-placeholder="booking.placeholder" placeholder="Hey! I'm interested in this tattoo. Let me know about your availability."></textarea>
-  <div class="bookingActions"><a id="sendInstagram" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01"/></svg><span id="sendInstagramLabel" data-i18n="booking.send">Send via Instagram &amp; paste message</span></a><button id="downloadBooking" type="button" data-i18n="booking.save">Save Image</button></div>
+  <div class="bookingActions"><a id="sendInstagram" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><svg viewBox="0.71 0.71 22.59 22.59" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.6 7.4h.01"/></svg><span id="sendInstagramLabel" data-i18n="booking.send">Send via Instagram &amp; paste message</span></a></div>
   <p id="shareMessage" role="status"></p>
  </div>
  <div id="igDone" hidden role="dialog" aria-modal="true" aria-labelledby="igDoneTitle">
   <div class="igCard">
-   <div class="igHead"><span class="igCheck" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><strong id="igDoneTitle" data-i18n="done.title">Thanks for your request!</strong></div>
+   <div class="igHead"><span class="igCheck" aria-hidden="true"><svg viewBox="1.91 1.41 21.18 21.18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><strong id="igDoneTitle" data-i18n="done.title">Thanks for your request!</strong></div>
    <p class="igText" data-i18n="done.sent">Already sent? Then I’ll get back to you soon.</p>
    <p class="igText igMuted" data-i18n="done.notyet">Not yet? Just open it again and paste – your request is still copied.</p>
    <button id="igDoneClose" type="button" class="igPrimary" data-i18n="done.close">Done</button>
@@ -388,11 +408,10 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
  </div>
  <div id="igSteps" hidden role="dialog" aria-modal="true" aria-labelledby="igStepsTitle">
   <div class="igCard">
-   <div class="igHead"><span class="igCheck" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><strong id="igStepsTitle"></strong></div>
+   <div class="igHead"><span class="igCheck" aria-hidden="true"><svg viewBox="1.91 1.41 21.18 21.18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><strong id="igStepsTitle"></strong></div>
    <textarea id="igManual" readonly hidden rows="5"></textarea>
-   <div class="igNext" data-i18n="ig.next">WHAT HAPPENS NEXT</div>
-   <ol class="igList"><li id="igStep1"></li><li id="igStep2"></li><li id="igStep3" data-i18n="ig.step3">Send</li></ol>
-   <a id="igOpen" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><span data-i18n="ig.open">Open Instagram</span> →</a>
+      <ol class="igList"><li id="igStepSave"><span id="igSaveText"></span><button id="igSave" type="button"></button></li><li id="igStep1"></li><li id="igStep2"></li></ol>
+   <a id="igOpen" class="bookingSend" href="https://ig.me/m/craykrow" target="_blank" rel="noopener"><span data-i18n="ig.open">Open Instagram</span></a>
    <button id="igBack" type="button" data-i18n="ig.back">Back</button>
   </div>
  </div>
@@ -401,6 +420,7 @@ body.hasLandingFigure #flashbook .flashInstruction{padding-left:20px}
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+if(window.__desktopFrame)await new Promise(()=>{}); // computer: the app runs in the phone-sized frame
 const $=id=>document.getElementById(id),viewer=$('viewer'),canvasHost=viewer,overlay=$('overlay'),msg=$('message'),debug=$('debug');
 const scene=new THREE.Scene(); // no background: the taupe backdrop of #viewer shows through
 const camera=new THREE.PerspectiveCamera(45,1,.001,1000);const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:true});renderer.setClearColor(0x000000,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;viewer.prepend(renderer.domElement);
@@ -427,26 +447,8 @@ const groundShadow=(()=>{const c=document.createElement('canvas');c.width=c.heig
 function placeGroundShadow(box,center,dim){groundShadow.position.set(center.x,box.min.y+dim.y*.002,center.z);groundShadow.scale.set(dim.y*.46,dim.y*.24,1);groundShadow.visible=true}
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let meshes=[],model,bodyHeight=1,bodyDiag=1,tex=null,imgAspect=1,anchor=null,tattoo=null,mode='orbit',dragging=false,dragId=null,grabOffset={x:0,y:0},lastTime=0,queued=null,raf=0;
 const cache=new Map();const status=s=>msg.textContent=s;
-let selectedFlashReady=false,toastTimer=null,coachWasReady=false;
+let selectedFlashReady=false;
 let figurePopStart=0,figurePopPrevious=1;
-function startFigurePop(){figurePopStart=performance.now();figurePopPrevious=1;}
-function showPlacementCoach(){
- // Designs are placed automatically, so the "tap the body" coach is no longer shown.
- const ready=false;
- $('placeCoach').hidden=!ready;
- $('hint').style.visibility=ready?'hidden':'';
- if(ready&&!coachWasReady){$('placedToast').hidden=true;const c=$('placeCoach');c.classList.remove('coachReplay');void c.offsetWidth;c.classList.add('coachReplay');const v=$('viewer');v.classList.remove('bodyPop');void v.offsetWidth;v.classList.add('bodyPop');startFigurePop();}
- coachWasReady=ready;
-}
-function showPlacedToast(){
- $('placeCoach').hidden=true;
- $('hint').style.visibility='';
- if(!selectedFlashReady)return;
- $('placedToast').hidden=false;
- if(toastTimer)clearTimeout(toastTimer);
- toastTimer=setTimeout(()=>$('placedToast').hidden=true,1600);
-}
-
 // One instruction works for mouse and touch; the gallery can reuse it later.
 let panelState='';
 // Phone: the panel height glides between "bar only" and "all controls"; the 3D view is resized every
@@ -472,41 +474,36 @@ function setPanelState(next){
  document.body.classList.toggle('panelCollapsed',next==='collapsed');
  if(next!=='none')animatePanelHeight(next==='open',wasNone);
  const h=$('panelHandle');h.setAttribute('aria-expanded',String(next==='open'));
- if(next==='collapsed'&&wasNone){h.classList.remove('glow');void h.offsetWidth;h.classList.add('glow')}
+
  // The 3D view takes the freed height (or gives it back) right away.
  requestAnimationFrame(()=>{resize();if(next==='none'&&!anchor&&model)fitFullBody(false);if(typeof updateConfirmOverlay==='function')updateConfirmOverlay()});
 }
 function updatePlacementHint(){
  // In the 3D view the bar [Adjust | Confirm] is always there; only behind the flashbook it is not needed.
  setPanelState(anchor||$('flashbook').hidden?(panelState==='open'?'open':'collapsed'):'none');
- const hint=$('hint');
- if(!tex){hint.classList.remove('afterPlacement');hint.textContent=t('hint.choose');showPlacementCoach();return}
- if(!model||!meshes.length){hint.classList.remove('afterPlacement');hint.textContent=t('hint.loading');showPlacementCoach();return}
- // The design lands on the body by itself, so there is no "tap the body" text any more.
- hint.textContent=anchor?t('hint.grab'):'';hint.classList.toggle('afterPlacement',!!anchor);showPlacementCoach();
 }
 
 // Language: German or English for the whole page (customer-facing texts and the request that is
 // sent to the artist). Default follows the phone's language; the choice is remembered.
 const I18N={
- en:{'done.title':'Thanks for your request!','done.sent':'Already sent? Then I’ll get back to you soon.','done.notyet':'Not yet? Just open it again and paste – your request is still copied.','done.close':'Done','done.again':'Open again','ig.copied':'Your request is copied','ig.copyFailed':'Copy your request','ig.next':'WHAT HAPPENS NEXT','ig.step1':'Instagram opens the chat with <b>@{name}</b>','ig.step2touch':'Press and hold the message field, then tap <b>Paste</b>','ig.step2desk':'Click the message field and press <b>{key} + V</b> (or right-click → Paste)','ig.step2manual':'Paste the copied text into the message field','ig.step3':'Send','ig.open':'Open Instagram','ig.back':'Back','flash.instruction':'TAP YOUR NEXT TATTOO','fav.instruction':'YOUR SAVED FLASHES','pages.choose':'CHOOSE A PAGE','fav.back':'← Back to flashbook','fav.empty':'Nothing saved yet – tap the ♡ on a design.','pages.title':'Choose a page','fav.save':'Save','fav.saved':'Saved','booking.alsoFav':'ALSO SAVED · ADD TO REQUEST','msg.also':'I’m also interested in','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
+ en:{'done.title':'Thanks for your request!','done.sent':'I’ll get back to you soon.','done.notyet':'Not sent yet? Open it again and paste.','done.close':'Done','done.again':'Open again','ig.copied':'Request copied','ig.copyFailed':'Copy your request','ig.next':'WHAT HAPPENS NEXT','ig.step1':'Instagram opens the chat with <b>@{name}</b>','ig.step2touch':'Press and hold the text field and <b>paste</b>','ig.step2desk':'Click the text field and press <b>{key} + V</b>','ig.step2manual':'Paste the copied text into the message field','ig.step3':'<b>Send</b><br><i>You’re welcome to send me your picture in the chat too, as soon as Instagram lets you.</i>','ig.save':'Save request as image <i>(optional)</i>','ig.saveBtn':'Save image','ig.saved':'Saved','ig.open':'Open Instagram','ig.back':'Back','flash.instruction':'TAP YOUR NEXT TATTOO','fav.instruction':'YOUR SAVED FLASHES','pages.choose':'CHOOSE A PAGE','fav.back':'← Back to flashbook','fav.empty':'Nothing saved yet – tap the ♡ on a design.','pages.title':'Choose a page','fav.save':'Save','fav.saved':'Saved','booking.alsoFav':'ALSO SAVED · ADD TO REQUEST','booking.alsoMax':'Max. 5 more designs per request','msg.also':'I’m also interested in','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
   'view.focus':'Focus','view.full':'Full Body',
-  'hint.tapBody':'TAP BODY TO PLACE TATTOO','hint.placed':'TATTOO PLACED','hint.drag':'DRAG TO MOVE · PINCH TO ZOOM','hint.tapBodyLong':'Tap the body to place your tattoo.','hint.choose':'Choose a design to begin','hint.loading':'Loading body…','hint.keep':'KEEP HOLDING','strip.info':'TAP TO SWITCH THE FLASH','hint.grab':'DRAG TO MOVE · TWO FINGERS TO ADJUST',
-  'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement →',
+  'strip.info':'Tap to switch the flash',
+  'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement',
   'booking.title':'Your request','booking.yourTattoo':'YOUR TATTOO','booking.yourDetails':'YOUR DETAILS','booking.flash':'Flash','booking.size':'Approximate size','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram','booking.save':'Save Image','booking.own':'Own upload',
   'budget.flex':'Flexible / not sure','budget.lt200':'Under €200','budget.200':'€200–300','budget.300':'€300–500','budget.500':'€500–800','budget.800':'€800–1,200','budget.1200':'€1,200+',
   'region.Chest':'Chest','region.Left chest':'Left chest','region.Right chest':'Right chest','region.Abdomen':'Abdomen','region.Ribs / side':'Ribs / side','region.Upper back':'Upper back','region.Lower back':'Lower back','region.Shoulder':'Shoulder','region.Upper arm':'Upper arm','region.Forearm':'Forearm','region.Hand':'Hand','region.Thigh':'Thigh','region.Calf':'Calf','region.Foot':'Foot','region.Neck':'Neck','region.Other / not sure':'Other / not sure',
   'msg.title':'NEW TATTOO BOOKING REQUEST','msg.hi':"Hi @{a}! I'd like to book a tattoo.",'msg.flash':'Flash','msg.placement':'Placement','msg.size':'Approximate size','msg.budget':'Maximum budget','msg.message':'Message',
-  'card.flash':'FLASH','card.size':'APPROXIMATE SIZE','card.placement':'PLACEMENT','card.budget':'MAXIMUM BUDGET','card.artist':'FOR ARTIST','card.message':'MESSAGE TO ARTIST','card.error':'Could not create the image.'},
- de:{'done.title':'Danke für deine Anfrage!','done.sent':'Schon abgeschickt? Dann melde ich mich bald bei dir.','done.notyet':'Noch nicht? Einfach nochmal öffnen und einfügen – deine Anfrage ist noch kopiert.','done.close':'Fertig','done.again':'Nochmal öffnen','ig.copied':'Deine Anfrage ist kopiert','ig.copyFailed':'Kopiere deine Anfrage','ig.next':'SO GEHT’S WEITER','ig.step1':'Instagram öffnet den Chat mit <b>@{name}</b>','ig.step2touch':'Ins Textfeld lange drücken und <b>Einfügen</b> wählen','ig.step2desk':'Ins Textfeld klicken und <b>{key} + V</b> drücken (oder Rechtsklick → Einfügen)','ig.step2manual':'Den kopierten Text ins Textfeld einfügen','ig.step3':'Senden','ig.open':'Instagram öffnen','ig.back':'Zurück','flash.instruction':'TIPPE AUF DEIN NÄCHSTES TATTOO','fav.instruction':'DEINE GEMERKTEN MOTIVE','pages.choose':'SPRING ZU EINER SEITE','fav.back':'← Zurück zum Flashbook','fav.empty':'Noch nichts gemerkt – tippe auf das ♡ bei einem Motiv.','pages.title':'Seite wählen','fav.save':'Merken','fav.saved':'Gemerkt','booking.alsoFav':'AUCH GEMERKT · IN ANFRAGE AUFNEHMEN','msg.also':'Mich interessieren auch','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
+  'card.also':'ALSO INTERESTED IN','card.request':'TATTOO REQUEST','card.flash':'FLASH','card.size':'APPROXIMATE SIZE','card.placement':'PLACEMENT','card.budget':'MAXIMUM BUDGET','card.artist':'FOR ARTIST','card.message':'MESSAGE TO ARTIST','card.error':'Could not create the image.'},
+ de:{'done.title':'Danke für deine Anfrage!','done.sent':'Ich melde mich bald bei dir.','done.notyet':'Noch nicht gesendet? Nochmal öffnen und einfügen.','done.close':'Fertig','done.again':'Nochmal öffnen','ig.copied':'Anfrage kopiert','ig.copyFailed':'Kopiere deine Anfrage','ig.next':'SO GEHT’S WEITER','ig.step1':'Instagram öffnet den Chat mit <b>@{name}</b>','ig.step2touch':'Ins Textfeld lange drücken und <b>einfügen</b>','ig.step2desk':'Ins Textfeld klicken und <b>{key} + V</b> drücken','ig.step2manual':'Den kopierten Text ins Textfeld einfügen','ig.step3':'<b>Senden</b><br><i>Dein Bild kannst du mir gern auch im Chat schicken, sobald Instagram es zulässt.</i>','ig.save':'Anfrage als Bild sichern <i>(optional)</i>','ig.saveBtn':'Bild sichern','ig.saved':'Gesichert','ig.open':'Instagram öffnen','ig.back':'Zurück','flash.instruction':'TIPPE AUF DEIN NÄCHSTES TATTOO','fav.instruction':'DEINE GEMERKTEN MOTIVE','pages.choose':'SPRING ZU EINER SEITE','fav.back':'← Zurück zum Flashbook','fav.empty':'Noch nichts gemerkt – tippe auf das ♡ bei einem Motiv.','pages.title':'Seite wählen','fav.save':'Merken','fav.saved':'Gemerkt','booking.alsoFav':'AUCH GEMERKT · IN ANFRAGE AUFNEHMEN','booking.alsoMax':'Maximal 5 weitere Motive pro Anfrage','msg.also':'Mich interessieren auch','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
   'view.focus':'Fokus','view.full':'Ganzer Körper',
-  'hint.tapBody':'TIPPE AUF DEN KÖRPER','hint.placed':'TATTOO PLATZIERT','hint.drag':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ZOOMEN','hint.tapBodyLong':'Tippe auf den Körper, um dein Tattoo zu platzieren.','hint.choose':'Wähle ein Motiv aus','hint.loading':'Körper lädt…','hint.keep':'GEDRÜCKT HALTEN','strip.info':'TIPPEN ZUM MOTIV WECHSELN','hint.grab':'ZIEHEN ZUM VERSCHIEBEN · ZWEI FINGER ZUM ANPASSEN',
-  'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen →',
+  'strip.info':'Tippen zum Motiv wechseln',
+  'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen',
   'booking.title':'Deine Anfrage','booking.yourTattoo':'DEIN TATTOO','booking.yourDetails':'DEINE ANGABEN','booking.flash':'Flash','booking.size':'Ungefähre Größe','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden','booking.save':'Bild speichern','booking.own':'Own upload',
   'budget.flex':'Flexibel / weiß nicht','budget.lt200':'Unter 200 €','budget.200':'200–300 €','budget.300':'300–500 €','budget.500':'500–800 €','budget.800':'800–1.200 €','budget.1200':'1.200 €+',
   'region.Chest':'Brust','region.Left chest':'Linke Brust','region.Right chest':'Rechte Brust','region.Abdomen':'Bauch','region.Ribs / side':'Rippen / Seite','region.Upper back':'Oberer Rücken','region.Lower back':'Unterer Rücken','region.Shoulder':'Schulter','region.Upper arm':'Oberarm','region.Forearm':'Unterarm','region.Hand':'Hand','region.Thigh':'Oberschenkel','region.Calf':'Wade','region.Foot':'Fuß','region.Neck':'Hals / Nacken','region.Other / not sure':'Andere / weiß nicht',
   'msg.title':'NEUE TATTOO-ANFRAGE','msg.hi':'Hi @{a}! Ich würde gern ein Tattoo buchen.','msg.flash':'Flash','msg.placement':'Stelle','msg.size':'Ungefähre Größe','msg.budget':'Maximales Budget','msg.message':'Nachricht',
-  'card.flash':'FLASH','card.size':'UNGEFÄHRE GRÖSSE','card.placement':'STELLE','card.budget':'MAXIMALES BUDGET','card.artist':'FÜR ARTIST','card.message':'NACHRICHT AN DEN ARTIST','card.error':'Das Bild konnte nicht erstellt werden.'}
+  'card.also':'MICH INTERESSIEREN AUCH','card.request':'TATTOO-ANFRAGE','card.flash':'FLASH','card.size':'UNGEFÄHRE GRÖSSE','card.placement':'STELLE','card.budget':'MAXIMALES BUDGET','card.artist':'FÜR ARTIST','card.message':'NACHRICHT AN DEN ARTIST','card.error':'Das Bild konnte nicht erstellt werden.'}
 };
 let lang=(()=>{try{const s=localStorage.getItem('lang');if(s==='de'||s==='en')return s}catch(e){}return (navigator.language||'').toLowerCase().startsWith('de')?'de':'en'})();
 const t=(key,vars={})=>(I18N[lang][key]??I18N.en[key]??key).replace(/\{(\w+)\}/g,(_,k)=>vars[k]??'');
@@ -525,7 +522,7 @@ function setLanguage(next){
  // Texts that are built in code: refresh them in the new language.
  if(typeof updateDimensions==='function')updateDimensions();
  if(typeof positionFlashbook==='function'&&typeof flashTrack!=='undefined'){const empty=flashTrack.querySelector('.flashEmpty');if(empty)empty.textContent=t('flash.empty');positionFlashbook()}
- updatePlacementHint();edgeHint.dataset.dir='';
+ updatePlacementHint();
 }
 // Two-finger tattoo gesture state (declared early: loadBody runs before the gesture code).
 let pinch=null,pinchRaf=0,pinchLast=0;
@@ -552,7 +549,7 @@ function updateRegion(){
  }else if(y>=.59){
    if(absX>.235)region=side+' forearm / arm';
    else if(absX>.145)region=side+' upper arm / side';
-   else region=facing==='front'?'Chest / abdomen':'Back';
+   else region=facing==='front'?(y>=.68?'Chest':'Abdomen'):'Back';
  }else if(y>=.49){
    if(absX>.235)region=side+' hand / arm';
    else if(absX>.13)region=side+' hip';
@@ -568,13 +565,6 @@ function updateRegion(){
 // still turns the body too (needed when zoomed in close).
 let dragClient=null,edgeSpeed=0,edgeClock=performance.now(),lastEdgeProjection=0;
 const EDGE_ZONE=0.1, MAX_ORBIT_SPEED=2.8, SIDE_ORBIT_SPEED=1.2; // faster edge orbit on mouse and touch
-const edgeHint=document.createElement('div');
-// Blue tile below the camera buttons, same look as the DRAG TO MOVE hint at the bottom.
-edgeHint.id='edgeHint';
-// Rotation arrows larger than the text; inline SVG so they look identical on every phone.
-const rotateIcon=d=>'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+d+'"/></svg>';
-const ROTATE_ICON_LEFT=rotateIcon('M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5'),ROTATE_ICON_RIGHT=rotateIcon('M19.95 11a8 8 0 1 0 -.5 4m.5 5v-5h-5');
-viewer.appendChild(edgeHint);
 function edgeVelocity(clientX){
  const r=renderer.domElement.getBoundingClientRect();
  const zone=Math.min(r.width*EDGE_ZONE,60);
@@ -595,9 +585,6 @@ function orbitDuringTattooDrag(dt){
  // Ease in and out instead of jumping to full speed.
  const want=Math.abs(edge)>Math.abs(side)?edge:side;
  const speed=Math.abs(want-edgeSpeed)<.02&&want===0?0:edgeSpeed+(want-edgeSpeed)*Math.min(1,dt*5);edgeSpeed=speed;
- // Keep the last text while fading out, so the pill does not collapse; the chevron shows the direction.
- if(Math.abs(speed)>0.001){const dir=speed<0?'left':'right';if(edgeHint.dataset.dir!==dir){edgeHint.dataset.dir=dir;edgeHint.innerHTML=dir==='left'?ROTATE_ICON_LEFT+'<span>'+t('hint.keep')+'</span>':'<span>'+t('hint.keep')+'</span>'+ROTATE_ICON_RIGHT}}
- edgeHint.style.opacity=Math.abs(speed)>0.001?"1":"0";
  if(Math.abs(speed)<0.001)return;
  // Rotate the camera around its current orbit target; keep the body stationary.
  const offset=camera.position.clone().sub(controls.target);
@@ -724,7 +711,7 @@ function loadBody(kind){
  status(`Loading ${filename}…`);
  cancelTattooDrag();
  const hadTattoo=!!anchor||introPlacePending;stopIntro();
- coachWasReady=false;anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;setCameraViewSelected('full');updatePlacementHint();
+ anchor=null;clear();updateRegion();setMode('orbit');focusGoal=null;setCameraViewSelected('full');updatePlacementHint();
  fetchBody(kind).then(asset=>{
   if(version!==bodyLoadVersion)return;
   if(model)scene.remove(model); // Do not dispose: cached models are reused.
@@ -774,10 +761,11 @@ document.querySelectorAll('#bodySwitch button').forEach(b=>b.addEventListener('c
 syncBodyRadios();
 for(const radio of bodyRadios)radio.addEventListener('change',()=>{if(!radio.checked)return;const select=$('bodySelect');if(select.disabled)return;select.value=radio.value;select.dispatchEvent(new Event('change',{bubbles:true}));syncBodyRadios();});
 
+const INTRO_LETTER_N=9000; // the lettering "hottest tats in town" on the back (only in the intro)
 // Intro tattoos: intro_<body>.json (shapes) + intro_<body>.jpg (all motifs, white = ink). Missing files: plain figure.
 function loadIntroSuit(kind){
- return Promise.all([fetch('./intro_'+kind+'.json').then(r=>r.ok?r.json():null),
-  new Promise(res=>new THREE.TextureLoader().load('./intro_'+kind+'.jpg',res,undefined,()=>res(null)))]).then(([d,tex])=>{
+ return Promise.all([fetch('./intro/intro_'+kind+'.json').then(r=>r.ok?r.json():null),
+  new Promise(res=>new THREE.TextureLoader().load('./intro/intro_'+kind+'.jpg',res,undefined,()=>res(null)))]).then(([d,tex])=>{
   if(!d||!tex)return null;
   tex.colorSpace=THREE.NoColorSpace;tex.anisotropy=4;
   const bin=b=>{const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer};
@@ -790,16 +778,20 @@ function loadIntroSuit(kind){
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));
    g.setIndex(Array.from(I.subarray(pi,pi+t.tris)));
    const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
-   const rect={value:new THREE.Vector4(...t.rect)},inkU={value:1};
-   m.onBeforeCompile=sh=>{sh.uniforms.uRect=rect;sh.uniforms.uInk=inkU;sh.fragmentShader='uniform vec4 uRect;uniform float uInk;\n'+sh.fragmentShader.replace('#include <map_fragment>',
-    'if(vMapUv.x<0.0||vMapUv.x>1.0||vMapUv.y<0.0||vMapUv.y>1.0)discard;\nfloat ink=texture2D(map,uRect.xy+vMapUv*uRect.zw,-0.8).r;\ndiffuseColor=vec4(mix(vec3(.12,.035,.33),vec3(.004,.003,.003),uInk),min(1.0,ink*mix(1.7,2.2,uInk))*opacity);\nif(diffuseColor.a<.03)discard;')};
-   const mesh=new THREE.Mesh(g,m);mesh.renderOrder=2;mesh.userData.ink=inkU;group.add(mesh);
+   const rect={value:new THREE.Vector4(...t.rect)},inkU={value:1},smearU={value:0},isLetter=t.n===INTRO_LETTER_N;
+   // the lettering: 8 samples along a slanted line (like the drawn smears 2 and 3), growing with uSmear, fading out
+   const sample=isLetter?'float ink=0.0;for(int i=0;i<8;i++){float f=float(i)/7.0;vec2 q=clamp(vMapUv-vec2(.42,.05)*uSmear*f,0.0,1.0);ink+=texture2D(map,uRect.xy+q*uRect.zw,-0.8).r*(1.0-.55*f);}ink=ink/5.6*(1.0-smoothstep(.45,1.0,uSmear));'
+    :'float ink=texture2D(map,uRect.xy+vMapUv*uRect.zw,-0.8).r;';
+   m.onBeforeCompile=sh=>{sh.uniforms.uRect=rect;sh.uniforms.uInk=inkU;sh.uniforms.uSmear=smearU;sh.fragmentShader='uniform vec4 uRect;uniform float uInk;uniform float uSmear;\n'+sh.fragmentShader.replace('#include <map_fragment>',
+    'if(vMapUv.x<0.0||vMapUv.x>1.0||vMapUv.y<0.0||vMapUv.y>1.0)discard;\n'+sample+'\ndiffuseColor=vec4(mix(vec3(.12,.035,.33),vec3(.004,.003,.003),uInk),min(1.0,ink*mix(1.7,2.2,uInk))*opacity);\nif(diffuseColor.a<.03)discard;')};
+   const mesh=new THREE.Mesh(g,m);mesh.renderOrder=2;mesh.userData.ink=inkU;mesh.userData.n=t.n;if(isLetter)mesh.userData.smear=smearU;group.add(mesh);
    pv+=t.verts;pi+=t.tris}
   return group}).catch(()=>null);
 }
 // Start with the body chosen last (♀/♂); on the very first visit at random. The intro shows the same one.
 const START_BODY=(()=>{try{const k=localStorage.getItem('bodyKind');if(k==='male'||k==='female')return k}catch(e){}return Math.random()<.5?'male':'female'})();
 $('bodySelect').value=START_BODY;syncBodyRadios();
+try{const c=localStorage.getItem('skin');if(/^#[0-9a-f]{6}$/i.test(c||''))$('skin').value=c}catch(e){}
 loadBody(START_BODY);
 const introSuit=loadIntroSuit(START_BODY);
 $('skin').addEventListener('input',e=>meshes.forEach(m=>m.material.color.set(e.target.value)));
@@ -1088,7 +1080,7 @@ function cropArtwork(img){
 }
 $('upload').addEventListener('change',()=>{const file=$('upload').files[0];if(!file)return;
  const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{
-   selectedFlashReady=false;$('placeCoach').hidden=true;const cropped=cropArtwork(img);artAlpha=makeArtAlpha(cropped);imgAspect=cropped.width/cropped.height;
+   selectedFlashReady=false;const cropped=cropArtwork(img);artAlpha=makeArtAlpha(cropped);imgAspect=cropped.width/cropped.height;
    updateDimensions();$('preview').src=cropped.toDataURL('image/png');
    if(tex)tex.dispose();tex=new THREE.CanvasTexture(cropped);tex.colorSpace=THREE.SRGBColorSpace;
    status('PNG ready. Click or tap on the body to place your tattoo.');updatePlacementHint();
@@ -1111,8 +1103,10 @@ function setSkinPickerOpen(open){skinOptions.hidden=!open;$('skinCurrent').hidde
 function updateSkinPicker(){const c=$('skin').value.toLowerCase();$('skinCurrent').style.background=c;skinOptions.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.color.toLowerCase()===c)))}
 $('skinCurrent').addEventListener('click',()=>setSkinPickerOpen(true));
 updateSkinPicker();
-presetButtons.forEach(b=>b.addEventListener('click',()=>{$('skin').value=b.dataset.color;meshes.forEach(m=>m.material.color.set(b.dataset.color));updateSkinSelection()}));
-$('skin').addEventListener('input',updateSkinSelection);
+const saveSkin=()=>{try{localStorage.setItem('skin',$('skin').value)}catch(e){}};
+presetButtons.forEach(b=>b.addEventListener('click',()=>{$('skin').value=b.dataset.color;meshes.forEach(m=>m.material.color.set(b.dataset.color));updateSkinSelection();saveSkin()}));
+$('skin').addEventListener('input',()=>{updateSkinSelection();saveSkin()});
+updateSkinSelection();
 for(const id of ['size','rotation'])$(id).addEventListener('change',()=>{if(anchor&&tex)wrap(false)});
 $('remove').onclick=()=>{anchor=null;dragging=false;clear();setMode('orbit');status('Tattoo removed. Click or tap on the body to place it again.');updatePlacementHint()};
 function moveAnchor(e,preview){
@@ -1233,7 +1227,7 @@ const activeTouches=new Set(),touchPoints=new Map();
 // Two-finger tattoo gesture (like a sticker): distance = size, twist = rotation, midpoint = position.
 function startPinch(a,b){
  const p=touchPoints.get(a),q=touchPoints.get(b);
- if(raf)cancelAnimationFrame(raf);raf=0;queued=null;edgeSpeed=0;edgeHint.style.opacity='0';
+ if(raf)cancelAnimationFrame(raf);raf=0;queued=null;edgeSpeed=0;
  pinch={a,b,d0:Math.max(Math.hypot(q.x-p.x,q.y-p.y),1),ang0:Math.atan2(q.y-p.y,q.x-p.x),size0:Number($('size').value),rot0:Number($('rotation').value),
   mid0:{x:(p.x+q.x)/2,y:(p.y+q.y)/2},anchor0:screenPoint(anchor.point)};
  try{renderer.domElement.setPointerCapture(b)}catch(err){}
@@ -1261,7 +1255,7 @@ function endPinch(liftedId){
 function cancelTattooDrag(){
  if(pinch){if(pinchRaf)cancelAnimationFrame(pinchRaf);pinchRaf=0;pinch=null}
  dragging=false;dragId=null;dragClient=null;edgeSpeed=0;
- renderer.domElement.classList.remove('drag');edgeHint.style.opacity='0';
+ renderer.domElement.classList.remove('drag');
  if(raf)cancelAnimationFrame(raf);raf=0;queued=null;
  controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;
 }
@@ -1273,11 +1267,11 @@ renderer.domElement.addEventListener('pointermove',e=>{
  if(dragging&&e.pointerId===dragId){dragClient={clientX:e.clientX,clientY:e.clientY};queueDrag(e);e.preventDefault()}
 });
 function finish(e){touchPoints.delete(e.pointerId);if(pinch&&(e.pointerId===pinch.a||e.pointerId===pinch.b)){activeTouches.delete(e.pointerId);endPinch(e.pointerId);press=null;return}
- activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;edgeHint.style.opacity="0";renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;const last=queued;queued=null;
+ activeTouches.delete(e.pointerId);if(dragging){if(e.pointerId!==dragId)return;dragging=false;dragId=null;dragClient=null;edgeSpeed=0;renderer.domElement.classList.remove('drag');if(raf)cancelAnimationFrame(raf);raf=0;const last=queued;queued=null;
  // Fingers slide a few pixels while lifting: keep the last dragged position (plus a pending
  // move that the throttle had not applied yet) and only upgrade the quality.
  if(last)moveAnchor(dragEvent(last),false);else wrap(false);controls.enabled=mode==='orbit'||window.matchMedia('(pointer: coarse)').matches;status('Tattoo moved. Grab it again or switch to Rotate Body.');press=null;return}
- if(!press)return;const d=Math.hypot(e.clientX-press.x,e.clientY-press.y);press=null;if(e.type!=='pointerup'||d>5||!tex||!meshes.length)return;if(hitTattoo(e))return;if(e.pointerType==='touch'&&anchor)return;if(moveAnchor(e,false)){setMode('move');status('Tattoo placed. Drag your tattoo to adjust its position.');showPlacedToast()}}
+ if(!press)return;const d=Math.hypot(e.clientX-press.x,e.clientY-press.y);press=null;if(e.type!=='pointerup'||d>5||!tex||!meshes.length)return;if(hitTattoo(e))return;if(e.pointerType==='touch'&&anchor)return;if(moveAnchor(e,false)){setMode('move');status('Tattoo placed. Drag your tattoo to adjust its position.')}}
 renderer.domElement.addEventListener('pointerup',finish);renderer.domElement.addEventListener('pointercancel',finish);
 renderer.domElement.addEventListener('lostpointercapture',e=>{if(dragging&&e.pointerId===dragId)cancelTattooDrag()});
 window.addEventListener('blur',()=>{if(dragging)cancelTattooDrag();activeTouches.clear();touchPoints.clear()});
@@ -1355,54 +1349,89 @@ function drawWrapped(ctx,str,x,y,maxWidth,lineHeight,maxLines=12){
  return y;
 }
 function loadPreview(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src})}
+// Saved request picture (iPhone full screen 1170 × 2532) in the flashbook's look: the placement as its own rounded
+// picture under the top line, the flash page (vintage paper) below it.
 async function createBookingCard(){
  if(!bookingPNG)throw Error('No screenshot available');
  const preview=await loadPreview(bookingPNG);
- const W=CARD_W,H=CARD_H,margin=64,col2=W/2+16;
- const budget=selectedText($('bookingBudget'));
- const flash=$('bookingFlash').textContent.trim();
- const region=selectedText($('bookingRegionSelect'));
- const note=$('bookingNote').value.trim();
- const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
- const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f8fa';ctx.fillRect(0,0,W,H);
- // Focused placement: full width, 67 % of the image height.
- ctx.fillStyle='#292a2e';ctx.fillRect(0,CARD_TOP,W,CARD_IMAGE_H);
- const scale=Math.min(W/preview.width,CARD_IMAGE_H/preview.height),dw=preview.width*scale,dh=preview.height*scale;
- ctx.drawImage(preview,(W-dw)/2,CARD_TOP+(CARD_IMAGE_H-dh)/2,dw,dh);
- const label=(t,x,y)=>{ctx.fillStyle='#696a77';ctx.font='28px system-ui,Arial,sans-serif';ctx.fillText(t,x,y)};
- const value=(t,x,y)=>{ctx.fillStyle='#17181b';ctx.font='bold 38px system-ui,Arial,sans-serif';ctx.fillText(t,x,y)};
- let y=CARD_TOP+CARD_IMAGE_H+72;
- label(t('card.flash'),margin,y);label(t('card.size'),col2,y);value(flash,margin,y+48);value($('bookingSize').textContent,col2,y+48);
- y+=120;
- label(t('card.placement'),margin,y);label(t('card.budget'),col2,y);value(region,margin,y+48);value(budget,col2,y+48);
- y+=120;
- label(t('card.artist'),margin,y);value('@'+ARTIST_INSTAGRAM,margin,y+48);
- if(note){
-  // Message only if the customer typed one; shortened with … if it does not fit.
-  y+=120;label(t('card.message'),margin,y);
-  ctx.fillStyle='#17181b';ctx.font='34px system-ui,Arial,sans-serif';
-  const lineH=46,maxLines=Math.max(1,Math.floor((H-40-(y+52))/lineH)+1),inner=W-2*margin,lines=[];let line='';
-  for(const word of note.split(/\s+/)){const next=line?line+' '+word:word;if(ctx.measureText(next).width>inner&&line){lines.push(line);line=word}else line=next}
-  if(line)lines.push(line);
-  if(lines.length>maxLines){lines.length=maxLines;let last=lines[maxLines-1];while(last&&ctx.measureText(last+'…').width>inner)last=last.slice(0,-1);lines[maxLines-1]=last.replace(/\s+$/,'')+'…'}
-  lines.forEach((l,i)=>ctx.fillText(l,margin,y+52+i*lineH));
- }
- return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('PNG export failed')),'image/png'));
+ const W=CARD_W,H=CARD_H,M=64,load=src=>src?loadPreview(src).catch(()=>null):Promise.resolve(null);
+ const budget=selectedText($('bookingBudget')),region=selectedText($('bookingRegionSelect')),note=$('bookingNote').value.trim();
+ const d=selectedDesignNumber&&designByNumber(selectedDesignNumber),motif=await load(d&&d.thumb[0]);
+ const also=allDesigns.filter(x=>bookingAlso.has(x.number)).slice(0,ALSO_MAX),alsoImgs=await Promise.all(also.map(x=>load(x.thumb[0])));
+ const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+ const sp=(txt,x,y,ls)=>{let xx=x;for(const ch of txt){c.fillText(ch,xx,y);xx+=c.measureText(ch).width+ls}return xx};
+ const tw=(txt,ls)=>[...txt].reduce((a,ch)=>a+c.measureText(ch).width+ls,0)-ls;
+ const cover=(img,x,y,w,h)=>{const k=Math.max(w/img.width,h/img.height);c.drawImage(img,x+(w-img.width*k)/2,y+(h-img.height*k)/2,img.width*k,img.height*k)};
+ const rounded=(x,y,w,h,r)=>{c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()};
+ // background: flashbook taupe with a soft light cone from above
+ let g=c.createRadialGradient(W/2,H*.15,0,W/2,H*.15,H*.75);g.addColorStop(0,'#5f574f');g.addColorStop(.55,'#4a443e');g.addColorStop(1,'#34302c');c.fillStyle=g;c.fillRect(0,0,W,H);
+ // top line
+ c.textBaseline='alphabetic';c.fillStyle='#f4efe9';c.font='650 36px system-ui,Arial,sans-serif';sp('CRAYKROW',M,170,7);
+ c.font='350 36px system-ui,Arial,sans-serif';c.fillStyle='#cdc4ba';const req=t('card.request');sp(req,W-M-tw(req,5),170,5);
+ let PX=M,PY,PW=W-2*M,PH,infoTop;
+ const paperAt=(x,y,w,h)=>{const p=document.createElement('canvas');drawPaper(p,(selectedDesignNumber||7)*13,w,h);
+  c.save();c.shadowColor='rgba(0,0,0,.45)';c.shadowBlur=60;c.shadowOffsetY=24;c.drawImage(p,x,y,w,h);c.restore();
+  c.strokeStyle='rgba(156,143,125,.45)';c.lineWidth=2;c.strokeRect(x+26,y+26,w-52,h-52)};
+ // Layout depends on the content: the flash page is only as tall as what is on it (other saved designs and the
+ // message are optional), the placement picture above takes the rest of the height.
+ const MB=270,lineH=50,inner=PW-120,GAP=30,S=Math.floor((inner-(ALSO_MAX-1)*GAP)/ALSO_MAX); // five other designs fill one row
+ c.font='400 36px system-ui,Arial,sans-serif';const words=[];{let line='';for(const word of note?note.split(/\s+/):[]){const next=line?line+' '+word:word;if(c.measureText(next).width>inner&&line){words.push(line);line=word}else line=next}if(line)words.push(line)}
+ const pageH=n=>64+MB+64+50+((also.length||n)?46+58:0)+(also.length?22+S+94:0)+(n?56+(n-1)*lineH:0)+90+58;
+ let nLines=Math.min(words.length,8);while(nLines>1&&H-80-pageH(nLines)-50-230<H*.32)nLines--; // keep the picture at least ~1/3 of the height
+ const lines=words.slice(0,nLines);
+ if(words.length>nLines){let last=lines[nLines-1];while(last&&c.measureText(last+'…').width>inner)last=last.slice(0,-1);lines[nLines-1]=last.replace(/\s+$/,'')+'…'}
+ PH=pageH(lines.length);
+ // the placement as its own picture under the top line
+ const ix=M,iy=230,iw=W-2*M,ih=Math.min(Math.round(H*.62),H-80-PH-50-iy);PH=H-80-(iy+ih+50); // a very short page gets the rest
+ c.save();c.shadowColor='rgba(0,0,0,.4)';c.shadowBlur=40;c.shadowOffsetY=16;rounded(ix,iy,iw,ih,28);c.fillStyle='#544d46';c.fill();c.restore();
+ c.save();rounded(ix,iy,iw,ih,28);c.clip();cover(preview,ix,iy,iw,ih);c.restore();
+ PY=iy+ih+50;paperAt(PX,PY,PW,PH);infoTop=PY+64;
+ const ink='#24201b',soft='#7a6a58';
+ const lab=(txt,x,y)=>{c.fillStyle=soft;c.font='650 30px system-ui,Arial,sans-serif';sp(txt,x,y,3)};
+ const val=(txt,x,y,size=36)=>{c.fillStyle=ink;c.font=`650 ${size}px system-ui,Arial,sans-serif`;c.fillText(txt,x,y)};
+ // motif as on the page + its number and size
+ const mx=PX+60,my=infoTop;
+ if(motif){const k=Math.min(MB/motif.width,MB/motif.height),w=motif.width*k,h=motif.height*k;c.save();c.globalCompositeOperation='multiply';c.drawImage(motif,mx+(MB-w)/2,my+(MB-h)/2,w,h);c.restore()}
+ const cw=(PW-120)/2,rx=mx+cw; // right column, the same as the budget below
+ lab(t('card.flash'),rx,my+70);val($('bookingFlash').textContent.trim(),rx,my+116);
+ lab(t('card.size'),rx,my+180);val($('bookingSize').textContent,rx,my+226);
+ let y=my+MB+64;
+ lab(t('card.placement'),mx,y);val(region,mx,y+50);lab(t('card.budget'),mx+cw,y);val(budget,mx+cw,y+50);
+ y+=96;if(also.length||lines.length){c.strokeStyle='rgba(122,106,88,.35)';c.lineWidth=2;c.beginPath();c.moveTo(mx,y);c.lineTo(PX+PW-60,y);c.stroke();y+=58}
+ // the other saved designs, small as on the page
+ if(also.length){lab(t('card.also'),mx,y);y+=22;
+  also.forEach((x,i)=>{const im=alsoImgs[i],bx=mx+i*(S+GAP);if(im){const k=Math.min(S/im.width,S/im.height);c.save();c.globalCompositeOperation='multiply';c.drawImage(im,bx+(S-im.width*k)/2,y+(S-im.height*k)/2,im.width*k,im.height*k);c.restore()}
+   c.fillStyle=soft;c.font='650 30px system-ui,Arial,sans-serif';c.fillText(flashLabel(x.number),bx,y+S+38)});
+  y+=S+94}
+ // message (measured above, shortened with … if it would push the picture below a third of the height)
+ const footY=PY+PH-58;
+ if(lines.length){lab(t('card.message'),mx,y);c.fillStyle=ink;c.font='400 36px system-ui,Arial,sans-serif';
+  lines.forEach((l,i)=>c.fillText(l,mx,y+56+i*lineH))}
+ // signed at the bottom of the page
+ c.fillStyle=soft;c.font='650 30px system-ui,Arial,sans-serif';const date=new Date().toLocaleDateString(lang==='de'?'de-DE':'en-GB');
+ sp('@'+ARTIST_INSTAGRAM.toUpperCase(),mx,footY,3);sp(date,PX+PW-60-tw(date,3),footY,3);
+ return new Promise((resolve,reject)=>cv.toBlob(blob=>blob?resolve(blob):reject(Error('PNG export failed')),'image/png'));
 }
 async function bookingFile(){
  const blob=await createBookingCard();
  const no=String(selectedDesignNumber||0).padStart(3,'0');
  return new File([blob],`${ARTIST_INSTAGRAM}-flash-${no}.png`,{type:'image/png'});
 }
-$('downloadBooking').onclick=async()=>{
- let file;
- try{file=await bookingFile()}catch(err){console.error(err);$('shareMessage').textContent=t('card.error');return}
- // Share sheet (needs https): on an iPhone it offers "Save Image", which saves to Photos.
+// "Save picture" in the steps card (a keepsake for the customer, nothing to attach): the share sheet
+// (needs https; on an iPhone "Save Image" puts it in Photos) or a plain download. The card stays open.
+const IG_SAVE_VB={saveBtn:'1.06 0.81 21.88 21.88',saved:'2.12 2.37 19.76 19.76'};
+const IG_SAVE_ICON={saveBtn:'<path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19.5h14"/>',saved:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'};
+function igSaveLabel(key){const b=$('igSave');b.innerHTML=`<svg viewBox="${IG_SAVE_VB[key]}" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IG_SAVE_ICON[key]}</svg>`;b.setAttribute('aria-label',t('ig.'+key));$('igSaveText').innerHTML=t('ig.save')}
+$('igSaveText').onclick=()=>$('igSave').click(); // the line itself saves too
+$('igSave').onclick=async()=>{
+ const b=$('igSave');let file;b.disabled=true;
+ try{file=await bookingFile()}catch(err){console.error(err);$('igSaveText').textContent=t('card.error');b.disabled=false;return}
+ let ok=true;
  if(navigator.canShare&&navigator.canShare({files:[file]})){
-  try{await navigator.share({files:[file],title:'Tattoo placement'});return}
-  catch(err){if(err&&err.name==='AbortError')return}
- }
- downloadBlob(file,file.name);
+  try{await navigator.share({files:[file],title:'Tattoo placement'})}
+  catch(err){if(err&&err.name==='AbortError')ok=false;else downloadBlob(file,file.name)}
+ }else downloadBlob(file,file.name);
+ b.disabled=false;if(ok){igSaveLabel('saved');b.classList.add('done')}
 };
 const selectedText=sel=>sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:'';
 function bookingMessageText(){
@@ -1465,6 +1494,7 @@ function showInstagramSteps(copied,message){
  const manual=$('igManual');manual.hidden=copied;if(!copied){manual.value=message}
  $('igStep1').innerHTML=t('ig.step1',{name:ARTIST_INSTAGRAM});
  $('igStep2').innerHTML=!copied?t('ig.step2manual'):touch?t('ig.step2touch'):t('ig.step2desk',{key:mac?'⌘':document.documentElement.lang==='de'?'Strg':'Ctrl'});
+ const save=$('igSave');igSaveLabel('saveBtn');save.classList.remove('done');save.disabled=false;
  $('igOpen').href='https://ig.me/m/'+ARTIST_INSTAGRAM;
  box.hidden=false;
  if(!copied){manual.focus();manual.select()}
@@ -1613,7 +1643,7 @@ function renderFlashPages(){
  updateFavUI();
  requestAnimationFrame(positionFlashbook);
 }
-const HEART_SVG='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
+const HEART_SVG='<svg viewBox="-1.65 -1.15 27.30 27.30" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
 function setFavMode(on){
  if(on===favMode)return;
  if(!$('pageOverview').hidden)closePageOverview();
@@ -1627,7 +1657,7 @@ $('favChip').addEventListener('click',()=>setFavMode(!favMode));
 // Page overview: 4 pages per row, scroll down; tiny previews (flashes/mini) load as they scroll into
 // view; a heart marks pages with saved designs. Tap a page to jump there, or the page count to close.
 const MINI_DIR='./flashes/mini/';
-const GRID_ICON='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>';
+const GRID_ICON='<svg viewBox="0.71 0.71 22.59 22.59" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>';
 let poObserver=null;
 function openPageOverview(){
  const grid=$('pageOverviewGrid');grid.innerHTML='';
@@ -1682,18 +1712,20 @@ function showStripInfo(){const el=$('stripInfo');el.textContent=t('strip.info');
 function closeFavStrip(){$('favStrip').hidden=true;$('favView').setAttribute('aria-expanded','false');clearTimeout(stripInfoTimer);$('stripInfo').classList.remove('show')}
 $('favView').addEventListener('click',()=>{const s=$('favStrip');if(s.hidden){renderFavStrip();s.hidden=false;$('favView').setAttribute('aria-expanded','true');showStripInfo()}else closeFavStrip()});
 // Booking: saved designs (none ticked by default) can be added to the request.
-const bookingAlso=new Set();
+const bookingAlso=new Set(),ALSO_MAX=5;let alsoWarnTimer=0;
 function renderBookingFavs(){
  bookingAlso.clear();const row=$('bookingFavRow');row.innerHTML='';
  const list=allDesigns.filter(d=>favs.has(d.number)&&d.number!==selectedDesignNumber);
  $('bookingFavs').hidden=!list.length;
  for(const d of list){const b=document.createElement('button');b.type='button';b.className='favPick';b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',d.name);
   const im=document.createElement('img');im.alt='';im.src=d.thumb[0];const no=document.createElement('i');no.textContent=flashLabel(d.number);b.append(im,no);
-  b.addEventListener('click',()=>{if(bookingAlso.has(d.number))bookingAlso.delete(d.number);else bookingAlso.add(d.number);const on=bookingAlso.has(d.number);b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));updateAlsoLine()});row.appendChild(b)}
+  b.addEventListener('click',()=>{if(bookingAlso.has(d.number))bookingAlso.delete(d.number);
+   else if(bookingAlso.size>=ALSO_MAX){const l=$('bookingAlso');clearTimeout(alsoWarnTimer);l.textContent=t('booking.alsoMax');l.classList.add('warn');alsoWarnTimer=setTimeout(()=>{l.classList.remove('warn');updateAlsoLine()},2200);return}
+   else bookingAlso.add(d.number);const on=bookingAlso.has(d.number);b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));updateAlsoLine()});row.appendChild(b)}
  updateAlsoLine();
 }
 function alsoList(){return allDesigns.filter(d=>bookingAlso.has(d.number)).map(d=>flashLabel(d.number)).join(', ')}
-function updateAlsoLine(){const l=alsoList();$('bookingAlso').textContent=l?`${t('msg.also')}: ${l}`:''}
+function updateAlsoLine(){const l=alsoList();clearTimeout(alsoWarnTimer);$('bookingAlso').classList.remove('warn');$('bookingAlso').textContent=l?`${t('msg.also')}: ${l}`:''}
 // Landing intro (first open only): the male figure turns large over a see-through flashbook, the
 // instruction appears, then the figure glides to the bottom left next to the page arrow and stays
 // there facing front as a small hint. A tap skips straight to that end state. The small figure stays
@@ -1704,8 +1736,8 @@ function introBusy(){return landing.state==='wait'||landing.state==='spin'||land
 // Intro: the tattoos start as purple stencils and turn into black ink one after another while the figure
 // turns; then the motifs fly onto page 1, the big figure fades where it is and the small one appears.
 function introSetInk(v){if(landing.suit)landing.suit.children.forEach(m=>m.userData.ink.value=v)}
-function introSetFade(v){if(landing.fig)landing.fig.traverse(o=>{if(o.isMesh)o.material.opacity=v});if(landing.shadow)landing.shadow.material.opacity=.9*v}
-function introResetSuit(){landing.flyRun=(landing.flyRun||0)+1;if(landing.suit)landing.suit.children.forEach(m=>{m.position.set(0,0,0);m.quaternion.identity();m.scale.setScalar(1);m.material.opacity=1})}
+function introSetFade(v){landing.figOpacity=v;if(landing.fig)landing.fig.traverse(o=>{if(o.isMesh)o.material.opacity=v});if(landing.shadow)landing.shadow.material.opacity=.9*v}
+function introResetSuit(){landing.flyRun=(landing.flyRun||0)+1;if(landing.suit)landing.suit.children.forEach(m=>{m.position.set(0,0,0);m.quaternion.identity();m.scale.setScalar(1);m.material.opacity=1});if(landing.letter)landing.letter.visible=false}
 // All tattoos leave the body at once: each one lifts off outwards (away from the body's axis) and a little
 // towards the viewer, grows slightly, fades — while the page motifs come out of the figure.
 function introTattoosFlyOff(ms){
@@ -1734,7 +1766,7 @@ function introInkOneByOne(ms){
 }
 function introFadeAndAppear(){
  if(!landing.canvas)return;const cv=landing.canvas,t0=performance.now();
- const fade=now=>{const k=Math.min(1,(now-t0)/550);introSetFade((1-k)*(1-k));if(k<1&&landing.canvas)requestAnimationFrame(fade);else appear()};requestAnimationFrame(fade);
+ const f0=landing.figOpacity??1,fade=now=>{const k=Math.min(1,(now-t0)/550);introSetFade(f0*(1-k)*(1-k));if(k<1&&landing.canvas)requestAnimationFrame(fade);else appear()};requestAnimationFrame(fade);
  const appear=()=>{if(!landing.canvas)return;
   landing.glide=null;landing.state='still';landing.angle=0;landing.pivot.rotation.y=0;introSetInk(1);introSetFade(1);introResetSuit();introCameraHome();if(landing.shadow)landing.shadow.visible=false;
   cv.style.transition='none';cv.style.opacity='0';cv.style.transform='scale(.8)';setLandingRect(landingCorner());landing.renderer.render(landing.scene,landing.camera);
@@ -1752,20 +1784,66 @@ function addIntroLights(sc){
 }
 // Camera: starts close on the chest (only ink and skin), pulls back calmly in 2.6 s to the whole figure, seen from a
 // little below (hero view).
+// With the lettering: the figure first stands with its back to us. On the back there is only the writing (the
+// tattoos of the back half are hidden), front, sides and arms are already tattooed. It turns one and a half times:
+// while the back turns away the writing smears off, while it is out of sight the back tattoos come in, so the
+// second time the back comes round it shows them.
+const LETTER_HOLD=1300; // ms the back with the writing is shown before the turn starts
+function introLetterAngle(ms){
+ if(ms<LETTER_HOLD)return Math.PI+.12*Math.pow(ms/LETTER_HOLD,2);
+ const k=Math.min(1,(ms-LETTER_HOLD)/INTRO_TURN),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+ return Math.PI+.12+(3*Math.PI-.12)*e; // ends facing us (4π)
+}
+// Tattoos on the back half of the body (seen from above more than ~107° away from the front).
+function introIsBackTattoo(m,offset){m.geometry.computeBoundingSphere();const c=m.geometry.boundingSphere.center.clone().add(offset);return c.z/Math.max(1e-6,Math.hypot(c.x,c.z))<-.3}
+function introLetterStep(){
+ const L=landing.letter,a=landing.angle,ease=k=>{k=Math.min(1,Math.max(0,k));return k*k*(3-2*k)};if(!landing.suit||landing.flown)return; // once they fly off, the fly-off owns the tattoos
+ // writing: smears off while the back turns away (from the start of the turn to a quarter turn)
+ if(L&&L.visible){const k=ease((a-Math.PI-.15)/(.45*Math.PI));L.userData.smear.value=k;if(k>=1)L.visible=false}
+ // back tattoos: come in while the back is out of sight (between 1.6π and 2.3π)
+ const b=ease((a-1.6*Math.PI)/(.7*Math.PI));for(const m of landing.suit.children)if(m!==L&&m.userData.back)m.material.opacity=b;
+ // last quarter turn: the figure starts to dissolve
+ introSetFade(1-.45*ease((a-3.5*Math.PI)/(.3*Math.PI)));
+}
+const INTRO_TURN=4500; // ms for the one full turn of the tattooed figure; the tattoos fly off after it
 function introCamera(now){
  const c=landing.camPlan;if(!c||!landing.spinStart)return;
- const t=Math.min(1,Math.max(0,(now-landing.spinStart)/2600)),e=.5-.5*Math.cos(Math.PI*t);
+ // lettering: close on the writing and pushing in slowly while the back is shown, then pulling out quickly
+ // (fast at first, then calming) while the figure turns
+ if(c.pIn){const ms=now-landing.spinStart,cam=landing.camera;
+  if(ms<LETTER_HOLD){const k=ms/LETTER_HOLD;cam.position.lerpVectors(c.p0,c.pIn,k*k*(3-2*k));cam.lookAt(c.t0)}
+  else{const k=Math.min(1,(ms-LETTER_HOLD)/(INTRO_TURN*.6)),e=1-Math.pow(1-k,3);cam.position.lerpVectors(c.pIn,c.p1,e);c.tgt.lerpVectors(c.t0,c.t1,e);cam.lookAt(c.tgt)}
+  return}
+ const t=Math.min(1,Math.max(0,(now-landing.spinStart-(landing.letter?LETTER_HOLD*.6:0))/(INTRO_TURN*.87))),e=.5-.5*Math.cos(Math.PI*t);
  landing.camera.position.lerpVectors(c.p0,c.p1,e);c.tgt.lerpVectors(c.t0,c.t1,e);landing.camera.lookAt(c.tgt);
 }
 function introCameraHome(){
  const c=landing.camPlan;if(!c)return;landing.camPlan=null;landing.camera.position.set(0,0,c.D);landing.camera.lookAt(0,0,0);
 }
+// only loaded when a figure has no lettering on its back (then the writing stands under the figure)
+const introLogoImages=()=>[1,2,3].map(i=>{const im=new Image();im.decoding='async';im.src='./intro/intro_text_'+i+'.png';return im});
+// Blur state s: 0 = drawing 1 (clean), 1 = drawing 2, 2 = drawing 3, 3 = gone. Between two states the two drawings cross-fade.
+function introLogoState(s){
+ const el=landing.logo;if(!el)return;const imgs=el.children;s=Math.max(0,Math.min(3,s));
+ for(let i=0;i<3;i++)imgs[i].style.opacity=String(Math.max(0,1-Math.abs(s-i)));
+}
+// The smears trail off to the right, so the clean writing sits left in the picture: shifted by 8.6 % it is centred.
+const INTRO_LOGO_DX=.086;
+// Animate s from a to b, the drawing drifting sideways by dx (share of its width) and growing to scale sc on the way.
+function introLogoMove(a,b,ms,x0,x1,sc0,sc1){
+ const el=landing.logo;if(!el)return;const t0=performance.now();
+ const step=now=>{if(landing.logo!==el)return;const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3);
+  introLogoState(a+(b-a)*e);el.style.transform=`translate(calc(-50% + ${(INTRO_LOGO_DX+x0+(x1-x0)*e)*100}%),-50%) scale(${sc0+(sc1-sc0)*e})`;
+  if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step);
+}
+function removeIntroLogo(){if(landing.logo){landing.logo.remove();landing.logo=null}}
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
  const cancel=()=>{if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
  const skip=()=>{if(landing.state==='wait'){landing.state='skip';document.body.classList.remove('landingIntro')}};
  landing.skip=skip;setTimeout(skip,6000);
- fetchBody(START_BODY).then(asset=>{
+ Promise.all([fetchBody(START_BODY),introSuit]).then(([asset,suitG])=>{
+  const letter=suitG&&suitG.children.find(m=>m.userData.n===INTRO_LETTER_N)||null;
   if(landing.state==='off'||!flashbook)return;
   const quiet=landing.state==='skip'||flashbook.hidden||!!selectedDesignNumber;
   const cv=document.createElement('canvas');cv.id='introFigure';cv.setAttribute('aria-hidden','true');document.body.appendChild(cv);
@@ -1779,7 +1857,13 @@ function startLandingIntro(){
   const W=innerWidth,H=innerHeight,top=0;
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
   cam.position.set(0,0,asset.dim.y/.92/vf);cam.lookAt(0,0,0);
-  {const h=asset.dim.y,D=h/.92/vf;landing.camPlan={D,p0:new THREE.Vector3(0,h*.21,h*.45),t0:new THREE.Vector3(0,h*.21,0),p1:new THREE.Vector3(0,-h*.11,D*1.05),t1:new THREE.Vector3(0,h*.03,0),tgt:new THREE.Vector3()};
+  {const h=asset.dim.y,D=h/.92/vf;landing.camPlan=letter
+    // lettering: starts on the whole back (writing readable), ends on the whole figure, large
+    ?(()=>{ // close and square on the writing: about 92 % of the screen width (or 75 % of its height)
+      letter.geometry.computeBoundingBox();const bb=letter.geometry.boundingBox,lc=bb.getCenter(new THREE.Vector3()).add(fig.position),ls=bb.getSize(new THREE.Vector3());
+      const at=new THREE.Vector3(-lc.x,lc.y,-lc.z),d=Math.max(ls.x/(.92*vf*W/H),ls.y/(.75*vf)); // seen with the figure turned by π
+      return {D,p0:at.clone().add(new THREE.Vector3(0,0,d)),pIn:at.clone().add(new THREE.Vector3(0,0,d*.9)),t0:at,p1:new THREE.Vector3(0,-h*.11,D*1.05),t1:new THREE.Vector3(0,h*.03,0),tgt:new THREE.Vector3()}})()
+    :{D,p0:new THREE.Vector3(0,h*.21,h*.45),t0:new THREE.Vector3(0,h*.21,0),p1:new THREE.Vector3(0,-h*.20,D*1.22),t1:new THREE.Vector3(0,-h*.11,0),tgt:new THREE.Vector3()};
    cam.position.copy(landing.camPlan.p0);cam.lookAt(landing.camPlan.t0);
    // soft shadow on the floor, so the figure stands in the room instead of floating
    const sh=new THREE.Mesh(new THREE.PlaneGeometry(h*.5,h*.26),new THREE.MeshBasicMaterial({map:groundShadow.material.map,transparent:true,depthWrite:false,opacity:.9}));
@@ -1787,7 +1871,9 @@ function startLandingIntro(){
   document.body.classList.add('hasLandingFigure');
   Object.assign(landing,{canvas:cv,renderer:r,scene:sc,camera:cam,pivot,state:'spin',angle:0,W,H,top,glide:null});
   setLandingRect({x:0,y:top,w:W,h:H});
+  if(letter){landing.letter=letter;letter.visible=true;letter.userData.smear.value=0;for(const m of suitG.children)if(m!==letter){m.userData.back=introIsBackTattoo(m,fig.position);m.material.opacity=m.userData.back?0:1}pivot.rotation.y=Math.PI}
   r.compile(sc,cam);r.render(sc,cam); // first frame ready before the turning starts
+  if(!letter){const lg=document.createElement('div');lg.id='introLogo';lg.setAttribute('aria-hidden','true');for(const im of introLogoImages())lg.appendChild(im);document.body.appendChild(lg);landing.logo=lg;introLogoState(3)}
   const txt=document.createElement('div');txt.id='introText';txt.textContent=t('flash.instruction');document.body.appendChild(txt);landing.text=txt;
   // Same type as the instruction line at the bottom (font, weight, spacing), just larger: as large as
   // the screen width allows, so it can shrink straight into that line.
@@ -1796,14 +1882,20 @@ function startLandingIntro(){
    Object.assign(txt.style,{fontFamily:cs.fontFamily,fontWeight:cs.fontWeight,textTransform:cs.textTransform,fontSize:parseFloat(cs.fontSize)*k+'px',letterSpacing:(parseFloat(cs.letterSpacing)||0)*k+'px'})}
   document.body.classList.add('landingIntro');
   if(quiet||matchMedia('(prefers-reduced-motion: reduce)').matches){finishLandingIntro();return}
-  landing.spinStart=performance.now();landing.angle0=0;landing.angle=0;landing.spinW=Math.PI*2/3.0;
+  landing.spinStart=performance.now();landing.angle0=0;landing.angle=letter?Math.PI:0;landing.spinW=Math.PI*2/(INTRO_TURN/1000);
+  const T_END=INTRO_TURN+(letter?LETTER_HOLD:0); // the figure faces us again
+  // lettering: no stop at the end — the tattoos already fly off during the last quarter turn (the figure has started to fade)
+  const T_FLY=letter?LETTER_HOLD+Math.round(INTRO_TURN*.8):T_END;
   runLandingLoop();
   const at=(ms,fn)=>landing.timers.push(setTimeout(fn,ms));
   // No big text during the turn (user: only the figure); the instruction line appears with the flashbook.
-  at(3000,()=>introTattoosFlyOff(1000));
-  at(3000,()=>{document.body.classList.add('introFly');landing.flown=true;flyMotifsToPage()});
-  at(3050,introFadeAndAppear);
-  at(3500,()=>document.body.classList.add('introPaper'));
+  at(450,()=>introLogoMove(3,0,750,.06,0,1,1));      // falls in: smeared → clean, sliding into place
+  at(T_END-50,()=>introLogoMove(0,3,650,0,.1,1,1.05));   // with the tattoos: clean → smeared → gone, drifting off
+  at(T_END+700,removeIntroLogo);
+  at(T_FLY,()=>introTattoosFlyOff(1000));
+  at(T_FLY,()=>{document.body.classList.add('introFly');landing.flown=true;flyMotifsToPage()});
+  at(T_FLY+50,introFadeAndAppear);
+  at(T_FLY+500,()=>document.body.classList.add('introPaper'));
  }).catch(cancel);
 }
 function setLandingRect(q){
@@ -1815,7 +1907,8 @@ function setLandingRect(q){
 function runLandingLoop(){
  if(landing.raf||!landing.renderer)return;let last=performance.now();
  const loop=now=>{landing.raf=0;if(!landing.renderer)return;const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(landing.state==='spin')landing.angle=landing.spinStart?landing.angle0+landing.spinW*(now-landing.spinStart)/1000:landing.angle+dt*1.6;
+  if(landing.state==='spin'&&landing.letter&&landing.spinStart){landing.angle=introLetterAngle(now-landing.spinStart);introLetterStep()}
+  else if(landing.state==='spin')landing.angle=landing.spinStart?landing.angle0+landing.spinW*(now-landing.spinStart)/1000:landing.angle+dt*1.6;
   else if(landing.state==='settle'){const k=Math.min(1,(now-landing.settleStart)/1100),e=1-Math.pow(1-k,3);landing.angle=landing.settleFrom+(landing.settleTo-landing.settleFrom)*e;if(k>=1){landing.state='still';landing.angle=0}}
   const g=landing.glide;
   if(g){const k=Math.min(1,(now-g.start)/900),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2,m=(p,q)=>p+(q-p)*e;
@@ -1833,7 +1926,7 @@ function landingCorner(){
 }
 function moveLandingFigure(animate){
  if(!landing.canvas)return;
- introSetInk(1);introSetFade(1);introResetSuit();introCameraHome();if(landing.shadow)landing.shadow.visible=false;landing.canvas.style.opacity='';landing.canvas.style.transform='';
+ introSetInk(1);introSetFade(1);introResetSuit();introCameraHome();if(landing.shadow)landing.shadow.visible=false;landing.canvas.style.opacity='';landing.canvas.style.transform='';removeIntroLogo();
  landing.timers.forEach(clearTimeout);landing.timers=[];
  const to=landingCorner();
  if(animate){if(!landing.flown){document.body.classList.add('introFly');flyMotifsToPage()}}else{document.body.classList.remove('introFly');document.querySelectorAll('.flyMotif').forEach(e=>e.remove())}
@@ -1953,7 +2046,7 @@ function flyMotifsToPage(){
 }
 function removeLandingFigure(){
  if(!landing.canvas)return;document.body.classList.remove('hasLandingFigure');landing.timers.forEach(clearTimeout);if(landing.raf)cancelAnimationFrame(landing.raf);
- document.body.classList.remove('landingIntro','introFly','introPaper');document.querySelectorAll('.flyMotif').forEach(e=>e.remove());landing.canvas.remove();landing.text.remove();
+ document.body.classList.remove('landingIntro','introFly','introPaper');document.querySelectorAll('.flyMotif').forEach(e=>e.remove());landing.canvas.remove();landing.text.remove();removeIntroLogo();
  landing.renderer.dispose();landing.renderer.forceContextLoss();Object.assign(landing,{canvas:null,renderer:null,raf:0,state:'off'});
 }
 // A tap during the intro only ends it (no design is opened through the see-through flashbook).
@@ -2008,13 +2101,12 @@ async function openFlashDesign(design,designNumber,sourceImg){
  // Only the most recently tapped design may finish loading (fast double taps on a phone).
  const token=++flashLoadToken;
  // A newly chosen design always starts with the full 3D view (Adjust closed).
- flashbook.hidden=true;$('viewerBack').hidden=false;setPanelState('collapsed');if(!history.state||history.state.v!=='3d')history.pushState({v:'3d'},'');requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;$('placeCoach').hidden=true;$('placedToast').hidden=true;
+ flashbook.hidden=true;$('viewerBack').hidden=false;setPanelState('collapsed');if(!history.state||history.state.v!=='3d')history.pushState({v:'3d'},'');requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;
  // Remove the previous tattoo and artwork immediately, not after the new PNG has loaded:
  // otherwise the old design stays visible (and can even be placed again) while loading.
  cancelTattooDrag();anchor=null;arapJob=null;uvBlend=null;clear();
  stopIntro();fitFullBody(false);setCameraViewSelected('full');
  if(tex){tex.dispose();tex=null}
- $('hint').classList.remove('afterPlacement');$('hint').style.visibility='hidden';
  resize();fitFullBody(false); // frame the body for the final view size (bar included)
  if(flyFrom)flyThumbToBody(flyFrom.img,flyFrom.rect);
  try{
@@ -2032,15 +2124,17 @@ async function openFlashDesign(design,designNumber,sourceImg){
   // The longer side is capped at 30 cm (very long designs are scaled down to that, the other side follows).
   {const a=imgAspect,longer=15*Math.max(a,1/a),k=Math.min(1,30/longer),w=15*Math.max(1,a)*k;
    $('size').value=k<1?Math.floor(w*2+1e-6)/2:Math.ceil(w*2-1e-6)/2}$('rotation').value=0;$('rotationDeg').value=0;$('rotationValue').textContent='0°';
+  // a new flash always starts unmirrored (it used to inherit the mirroring of the tattoo selected before)
+  flipHorizontal=flipVertical=false;for(const id of ['flipH','flipV']){$(id).classList.remove('active');$(id).setAttribute('aria-pressed','false')}
   $('preview').src=cropped.toDataURL('image/png');updateDimensions();
   anchor=null;clear();setMode('orbit');setCameraViewSelected('full');selectedFlashReady=true;updatePlacementHint();
   placeWithIntro();
   status(`Design #${String(selectedDesignNumber).padStart(3,'0')} selected. Tap the body to place it.`);
  }catch(err){console.error(err);status('Could not load flash. Check the flashes folder.');}
 }
-$('panelHandle').onclick=()=>{$('panelHandle').classList.remove('glow');setPanelState(panelState==='open'?'collapsed':'open')};
+$('panelHandle').onclick=()=>{setPanelState(panelState==='open'?'collapsed':'open')};
 function showFlashbookAgain(){stopIntro();cancelMorph();closeFavStrip();if(panelState==='open')setPanelState('collapsed'); // closes behind the flashbook
-requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;coachWasReady=false;figurePopStart=0;figurePopPrevious=1;$('placeCoach').hidden=true;$('placedToast').hidden=true;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)}
+requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure(false)});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;figurePopStart=0;figurePopPrevious=1;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)}
 $('viewerBack').onclick=()=>{if(history.state&&history.state.v==='3d')history.back();else showFlashbookAgain()};
 window.addEventListener('popstate',()=>{const v=history.state&&history.state.v;
  if(!bookingOverlay.hidden&&v!=='booking'){hideBooking();if(v!=='3d'&&flashbook.hidden)showFlashbookAgain();return}
