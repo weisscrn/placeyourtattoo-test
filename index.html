@@ -1567,10 +1567,10 @@ function layoutFlashPages(designs){
 function setImageSources(img,urls){let i=0;img.onerror=()=>{if(++i<urls.length)img.src=urls[i]};img.src=urls[0]}
 const prefetched=new Set();
 // Flashbook loading: the page on screen first, then its neighbours ring by ring (3 pages each way), so the next
-// swipe always finds its page ready. The large working copies of the page on screen (for a quick try-on) are only
-// fetched once its previews are in and you stay on it for a moment (.6 s), and dropped again when you move on, so
-// they never hold up the previews.
-let pageLoadRun=0,workAbort=null,workTimer=0;
+// swipe always finds its page ready. The large working copies of the page on screen (so a tapped design lands at
+// once) start right after arriving on a page (.3 s, so fast flipping does not start them for every page passed) and
+// keep loading when you move on, so pages you come back to are ready too.
+let pageLoadRun=0,workTimer=0;
 function startPageImages(page){page.querySelectorAll('img[data-pending]').forEach(img=>{const urls=JSON.parse(img.dataset.pending);delete img.dataset.pending;setImageSources(img,urls)})}
 const pageImagesDone=page=>Promise.all([...page.querySelectorAll('img')].map(im=>im.complete?null:new Promise(r=>{im.addEventListener('load',r,{once:true});im.addEventListener('error',r,{once:true})})));
 function loadNearbyPages(){
@@ -1580,12 +1580,10 @@ function loadNearbyPages(){
  (async()=>{for(const ring of rings){if(run!==pageLoadRun)return;
   ring.forEach(([p,i])=>{paintPage(p,i);startPageImages(p)});
   await Promise.race([Promise.all(ring.map(([p])=>pageImagesDone(p))),new Promise(r=>setTimeout(r,4000))])}})();
- clearTimeout(workTimer);if(workAbort){workAbort.abort();workAbort=null}
+ clearTimeout(workTimer);
  const here=flashPage;
- workTimer=setTimeout(async function go(){if(introBusy()){workTimer=setTimeout(go,500);return}if(here!==flashPage)return;
-  const pg=flashTrack.querySelectorAll('.flashPage')[here];if(pg)await Promise.race([pageImagesDone(pg),new Promise(r=>setTimeout(r,3000))]);if(here!==flashPage)return;
-  const ac=new AbortController();workAbort=ac;
-  (flashPages[here]||[]).forEach(({design:d})=>{const u=d.src[0];if(prefetched.has(u))return;prefetched.add(u);fetch(u,{priority:'low',signal:ac.signal}).catch(()=>prefetched.delete(u))})},600);
+ workTimer=setTimeout(function go(){if(introBusy()){workTimer=setTimeout(go,500);return}if(here!==flashPage)return;
+  (flashPages[here]||[]).forEach(({design:d})=>{const u=d.src[0];if(prefetched.has(u))return;prefetched.add(u);fetch(u,{priority:'low'}).catch(()=>prefetched.delete(u))})},300);
 }
 // Favourites ("saved designs"): numbers stored in this browser.
 const favs=new Set((()=>{try{return JSON.parse(localStorage.getItem('favs')||'[]')}catch(e){return []}})());
