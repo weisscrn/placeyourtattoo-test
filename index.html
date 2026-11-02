@@ -1523,7 +1523,9 @@ async function loadFlashList(){
  try{
   const r=await fetch(FLASH_DIR+'flashes.json',{cache:'no-store'});
   if(r.ok){const list=await r.json();
-   return list.map(e=>({number:e.number,shape:e.shape||'single',name:'Flash '+flashLabel(e.number),src:e.work?[WORK_DIR+e.file]:[FLASH_DIR+e.file],thumb:[THUMB_DIR+e.file]}))
+   // webp: lossless WebP copies exist (same pixels, ~40 % smaller); the PNG stays as fallback
+   const w=(dir,e)=>e.webp?[dir+e.file.replace(/\.png$/i,'.webp'),dir+e.file]:[dir+e.file];
+   return list.map(e=>({number:e.number,shape:e.shape||'single',name:'Flash '+flashLabel(e.number),src:e.work?w(WORK_DIR,e):[FLASH_DIR+e.file],thumb:w(THUMB_DIR,e)}))
      .sort((a,b)=>b.number-a.number)}
  }catch(err){console.warn('flashes.json missing or invalid, probing numbered PNGs instead',err)}
  return probeFlashes();
