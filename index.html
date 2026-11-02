@@ -9,11 +9,9 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Flashbook">
 <meta name="theme-color" content="#4a443e">
-<meta name="description" content="Probier jedes Flash direkt an deinem Körper an.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CRAYKROW">
 <meta property="og:title" content="CRAYKROW Flashbook">
-<meta property="og:description" content="Probier jedes Flash direkt an deinem Körper an.">
 <meta property="og:url" content="https://weisscrn.github.io/placeyourtattoo-test/">
 <meta property="og:image" content="https://weisscrn.github.io/placeyourtattoo-test/icons/vorschau.jpg">
 <meta property="og:image:width" content="1200">
@@ -1568,15 +1566,26 @@ function layoutFlashPages(designs){
 // Try each candidate URL in turn: preview first, then the full PNG.
 function setImageSources(img,urls){let i=0;img.onerror=()=>{if(++i<urls.length)img.src=urls[i]};img.src=urls[0]}
 const prefetched=new Set();
+// Flashbook loading: the page on screen first, then its neighbours ring by ring (3 pages each way), so the next
+// swipe always finds its page ready. The large working copies of the page on screen (for a quick try-on) are only
+// fetched once its previews are in and you stay on it for a moment (.6 s), and dropped again when you move on, so
+// they never hold up the previews.
+let pageLoadRun=0,workAbort=null,workTimer=0;
+function startPageImages(page){page.querySelectorAll('img[data-pending]').forEach(img=>{const urls=JSON.parse(img.dataset.pending);delete img.dataset.pending;setImageSources(img,urls)})}
+const pageImagesDone=page=>Promise.all([...page.querySelectorAll('img')].map(im=>im.complete?null:new Promise(r=>{im.addEventListener('load',r,{once:true});im.addEventListener('error',r,{once:true})})));
 function loadNearbyPages(){
- flashTrack.querySelectorAll('.flashPage').forEach((page,i)=>{
-  if(Math.abs(i-flashPage)>1)return;
-  paintPage(page,i);
-  page.querySelectorAll('img[data-pending]').forEach(img=>{const urls=JSON.parse(img.dataset.pending);delete img.dataset.pending;setImageSources(img,urls)});
- });
- // Quietly fetch the working copies of the page on screen, so a tapped design is ready almost at once
- // (it then blends in while it is still flying).
- (flashPages[flashPage]||[]).forEach(({design:d})=>{const u=d.src[0];if(!prefetched.has(u)){prefetched.add(u);setTimeout(function go(){if(introBusy()){setTimeout(go,500);return}fetch(u,{priority:'low'}).catch(()=>prefetched.delete(u))},1500)}});
+ const run=++pageLoadRun,pages=[...flashTrack.querySelectorAll('.flashPage')],n=pages.length;if(!n)return;
+ const dist=i=>{const d=Math.abs(i-flashPage);return Math.min(d,n-d)}; // the book goes round, so the last page is next to the first
+ const rings=[0,1,2,3].map(r=>pages.map((p,i)=>[p,i]).filter(([,i])=>dist(i)===r));
+ (async()=>{for(const ring of rings){if(run!==pageLoadRun)return;
+  ring.forEach(([p,i])=>{paintPage(p,i);startPageImages(p)});
+  await Promise.race([Promise.all(ring.map(([p])=>pageImagesDone(p))),new Promise(r=>setTimeout(r,4000))])}})();
+ clearTimeout(workTimer);if(workAbort){workAbort.abort();workAbort=null}
+ const here=flashPage;
+ workTimer=setTimeout(async function go(){if(introBusy()){workTimer=setTimeout(go,500);return}if(here!==flashPage)return;
+  const pg=flashTrack.querySelectorAll('.flashPage')[here];if(pg)await Promise.race([pageImagesDone(pg),new Promise(r=>setTimeout(r,3000))]);if(here!==flashPage)return;
+  const ac=new AbortController();workAbort=ac;
+  (flashPages[here]||[]).forEach(({design:d})=>{const u=d.src[0];if(prefetched.has(u))return;prefetched.add(u);fetch(u,{priority:'low',signal:ac.signal}).catch(()=>prefetched.delete(u))})},600);
 }
 // Favourites ("saved designs"): numbers stored in this browser.
 const favs=new Set((()=>{try{return JSON.parse(localStorage.getItem('favs')||'[]')}catch(e){return []}})());
@@ -2035,6 +2044,23 @@ function endFlashSwipe(e){
 }
 flashViewport.addEventListener('pointerup',endFlashSwipe);flashViewport.addEventListener('pointercancel',endFlashSwipe);
 flashViewport.addEventListener('click',e=>{if((window.__flashSuppressClickUntil||0)>performance.now()){e.preventDefault();e.stopPropagation()}},true);
+// Pinch: two fingers make the page on screen larger (up to 3×) around the point between them, and it follows them;
+// letting go springs back. While pinching there is no page swipe, and no design opens.
+const pinchTouches=new Map();let flashPinch=null;
+flashViewport.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;pinchTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(pinchTouches.size!==2)return;const page=flashTrack.querySelectorAll('.flashPage')[flashPage];if(!page)return;
+ flashTouchStart=null;flashFollow=false;flashTrack.classList.remove('following');positionFlashbook(); // the swipe stops
+ const [a,b]=[...pinchTouches.values()],r=page.getBoundingClientRect(),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+ page.style.transition='none';page.style.transformOrigin=`${mx-r.left}px ${my-r.top}px`;page.style.zIndex='3';
+ flashPinch={page,d0:Math.hypot(a.x-b.x,a.y-b.y)||1,mx,my}},true);
+flashViewport.addEventListener('pointermove',e=>{if(!pinchTouches.has(e.pointerId))return;pinchTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(!flashPinch||pinchTouches.size<2)return;e.stopImmediatePropagation();const [a,b]=[...pinchTouches.values()];
+ const k=Math.min(3,Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)/flashPinch.d0)),dx=(a.x+b.x)/2-flashPinch.mx,dy=(a.y+b.y)/2-flashPinch.my;
+ flashPinch.page.style.transform=`translate(${dx}px,${dy}px) scale(${k})`},true);
+const endFlashPinch=e=>{pinchTouches.delete(e.pointerId);if(!flashPinch)return;const p=flashPinch.page;
+ if(pinchTouches.size===0||pinchTouches.size===1){flashPinch=null;pinchTouches.clear();flashTouchStart=null;window.__flashSuppressClickUntil=performance.now()+500;
+  p.style.transition='transform .3s var(--ease)';p.style.transform='';setTimeout(()=>{if(!p.style.transform){p.style.transition='';p.style.zIndex=''}},320)}};
+flashViewport.addEventListener('pointerup',endFlashPinch,true);flashViewport.addEventListener('pointercancel',endFlashPinch,true);
 flashViewport.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>15){e.preventDefault();goFlashPage(flashPage+(e.deltaX>0?1:-1))}},{passive:false});
 window.addEventListener('resize',()=>{if(!flashbook.hidden)positionFlashbook()});
 let selectedDesignNumber=null;
