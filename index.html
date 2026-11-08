@@ -287,7 +287,7 @@ body:not(.landingIntro):not(.favMode) #flashbook:not(:has(#pageOverview:not([hid
    stands there until the 3D figure has loaded, which then takes over exactly where the picture is. */
 #introPlaceholder{position:fixed;left:0;top:0;z-index:20;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .9s ease}
 #introPlaceholder[data-ok]{opacity:1} /* picture loaded: fade in */
-#introPlaceholder.gone{opacity:0;transition-duration:.8s} /* soft hand-over: small differences melt instead of popping */
+#introPlaceholder.gone{opacity:0;transition-duration:.3s} /* only when the intro is skipped */
 /* Intro: completely clean, only the turning figure and the text. The pages fade in when the motifs
    fly onto them; title, DE/EN, page count and arrows fade in when they have landed. */
 .flashTop,.flashBottom{transition:opacity .5s var(--ease)}
@@ -1936,7 +1936,8 @@ function introCamera(now){
 function introCameraHome(){
  const c=landing.camPlan;if(!c)return;landing.camPlan=null;landing.camera.position.set(0,0,c.D);landing.camera.lookAt(0,0,0);
 }
-function dropIntroPlaceholder(){const el=$('introPlaceholder');if(!el||el.classList.contains('gone'))return;el.classList.add('gone');setTimeout(()=>el.remove(),700)}
+// instant: the 3D figure has just drawn exactly this picture, so it is swapped without any fade (the camera starts moving right after)
+function dropIntroPlaceholder(instant){const el=$('introPlaceholder');if(!el||el.classList.contains('gone'))return;if(instant){el.remove();return}el.classList.add('gone');setTimeout(()=>el.remove(),900)}
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
  const cancel=()=>{dropIntroPlaceholder();if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
@@ -1952,7 +1953,7 @@ function startLandingIntro(){
   const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
   // Tattooed figure (made in _gestalten_*.html): the finished tattoos are put on as they are.
   fig.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true}});landing.fig=fig;landing.bodyH=asset.dim.y;
-  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}requestAnimationFrame(()=>requestAnimationFrame(dropIntroPlaceholder))}); // picture goes once the figure is drawn with its lettering
+  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}requestAnimationFrame(()=>dropIntroPlaceholder(true))}); // gone in the very frame the figure is first drawn with its lettering
   // Larger figure (about 72 % of the screen height); the hands still stay inside the screen while it turns.
   const W=innerWidth,H=innerHeight,top=0;
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
