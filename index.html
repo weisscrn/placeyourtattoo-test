@@ -181,6 +181,8 @@ button svg [stroke],button svg circle,button svg path,button svg rect,.igCheck s
 .flashTop{position:relative;box-sizing:border-box;padding:calc(6px + env(safe-area-inset-top)) var(--edge) 6px;margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
 .flashTitle{margin:0;text-align:center;font:650 16px/1.2 var(--font);letter-spacing:.14em} /* logo: 16 on every screen */
 .flashTitle span{font-weight:350;letter-spacing:.08em}
+@media (max-width:374px){.flashTitle{font-size:14px;letter-spacing:.1em}}
+@media (max-width:340px){.flashTitle{font-size:13px;letter-spacing:.1em}.favChip[aria-pressed="true"] svg:not(.favBack){display:none}} /* tiniest phones: ← 12 instead of ← ♥ 12 in the saved list */ /* small phones: the title would run into the heart and DE/EN */
 .langSwitch{justify-self:end;display:grid;grid-template-columns:31px 31px;height:var(--h-float);padding:0;overflow:hidden;border-radius:var(--radius)}
 .langSwitch button{background:transparent;border:0;border-radius:0;height:100%;margin:0;padding:0;font:650 12px var(--font);letter-spacing:.08em;color:var(--muted)}
 .langSwitch button+button{border-left:1px solid var(--line)}
@@ -223,7 +225,7 @@ button svg [stroke],button svg circle,button svg path,button svg rect,.igCheck s
 .favChip.has .favBack{color:inherit}
 #favChip.has .favBack path,#favChip .favBack path{fill:none}
 .flashTop{z-index:5} /* the hint below the heart lies over the page */
-#favHint{position:absolute;top:100%;left:var(--edge);z-index:9;padding:9px 12px;white-space:nowrap;line-height:1.3;font-size:12px;font-weight:650;letter-spacing:.06em;background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);color:var(--text);box-shadow:0 6px 20px #0006;pointer-events:none;opacity:0;transition:opacity var(--dur) var(--ease)}
+#favHint{position:absolute;top:100%;left:var(--edge);z-index:9;padding:9px 12px;max-width:calc(100vw - 2*var(--edge));line-height:1.3;font-size:12px;font-weight:650;letter-spacing:.06em;background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);color:var(--text);box-shadow:0 6px 20px #0006;pointer-events:none;opacity:0;transition:opacity var(--dur) var(--ease)}
 #favHint.show{opacity:1}
 .favChip .favBack{display:none}
 .favChip[aria-pressed="true"]{background:var(--selected);padding:0 9px;gap:4px} /* saved list open (same look as the chosen language): tap again to go back */
@@ -281,6 +283,11 @@ body:not(.landingIntro):not(.favMode) #flashbook:not(:has(#pageOverview:not([hid
 
 /* ---------- Landing intro ---------- */
 #introFigure{position:fixed;left:0;top:0;z-index:19;pointer-events:none}
+/* The intro's first frame as a small picture (intro/start_*.webp): it fades in as soon as the page opens and
+   stands there until the 3D figure has loaded, which then takes over exactly where the picture is. */
+#introPlaceholder{position:fixed;inset:0;z-index:20;width:100%;height:100%;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .9s ease}
+#introPlaceholder[data-ok]{opacity:1} /* picture loaded: fade in */
+#introPlaceholder.gone{opacity:0;transition-duration:.3s}
 /* Intro: completely clean, only the turning figure and the text. The pages fade in when the motifs
    fly onto them; title, DE/EN, page count and arrows fade in when they have landed. */
 .flashTop,.flashBottom{transition:opacity .5s var(--ease)}
@@ -374,6 +381,14 @@ html.desktopFrame iframe{position:fixed;left:50%;top:50%;transform:translate(-50
 <script type="importmap">{"imports":{"three":"./lib/three/build/three.module.js","three/addons/":"./lib/three/examples/jsm/"}}</script>
 </head>
 <body class="landingIntro">
+<script>
+// Man or woman is decided here already, so the first frame of the right figure can be shown before anything else has loaded.
+(()=>{if(/[#&]f=/.test(location.hash)&&/[#&]p=/.test(location.hash))return; // shared link: own loading circle
+ let k=null,skin=null;try{k=localStorage.getItem('bodyKind');skin=localStorage.getItem('skin')}catch(e){}
+ if(k!=='male'&&k!=='female')k=Math.random()<.5?'male':'female';window.__startBody=k;
+ if(skin&&skin.toLowerCase()!=='#b99480')return; // the picture shows the standard skin tone
+ document.write('<img id="introPlaceholder" alt="" src="intro/start_'+k+'.webp" onload="this.dataset.ok=1">')})();
+</script>
 <script>if(/[#&]f=/.test(location.hash)&&/[#&]p=/.test(location.hash))document.write('<div id="sharedLoading" role="status" aria-label="Loading"></div>')</script>
 <div id="flashbook" aria-label="Tattoo flashbook">
   <div class="flashTop"><div id="favHint" aria-live="polite"></div><button type="button" id="favChip" class="favChip" aria-pressed="false" aria-label="Saved designs"><svg class="favBack" viewBox="2.12 2.12 19.76 19.76" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg><svg viewBox="-1.65 -1.15 27.30 27.30" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favCount">0</span></button><h1 class="flashTitle">CRAYKROW <span>FLASHBOOK</span></h1><div class="langSwitch" role="group" aria-label="Language / Sprache"><button type="button" data-lang="de">DE</button><button type="button" data-lang="en">EN</button></div></div>
@@ -521,7 +536,7 @@ $('shareView').addEventListener('click',async()=>{
 const I18N={
  en:{'done.title':'Thanks for your request!','done.sent':'I’ll get back to you soon.','done.notyet':'Not sent yet? Open it again and paste.','done.close':'Done','done.again':'Open again','ig.copied':'Request copied','ig.copyFailed':'Copy your request','ig.step1':'Instagram opens the chat with <b>@{name}</b>','ig.step2touch':'Press and hold the text field and <b>paste</b>','ig.step2desk':'Click the text field and press <b>{key} + V</b>','ig.step2manual':'Paste the copied text into the message field','ig.save':'Save request as image <i>(optional)</i>','ig.saveBtn':'Save image','ig.saved':'Saved','ig.open':'Open Instagram','ig.back':'Back','flash.instruction':'TAP YOUR NEXT TATTOO','fav.instruction':'YOUR SAVED FLASHES','pages.choose':'CHOOSE A PAGE','fav.empty':'Nothing saved yet – tap the ♡ on a design.','fav.save':'Save','fav.saved':'Saved','booking.alsoFav':'ALSO SAVED · ADD TO REQUEST','booking.alsoMax':'Max. 5 more designs per request','msg.also':'I’m also interested in','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
   'view.focus':'Zoom','view.full':'Full Body',
-  'strip.info':'Tap to switch the flash','strip.save':'Tap the ♡ to save it','fav.hint':'Tap the ♡ to save a design','share.text':'What do you think of this one?','share.copied':'Link copied',
+  'strip.info':'Tap to switch the flash','strip.save':'Tap the ♡ to save it','fav.hint':'Tap the ♡ to save a design','flash.loadError':'Couldn’t load this design – please tap it again','share.text':'What do you think of this one?','share.copied':'Link copied',
   'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement',
   'booking.title':'Your request','booking.yourTattoo':'YOUR TATTOO','booking.yourDetails':'YOUR DETAILS','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram','booking.own':'Own upload',
   'budget.flex':'Flexible / not sure','budget.lt200':'Under €200','budget.200':'€200–300','budget.300':'€300–500','budget.500':'€500–800','budget.800':'€800–1,200','budget.1200':'€1,200+',
@@ -530,7 +545,7 @@ const I18N={
   'card.also':'ALSO INTERESTED IN','card.request':'TATTOO REQUEST','card.flash':'FLASH','card.size':'APPROXIMATE SIZE','card.placement':'PLACEMENT','card.budget':'MAXIMUM BUDGET','card.message':'MESSAGE TO ARTIST','card.error':'Could not create the image.'},
  de:{'done.title':'Danke für deine Anfrage!','done.sent':'Ich melde mich bald bei dir.','done.notyet':'Noch nicht gesendet? Nochmal öffnen und einfügen.','done.close':'Fertig','done.again':'Nochmal öffnen','ig.copied':'Anfrage kopiert','ig.copyFailed':'Kopiere deine Anfrage','ig.step1':'Instagram öffnet den Chat mit <b>@{name}</b>','ig.step2touch':'Ins Textfeld lange drücken und <b>einfügen</b>','ig.step2desk':'Ins Textfeld klicken und <b>{key} + V</b> drücken','ig.step2manual':'Den kopierten Text ins Textfeld einfügen','ig.save':'Anfrage als Bild sichern <i>(optional)</i>','ig.saveBtn':'Bild sichern','ig.saved':'Gesichert','ig.open':'Instagram öffnen','ig.back':'Zurück','flash.instruction':'TIPPE AUF DEIN NÄCHSTES TATTOO','fav.instruction':'DEINE GEMERKTEN MOTIVE','pages.choose':'SPRING ZU EINER SEITE','fav.empty':'Noch nichts gemerkt – tippe auf das ♡ bei einem Motiv.','fav.save':'Merken','fav.saved':'Gemerkt','booking.alsoFav':'AUCH GEMERKT · IN ANFRAGE AUFNEHMEN','booking.alsoMax':'Maximal 5 weitere Motive pro Anfrage','msg.also':'Mich interessieren auch','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
   'view.focus':'Zoom','view.full':'Ganzer Körper',
-  'strip.info':'Tippen zum Motiv wechseln','strip.save':'Tippe aufs ♡ zum Merken','fav.hint':'Tippe aufs ♡, um ein Motiv zu merken','share.text':'Wie findest du das?','share.copied':'Link kopiert',
+  'strip.info':'Tippen zum Motiv wechseln','strip.save':'Tippe aufs ♡ zum Merken','fav.hint':'Tippe aufs ♡, um ein Motiv zu merken','flash.loadError':'Motiv konnte nicht geladen werden – bitte nochmal antippen','share.text':'Wie findest du das?','share.copied':'Link kopiert',
   'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen',
   'booking.title':'Deine Anfrage','booking.yourTattoo':'DEIN TATTOO','booking.yourDetails':'DEINE ANGABEN','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden','booking.own':'Own upload',
   'budget.flex':'Flexibel / weiß nicht','budget.lt200':'Unter 200 €','budget.200':'200–300 €','budget.300':'300–500 €','budget.500':'500–800 €','budget.800':'800–1.200 €','budget.1200':'1.200 €+',
@@ -897,7 +912,7 @@ const SHARED=(()=>{try{const q=new URLSearchParams(location.hash.slice(1)),num=k
  if(p.length!==3||n.length!==3||[...p,...n].some(v=>!isFinite(v)))return null;
  return {f:num('f'),b:q.get('b')==='f'?'female':'male',c:/^[0-9a-f]{6}$/i.test(q.get('c')||'')?'#'+q.get('c'):null,p,n,
   s:isFinite(num('s'))&&num('s')>0?num('s'):null,r:isFinite(num('r'))?num('r'):0,fh:(q.get('m')||'')[0]==='1',fv:(q.get('m')||'')[1]==='1'}}catch(e){return null}})();
-const START_BODY=(()=>{if(SHARED)return SHARED.b;try{const k=localStorage.getItem('bodyKind');if(k==='male'||k==='female')return k}catch(e){}return Math.random()<.5?'male':'female'})();
+const START_BODY=(()=>{if(SHARED)return SHARED.b;if(window.__startBody)return window.__startBody;try{const k=localStorage.getItem('bodyKind');if(k==='male'||k==='female')return k}catch(e){}return Math.random()<.5?'male':'female'})();
 $('bodySelect').value=START_BODY;syncBodyRadios();
 try{const c=localStorage.getItem('skin');if(/^#[0-9a-f]{6}$/i.test(c||''))$('skin').value=c}catch(e){}
 if(SHARED&&SHARED.c)$('skin').value=SHARED.c;
@@ -1383,7 +1398,7 @@ const bookingOverlay=$('bookingOverlay');
 // Each screen has its own step in the browser history, so the back gesture (swipe from the left edge) goes
 // request -> 3D view -> flashbook -> leaves the page, exactly like the X and the "Flashbook" button.
 function hideBooking(){bookingOverlay.hidden=true;$('igSteps').hidden=true;$('igDone').hidden=true}
-function leaveBooking(){if(history.state&&history.state.v==='booking')history.back();else hideBooking()}
+function leaveBooking(){if(history.state&&history.state.v==='booking')goBackOnce();else hideBooking()}
 $('closeBooking').onclick=leaveBooking;
 bookingOverlay.addEventListener('click',e=>{if(e.target===bookingOverlay)leaveBooking()});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!bookingOverlay.hidden)leaveBooking()});
@@ -1755,8 +1770,9 @@ function setFavMode(on){
  requestAnimationFrame(()=>requestAnimationFrame(()=>{flashTrack.style.transition=''}));
 }
 let favHintTimer=0;
+function showFavHint(text,ms){const el=$('favHint');el.textContent=text;el.classList.add('show');clearTimeout(favHintTimer);favHintTimer=setTimeout(()=>el.classList.remove('show'),ms)}
 $('favChip').addEventListener('click',()=>{
- if(!favMode&&!favs.size){const el=$('favHint');el.textContent=t('fav.hint');el.classList.add('show');clearTimeout(favHintTimer);favHintTimer=setTimeout(()=>el.classList.remove('show'),3000);return} // nothing saved yet: explain instead of an empty list
+ if(!favMode&&!favs.size){showFavHint(t('fav.hint'),3000);return} // nothing saved yet: explain instead of an empty list
  setFavMode(!favMode)});
 // Page overview: 4 pages per row, scroll down; tiny previews (flashes/mini) load as they scroll into
 // view; a heart marks pages with saved designs. Tap a page to jump there, or the page count to close.
@@ -1920,10 +1936,11 @@ function introCamera(now){
 function introCameraHome(){
  const c=landing.camPlan;if(!c)return;landing.camPlan=null;landing.camera.position.set(0,0,c.D);landing.camera.lookAt(0,0,0);
 }
+function dropIntroPlaceholder(){const el=$('introPlaceholder');if(!el||el.classList.contains('gone'))return;el.classList.add('gone');setTimeout(()=>el.remove(),700)}
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
- const cancel=()=>{if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
- const skip=()=>{if(landing.state==='wait'){landing.state='skip';document.body.classList.remove('landingIntro')}};
+ const cancel=()=>{dropIntroPlaceholder();if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
+ const skip=()=>{dropIntroPlaceholder();if(landing.state==='wait'){landing.state='skip';document.body.classList.remove('landingIntro')}};
  landing.skip=skip;setTimeout(skip,6000);
  Promise.all([fetchBody(START_BODY),introSuit]).then(([asset,suitG])=>{
   const letter=suitG&&suitG.children.find(m=>m.userData.n===INTRO_LETTER_N)||null;
@@ -1935,7 +1952,7 @@ function startLandingIntro(){
   const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
   // Tattooed figure (made in _gestalten_*.html): the finished tattoos are put on as they are.
   fig.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true}});landing.fig=fig;landing.bodyH=asset.dim.y;
-  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}});
+  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}requestAnimationFrame(()=>requestAnimationFrame(dropIntroPlaceholder))}); // picture goes once the figure is drawn with its lettering
   // Larger figure (about 72 % of the screen height); the hands still stay inside the screen while it turns.
   const W=innerWidth,H=innerHeight,top=0;
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
@@ -2181,8 +2198,12 @@ async function openFlashDesign(design,designNumber,sourceImg,at){
  resize();fitFullBody(false); // frame the body for the final view size (bar included)
  if(flyFrom)flyThumbToBody(flyFrom.img,flyFrom.rect);
  try{
+  // WebP first, then the PNG; a failed attempt (bad signal, file missing) is tried once more after a moment.
   let response=null;
-  for(const url of design.src){const r=await fetch(url);if(r.ok){response=r;break}}
+  for(let attempt=0;attempt<2&&!response;attempt++){
+   if(attempt)await new Promise(r=>setTimeout(r,800));
+   for(const url of design.src){try{const r=await fetch(url);if(r.ok){response=r;break}}catch(err){}}
+  }
   if(!response)throw new Error('Could not load '+design.src.join(' / '));
   const blob=await response.blob();const url=URL.createObjectURL(blob);
   const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=url});
@@ -2200,7 +2221,10 @@ async function openFlashDesign(design,designNumber,sourceImg,at){
   $('preview').src=cropped.toDataURL('image/png');updateDimensions();
   anchor=null;clear();setMode('orbit');setCameraViewSelected('full');selectedFlashReady=true;updatePlacementHint();
   if(at)placeShared(at);else placeWithIntro();
- }catch(err){console.error(err);}
+ }catch(err){console.error(err);
+  // Never leave an empty body without a word: back to the flashbook with a short note.
+  if(token===flashLoadToken){if(history.state&&history.state.v==='3d')goBackOnce();else showFlashbookAgain();showFavHint(t('flash.loadError'),4000)}
+ }
 }
 // Puts the shared tattoo back exactly: size, turn, mirroring, then at the saved point on the skin.
 function placeShared(sh){
@@ -2224,8 +2248,11 @@ async function openShared(sh){
 $('panelHandle').onclick=()=>{setPanelState(panelState==='open'?'collapsed':'open')};
 function showFlashbookAgain(){stopIntro();cancelMorph();closeFavStrip();if(panelState==='open')setPanelState('collapsed'); // closes behind the flashbook
 requestAnimationFrame(()=>{if(landing.canvas)moveLandingFigure()});requestAnimationFrame(updateConfirmOverlay);selectedFlashReady=false;figurePopStart=0;figurePopPrevious=1;cancelTattooDrag();$('bookingOverlay').hidden=true;flashbook.hidden=false;$('viewerBack').hidden=true;requestAnimationFrame(positionFlashbook)}
-$('viewerBack').onclick=()=>{if(history.state&&history.state.v==='3d')history.back();else showFlashbookAgain()};
-window.addEventListener('popstate',()=>{const v=history.state&&history.state.v;
+// history.back() finishes a moment later: a second quick tap would go back once more and leave the site.
+let backPending=0;
+function goBackOnce(){if(performance.now()<backPending)return;backPending=performance.now()+1000;history.back()}
+$('viewerBack').onclick=()=>{if(history.state&&history.state.v==='3d')goBackOnce();else showFlashbookAgain()};
+window.addEventListener('popstate',()=>{backPending=0;const v=history.state&&history.state.v;
  if(!bookingOverlay.hidden&&v!=='booking'){hideBooking();if(v!=='3d'&&flashbook.hidden)showFlashbookAgain();return}
  if(flashbook.hidden&&v!=='3d'&&v!=='booking')showFlashbookAgain()});
 buildFlashbook();
