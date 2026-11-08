@@ -284,10 +284,9 @@ body:not(.landingIntro):not(.favMode) #flashbook:not(:has(#pageOverview:not([hid
 /* ---------- Landing intro ---------- */
 #introFigure{position:fixed;left:0;top:0;z-index:19;pointer-events:none}
 /* The intro's first frame as a small picture (intro/start_*.webp): it fades in as soon as the page opens and
-   stands there until the 3D figure has loaded, which then takes over exactly where the picture is. */
-#introPlaceholder{position:fixed;left:0;top:0;z-index:20;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .9s ease}
+   stands there, under the 3D figure (z-index below #introFigure), until the figure is drawn exactly on top of it. */
+#introPlaceholder{position:fixed;left:0;top:0;z-index:18;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .9s ease}
 #introPlaceholder[data-ok]{opacity:1} /* picture loaded: fade in */
-#introPlaceholder.gone{opacity:0;transition-duration:.3s} /* only when the intro is skipped */
 /* Intro: completely clean, only the turning figure and the text. The pages fade in when the motifs
    fly onto them; title, DE/EN, page count and arrows fade in when they have landed. */
 .flashTop,.flashBottom{transition:opacity .5s var(--ease)}
@@ -1936,8 +1935,10 @@ function introCamera(now){
 function introCameraHome(){
  const c=landing.camPlan;if(!c)return;landing.camPlan=null;landing.camera.position.set(0,0,c.D);landing.camera.lookAt(0,0,0);
 }
-// instant: the 3D figure has just drawn exactly this picture, so it is swapped without any fade (the camera starts moving right after)
-function dropIntroPlaceholder(instant){const el=$('introPlaceholder');if(!el||el.classList.contains('gone'))return;if(instant){el.remove();return}el.classList.add('gone');setTimeout(()=>el.remove(),900)}
+// The start picture lies under the 3D figure. Once the figure is drawn with its lettering (exactly the picture) the
+// picture is removed at once, never faded; the figure then stands still for INTRO_HOLD before the camera moves.
+const INTRO_HOLD=300;
+function dropIntroPlaceholder(){const el=$('introPlaceholder');if(el)el.remove()}
 function startLandingIntro(){
  // The page starts with body.landingIntro (see-through flashbook); without a figure it is cleared.
  const cancel=()=>{dropIntroPlaceholder();if(landing.state==='wait'){landing.state='off';document.body.classList.remove('landingIntro')}};
@@ -1953,7 +1954,7 @@ function startLandingIntro(){
   const fig=asset.model.clone();fig.position.sub(asset.center);const pivot=new THREE.Group();pivot.add(fig);sc.add(pivot);
   // Tattooed figure (made in _gestalten_*.html): the finished tattoos are put on as they are.
   fig.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true}});landing.fig=fig;landing.bodyH=asset.dim.y;
-  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}requestAnimationFrame(()=>dropIntroPlaceholder(true))}); // gone in the very frame the figure is first drawn with its lettering
+  introSuit.then(g=>{if(g){g.position.copy(fig.position);pivot.add(g);landing.suit=g}}); // gone in the very frame the figure is first drawn with its lettering
   // Larger figure (about 72 % of the screen height); the hands still stay inside the screen while it turns.
   const W=innerWidth,H=innerHeight,top=0;
   const cam=new THREE.PerspectiveCamera(30,W/H,.01,100);const vf=2*Math.tan(THREE.MathUtils.degToRad(15));
@@ -1975,7 +1976,11 @@ function startLandingIntro(){
   if(letter){landing.letter=letter;letter.visible=true;letter.userData.smear.value=0;for(const m of suitG.children)if(m!==letter){m.userData.back=introIsBackTattoo(m,fig.position);m.material.opacity=m.userData.back?0:1}pivot.rotation.y=Math.PI}
   r.compile(sc,cam);r.render(sc,cam); // first frame ready before the turning starts
   document.body.classList.add('landingIntro');
-  if(quiet||matchMedia('(prefers-reduced-motion: reduce)').matches){finishLandingIntro();return}
+  if(quiet||matchMedia('(prefers-reduced-motion: reduce)').matches){dropIntroPlaceholder();finishLandingIntro();return}
+  introSuit.then(()=>{ // the figure with its lettering (= the start picture) is drawn and stands still while the picture fades
+  if(landing.state!=='spin')return;r.render(sc,cam);
+  const hold=$('introPlaceholder')?INTRO_HOLD:0;requestAnimationFrame(dropIntroPlaceholder);
+  setTimeout(()=>{if(landing.state!=='spin')return; // tapped away during the hand-over
   landing.spinStart=performance.now();landing.angle0=0;landing.angle=letter?Math.PI:0;landing.spinW=Math.PI*2/(INTRO_TURN/1000);
   const T_END=INTRO_TURN+(letter?LETTER_HOLD:0); // the figure faces us again
   // lettering: no stop at the end — the tattoos already fly off during the last quarter turn (the figure has started to fade)
@@ -1987,12 +1992,13 @@ function startLandingIntro(){
   at(T_FLY,()=>{document.body.classList.add('introFly');landing.flown=true;flyMotifsToPage()});
   at(T_FLY+50,introFadeAndAppear);
   at(T_FLY+500,()=>document.body.classList.add('introPaper'));
+  },hold)});
  }).catch(cancel);
 }
 function setLandingRect(q){
  const cv=landing.canvas,w=Math.max(1,Math.round(q.w)),h=Math.max(1,Math.round(q.h));
  cv.style.left=q.x+'px';cv.style.top=q.y+'px';cv.style.width=w+'px';cv.style.height=h+'px';
- {const ph=$('introPlaceholder');if(ph&&!ph.classList.contains('gone'))Object.assign(ph.style,{left:q.x+'px',top:q.y+'px',width:w+'px',height:h+'px'})} // the start picture lies exactly on the figure
+ {const ph=$('introPlaceholder');if(ph)Object.assign(ph.style,{left:q.x+'px',top:q.y+'px',width:w+'px',height:h+'px'})} // the start picture lies exactly on the figure
  if(cv.width!==Math.round(w*landing.renderer.getPixelRatio())||cv.height!==Math.round(h*landing.renderer.getPixelRatio()))landing.renderer.setSize(w,h,false);
  landing.camera.aspect=w/h;landing.camera.updateProjectionMatrix();
 }
@@ -2018,6 +2024,7 @@ function landingCorner(){
 }
 // Ends the intro: the figure jumps to its small place in the corner (tattoos back on, lettering gone).
 function moveLandingFigure(){
+ dropIntroPlaceholder(); // tapped away: the start picture is gone at once
  if(!landing.canvas)return;
  introSetInk(1);introSetFade(1);introResetSuit();introCameraHome();if(landing.shadow)landing.shadow.visible=false;landing.canvas.style.opacity='';landing.canvas.style.transform='';
  landing.timers.forEach(clearTimeout);landing.timers=[];
