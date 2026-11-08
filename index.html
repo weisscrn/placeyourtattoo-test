@@ -371,7 +371,7 @@ html.desktopFrame iframe{position:fixed;left:50%;top:50%;transform:translate(-50
 <div id="skinPicker" role="group" aria-label="Skin tone"><button type="button" id="skinCurrent" aria-expanded="false" aria-label="Skin tone"></button><div id="skinOptions" hidden></div></div>
 
 
-<main><div id="viewer"><div id="favStrip" hidden></div><div id="stripInfo" aria-live="polite"></div><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="favView" aria-expanded="false" aria-label="Saved designs"><svg viewBox="-1.65 -1.15 27.30 27.30" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favViewCount">0</span></button><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Focus on tattoo"><svg viewBox="-0.71 -0.71 25.41 25.41" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span data-i18n="view.focus">Focus</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="-0.71 -0.71 25.41 25.41" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span data-i18n="view.full">Full Body</span></button></div></div>
+<main><div id="viewer"><div id="favStrip" hidden></div><div id="stripInfo" aria-live="polite"></div><div class="viewerActions" aria-label="Camera view controls"><button type="button" id="favView" aria-expanded="false" aria-label="Saved designs"><svg viewBox="-1.65 -1.15 27.30 27.30" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.7 4.5 7.1 4.5c2.1 0 3.6 1.2 4.9 2.9 1.3-1.7 2.8-2.9 4.9-2.9 3.4 0 5.7 3.4 4.4 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg><span id="favViewCount">0</span></button><button type="button" id="focusTattoo" disabled title="Zoom to tattoo" aria-label="Zoom to tattoo"><svg viewBox="-0.71 -0.71 25.41 25.41" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><circle cx="11" cy="11" r="3.5"/><path d="m14 14 4 4"/></svg><span data-i18n="view.focus">Zoom</span></button><button type="button" id="resetView" title="Show full body" aria-label="Show full body"><svg viewBox="-0.71 -0.71 25.41 25.41" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M12 7v4m0 3v3M9.5 10h5M9 20h6"/></svg><span data-i18n="view.full">Full Body</span></button></div></div>
 <aside><select id="bodySelect" aria-label="Body model" hidden tabindex="-1"><option value="male">Male Body</option><option value="female">Female Body</option></select><img id="preview" alt="" hidden><label for="size"><span data-i18n="panel.width">Tattoo width (cm)</span> <span class="value" id="sizeValue">15 cm</span></label><div class="inputrow"><input id="size" type="range" min="2" max="65" step="0.5" value="15"><input id="sizeCm" type="number" min="2" max="65" step="0.5" value="15" aria-label="Tattoo width in centimeters" hidden tabindex="-1" aria-hidden="true"></div><div class="measurement" id="dimensions" aria-live="polite">Estimated height: 15.0 cm</div><div id="regionPanel" hidden><span id="regionValue">Not placed yet</span></div><label for="rotation"><span data-i18n="panel.rotation">Rotation</span> <span class="value" id="rotationValue">0°</span></label><div class="inputrow"><input id="rotation" type="range" min="-180" max="180" step="1" value="0"><input id="rotationDeg" type="number" min="-180" max="180" step="1" value="0" aria-label="Tattoo rotation in degrees" hidden tabindex="-1" aria-hidden="true"></div><div class="mirrorSkinRow"><div class="mirrorline"><span data-i18n="panel.mirror">Mirror tattoo</span><div class="mirroricons"><button type="button" id="flipH" aria-pressed="false" aria-label="Mirror tattoo horizontally" title="Mirror horizontally"><svg aria-hidden="true" viewBox="-2.12 -2.12 28.24 28.24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 6.5v2M12 11v2M12 15.5v2M12 20v2"/><path d="M3 12h7m-3-3 3 3-3 3M21 12h-7m3-3-3 3 3 3"/></svg></button><button type="button" id="flipV" aria-pressed="false" aria-label="Mirror tattoo vertically" title="Mirror vertically"><svg aria-hidden="true" viewBox="-2.12 -2.12 28.24 28.24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2M6.5 12h2M11 12h2M15.5 12h2M20 12h2"/><path d="M12 3v7m-3-3 3 3 3-3M12 21v-7m-3 3 3-3 3 3"/></svg></button></div></div><div class="skinline"><span data-i18n="panel.skin">Skin tone</span><div class="skinpresets" id="skinpresets"><button type="button" data-color="#F4D9C2" style="background:#F4D9C2" aria-label="Light skin tone"></button><button type="button" data-color="#DEB38E" style="background:#DEB38E" aria-label="Light medium skin tone"></button><button type="button" data-color="#BA8762" style="background:#BA8762" aria-label="Medium skin tone"></button><button type="button" data-color="#88563C" style="background:#88563C" aria-label="Deep skin tone"></button><button type="button" data-color="#503428" style="background:#503428" aria-label="Dark skin tone"></button></div></div></div><div class="colorline" hidden><label for="skin">Custom skin color</label><input id="skin" type="color" value="#b99480"></div><div class="panelBar"><button type="button" id="panelHandle" aria-expanded="false"><svg viewBox="0.71 0.71 22.59 22.59" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span data-i18n="panel.adjust">Adjust</span></button><button type="button" id="shareView" aria-label="Share" hidden><svg viewBox="0.71 0.71 22.59 22.59" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M4 13v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg></button><button id="confirmPlacement" type="button" disabled data-i18n="panel.confirm">Confirm Placement →</button></div></aside>
 </main>
 <div id="bookingOverlay" hidden role="dialog" aria-modal="true" aria-label="Booking request">
@@ -505,7 +505,7 @@ $('shareView').addEventListener('click',async()=>{
 // sent to the artist). Default follows the phone's language; the choice is remembered.
 const I18N={
  en:{'done.title':'Thanks for your request!','done.sent':'I’ll get back to you soon.','done.notyet':'Not sent yet? Open it again and paste.','done.close':'Done','done.again':'Open again','ig.copied':'Request copied','ig.copyFailed':'Copy your request','ig.step1':'Instagram opens the chat with <b>@{name}</b>','ig.step2touch':'Press and hold the text field and <b>paste</b>','ig.step2desk':'Click the text field and press <b>{key} + V</b>','ig.step2manual':'Paste the copied text into the message field','ig.save':'Save request as image <i>(optional)</i>','ig.saveBtn':'Save image','ig.saved':'Saved','ig.open':'Open Instagram','ig.back':'Back','flash.instruction':'TAP YOUR NEXT TATTOO','fav.instruction':'YOUR SAVED FLASHES','pages.choose':'CHOOSE A PAGE','fav.empty':'Nothing saved yet – tap the ♡ on a design.','fav.save':'Save','fav.saved':'Saved','booking.alsoFav':'ALSO SAVED · ADD TO REQUEST','booking.alsoMax':'Max. 5 more designs per request','msg.also':'I’m also interested in','flash.page':'Page {n} of {m}','flash.empty':'No flashes yet',
-  'view.focus':'Focus','view.full':'Full Body',
+  'view.focus':'Zoom','view.full':'Full Body',
   'strip.info':'Tap to switch the flash','share.text':'What do you think of this one?','share.copied':'Link copied',
   'panel.adjust':'Adjust','panel.bodyModel':'Body model','panel.male':'Male Body','panel.female':'Female Body','panel.width':'Tattoo width (cm)','panel.height':'Estimated height: {v} cm','panel.rotation':'Rotation','panel.mirror':'Mirror tattoo','panel.skin':'Skin tone','panel.confirm':'Confirm Placement',
   'booking.title':'Your request','booking.yourTattoo':'YOUR TATTOO','booking.yourDetails':'YOUR DETAILS','booking.placement':'Placement (suggested, editable)','booking.budget':'Maximum budget','booking.message':'Message to artist (optional)','booking.placeholder':"Hey! I'm interested in this tattoo. Let me know about your availability.",'booking.send':'Send via Instagram','booking.own':'Own upload',
@@ -514,7 +514,7 @@ const I18N={
   'msg.title':'NEW TATTOO BOOKING REQUEST','msg.hi':"Hi @{a}! I'd like to book a tattoo.",'msg.flash':'Flash','msg.placement':'Placement','msg.size':'Approximate size','msg.budget':'Maximum budget','msg.message':'Message',
   'card.also':'ALSO INTERESTED IN','card.request':'TATTOO REQUEST','card.flash':'FLASH','card.size':'APPROXIMATE SIZE','card.placement':'PLACEMENT','card.budget':'MAXIMUM BUDGET','card.message':'MESSAGE TO ARTIST','card.error':'Could not create the image.'},
  de:{'done.title':'Danke für deine Anfrage!','done.sent':'Ich melde mich bald bei dir.','done.notyet':'Noch nicht gesendet? Nochmal öffnen und einfügen.','done.close':'Fertig','done.again':'Nochmal öffnen','ig.copied':'Anfrage kopiert','ig.copyFailed':'Kopiere deine Anfrage','ig.step1':'Instagram öffnet den Chat mit <b>@{name}</b>','ig.step2touch':'Ins Textfeld lange drücken und <b>einfügen</b>','ig.step2desk':'Ins Textfeld klicken und <b>{key} + V</b> drücken','ig.step2manual':'Den kopierten Text ins Textfeld einfügen','ig.save':'Anfrage als Bild sichern <i>(optional)</i>','ig.saveBtn':'Bild sichern','ig.saved':'Gesichert','ig.open':'Instagram öffnen','ig.back':'Zurück','flash.instruction':'TIPPE AUF DEIN NÄCHSTES TATTOO','fav.instruction':'DEINE GEMERKTEN MOTIVE','pages.choose':'SPRING ZU EINER SEITE','fav.empty':'Noch nichts gemerkt – tippe auf das ♡ bei einem Motiv.','fav.save':'Merken','fav.saved':'Gemerkt','booking.alsoFav':'AUCH GEMERKT · IN ANFRAGE AUFNEHMEN','booking.alsoMax':'Maximal 5 weitere Motive pro Anfrage','msg.also':'Mich interessieren auch','flash.page':'Seite {n} von {m}','flash.empty':'Noch keine Flashes',
-  'view.focus':'Fokus','view.full':'Ganzer Körper',
+  'view.focus':'Zoom','view.full':'Ganzer Körper',
   'strip.info':'Tippen zum Motiv wechseln','share.text':'Wie findest du das?','share.copied':'Link kopiert',
   'panel.adjust':'Anpassen','panel.bodyModel':'Körpermodell','panel.male':'Männlich','panel.female':'Weiblich','panel.width':'Tattoo-Breite (cm)','panel.height':'Geschätzte Höhe: {v} cm','panel.rotation':'Drehung','panel.mirror':'Spiegeln','panel.skin':'Hautton','panel.confirm':'Platzierung bestätigen',
   'booking.title':'Deine Anfrage','booking.yourTattoo':'DEIN TATTOO','booking.yourDetails':'DEINE ANGABEN','booking.placement':'Stelle (vorgeschlagen, änderbar)','booking.budget':'Maximales Budget','booking.message':'Nachricht an den Artist (optional)','booking.placeholder':'Hey! Ich interessiere mich für dieses Tattoo. Wann hättest du Zeit?','booking.send':'Über Instagram senden','booking.own':'Own upload',
@@ -643,13 +643,17 @@ function setCameraViewSelected(mode){
  }
 }
 $('focusTattoo').onclick=()=>{if(!tattoo||!anchor)return;camTween=null;focusTattoo();setCameraViewSelected('focus')};
-// Frame the whole body in whatever space the 3D view has right now (full screen or with the panel).
+// Frame the whole body in whatever space the 3D view has right now (full screen or with the panel),
+// seen from the side the tattoo is on (back, side, arm …), always level at eye height; front without one.
 function fullBodyView(){
  if(!regionBox)return initialView;
  const c=regionBox.getCenter(new THREE.Vector3()),d=regionBox.getSize(new THREE.Vector3());
+ const dir=anchor?new THREE.Vector3(anchor.normal.x,0,anchor.normal.z):new THREE.Vector3();
+ if(dir.length()<.15)dir.set(0,0,1);dir.normalize(); // skin facing straight up/down (top of the shoulder): from the front
+ const ax=Math.abs(dir.x),az=Math.abs(dir.z),width=az*d.x+ax*d.z,depth=ax*d.x+az*d.z; // the body's size as seen from there
  const vf=2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
- const distance=Math.max(d.y/vf,d.x/(vf*camera.aspect),d.z*2)*1.12;
- return {position:c.clone().add(new THREE.Vector3(0,0,distance)),target:c};
+ const distance=Math.max(d.y/vf,width/(vf*camera.aspect),depth*2)*1.12;
+ return {position:c.clone().addScaledVector(dir,distance),target:c};
 }
 function fitFullBody(animate){
  const v=fullBodyView();if(!v)return;initialView=v;
@@ -661,6 +665,26 @@ setCameraViewSelected('full');
 // OrbitControls fires 'start' for mouse/touch orbit and wheel zoom, not for
 // the scripted Focus / Full Body transitions. Clear both view highlights.
 controls.addEventListener('start',()=>setCameraViewSelected(null));
+// Spin: a quick swipe lets the figure turn on by itself and run out gently (at most half a turn);
+// a finger on the screen stops it at once. A slow push just stops where the finger lets go.
+const SPIN_MAX=Math.PI,SPIN_TAU=.5,SPIN_MIN_SPEED=2.5; // max angle, run-out time (s), min swipe speed (rad/s)
+let spin=null,orbitSamples=null;
+controls.addEventListener('start',()=>{spin=null;orbitSamples=[]});
+// the finger's own speed (the figure trails the finger a little because of the controls' smoothing)
+renderer.domElement.addEventListener('pointermove',e=>{const s=orbitSamples;if(!s)return;
+ if(s.length&&s[0].id!==e.pointerId){orbitSamples=null;return} // second finger: zoom, no spin
+ s.push({id:e.pointerId,t:performance.now(),x:e.clientX});if(s.length>30)s.shift()},true);
+controls.addEventListener('end',()=>{const s=orbitSamples;orbitSamples=null;if(!s||s.length<2)return;
+ const now=performance.now(),recent=s.filter(p=>now-p.t<=100);if(recent.length<2||now-recent[recent.length-1].t>60)return; // finger rested before letting go
+ const a=recent[0],b=recent[recent.length-1],v=-2*Math.PI*controls.rotateSpeed*(b.x-a.x)/renderer.domElement.clientHeight/((b.t-a.t)/1000); // same turn per pixel as the controls
+ if(Math.abs(v)<SPIN_MIN_SPEED)return;
+ spin={total:Math.max(-SPIN_MAX,Math.min(SPIN_MAX,v*SPIN_TAU)),done:0,start:now}});
+renderer.domElement.addEventListener('pointerdown',()=>{spin=null;controls._sphericalDelta.set(0,0,0)},true); // finger down: stand still
+function stepSpin(now){
+ if(!spin)return;if(camTween||focusGoal||dragging||pinch||!$('flashbook').hidden){spin=null;return}
+ const k=(now-spin.start)/1000/SPIN_TAU,goal=k>=7?spin.total:spin.total*(1-Math.exp(-k)),step=goal-spin.done;spin.done=goal;
+ camera.position.sub(controls.target).applyAxisAngle(camera.up,step).add(controls.target);
+ if(k>=7)spin=null}
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;if(!w||!h)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)}window.addEventListener('resize',resize);resize();
 // Written as a generator so the background preparation of the second body can run in small time
 // slices (the page keeps running smoothly); prepareMesh() runs it in one go when it is needed at once.
@@ -692,6 +716,57 @@ const bodyLoader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder); // body mod
 const bodyAssets=new Map(); // Keep both loaded models and prepared adjacency in memory.
 const bodyPromises=new Map();
 let bodyLoadVersion=0;
+// Fast hit test for the body: a bounding-box tree over its triangles (BVH). Without it every tap and
+// every drag step tests all ~100 000 triangles one by one (tens of ms each on a phone, and the
+// gap check while dragging does up to 30 of them). Same result as three.js' own raycast (nearest hit).
+function addBodyRaycastTree(mesh){
+ const g=mesh.geometry,pa=g.getAttribute('position'),nV=pa.count,idx=g.index?g.index.array:null,nT=idx?idx.length/3:nV/3;
+ const P=new Float32Array(nV*3);for(let i=0;i<nV;i++){P[i*3]=pa.getX(i);P[i*3+1]=pa.getY(i);P[i*3+2]=pa.getZ(i)}
+ const T=new Uint32Array(nT*3);for(let i=0;i<nT*3;i++)T[i]=idx?idx[i]:i;
+ const C=new Float32Array(nT*3);for(let t=0;t<nT;t++)for(let k=0;k<3;k++)C[t*3+k]=(P[T[t*3]*3+k]+P[T[t*3+1]*3+k]+P[T[t*3+2]*3+k])/3;
+ const order=new Uint32Array(nT);for(let t=0;t<nT;t++)order[t]=t;
+ const LEAF=8,maxN=2*Math.ceil(nT/(LEAF/2))+1,B=new Float32Array(maxN*6),first=new Uint32Array(maxN),count=new Uint32Array(maxN),right=new Uint32Array(maxN);let n=0;
+ const build=(lo,hi)=>{const id=n++;let x0=Infinity,y0=Infinity,z0=Infinity,x1=-Infinity,y1=-Infinity,z1=-Infinity,c0=[Infinity,Infinity,Infinity],c1=[-Infinity,-Infinity,-Infinity];
+  for(let i=lo;i<hi;i++){const t=order[i];for(let k=0;k<3;k++){const v=T[t*3+k]*3,x=P[v],y=P[v+1],z=P[v+2];if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;if(z<z0)z0=z;if(z>z1)z1=z}
+   for(let k=0;k<3;k++){const c=C[t*3+k];if(c<c0[k])c0[k]=c;if(c>c1[k])c1[k]=c}}
+  B.set([x0,y0,z0,x1,y1,z1],id*6);
+  if(hi-lo<=LEAF){first[id]=lo;count[id]=hi-lo;return id}
+  const ax=c1[0]-c0[0]>=c1[1]-c0[1]&&c1[0]-c0[0]>=c1[2]-c0[2]?0:c1[1]-c0[1]>=c1[2]-c0[2]?1:2,mid=(lo+hi)>>1;
+  // quickselect: the middle triangle along the longest axis splits the node in two equal halves
+  let l=lo,r=hi-1;while(l<r){const pv=C[order[(l+r)>>1]*3+ax];let i=l,j=r;
+   while(i<=j){while(C[order[i]*3+ax]<pv)i++;while(C[order[j]*3+ax]>pv)j--;if(i<=j){const q=order[i];order[i]=order[j];order[j]=q;i++;j--}}
+   if(mid<=j)r=j;else if(mid>=i)l=i;else break}
+  count[id]=0;build(lo,mid);right[id]=build(mid,hi);return id};
+ build(0,nT);
+ const inv=new THREE.Matrix4(),local=new THREE.Ray(),pt=new THREE.Vector3(),va=new THREE.Vector3(),vb=new THREE.Vector3(),vc=new THREE.Vector3(),stack=new Uint32Array(128);
+ mesh.raycast=function(raycaster,intersects){
+  inv.copy(this.matrixWorld).invert();local.copy(raycaster.ray).applyMatrix4(inv);
+  const ox=local.origin.x,oy=local.origin.y,oz=local.origin.z,dx=local.direction.x,dy=local.direction.y,dz=local.direction.z,ix=1/dx,iy=1/dy,iz=1/dz;
+  const cull=this.material.side===THREE.FrontSide,back=this.material.side===THREE.BackSide;
+  let best=Infinity,bestT=-1,sp=0;stack[sp++]=0;
+  while(sp){const id=stack[--sp],o=id*6;
+   let ta=(B[o]-ox)*ix,tb=(B[o+3]-ox)*ix,tmin=Math.min(ta,tb),tmax=Math.max(ta,tb);
+   ta=(B[o+1]-oy)*iy;tb=(B[o+4]-oy)*iy;tmin=Math.max(tmin,Math.min(ta,tb));tmax=Math.min(tmax,Math.max(ta,tb));
+   ta=(B[o+2]-oz)*iz;tb=(B[o+5]-oz)*iz;tmin=Math.max(tmin,Math.min(ta,tb));tmax=Math.min(tmax,Math.max(ta,tb));
+   if(!(tmax>=Math.max(tmin,0))||tmin>best)continue;
+   if(count[id]){for(let i=first[id],e=i+count[id];i<e;i++){const t=order[i];let a=T[t*3]*3,b=T[t*3+1]*3,c=T[t*3+2]*3;if(back){const q=a;a=c;c=q}
+     // Möller–Trumbore, same culling rule as THREE.Ray.intersectTriangle
+     const e1x=P[b]-P[a],e1y=P[b+1]-P[a+1],e1z=P[b+2]-P[a+2],e2x=P[c]-P[a],e2y=P[c+1]-P[a+1],e2z=P[c+2]-P[a+2];
+     const nx=e1y*e2z-e1z*e2y,ny=e1z*e2x-e1x*e2z,nz=e1x*e2y-e1y*e2x;let DdN=dx*nx+dy*ny+dz*nz,sg;
+     if(DdN>0){if(cull)continue;sg=1}else if(DdN<0){sg=-1;DdN=-DdN}else continue;
+     const qx=ox-P[a],qy=oy-P[a+1],qz=oz-P[a+2];
+     const DdQxE2=sg*(dx*(qy*e2z-qz*e2y)+dy*(qz*e2x-qx*e2z)+dz*(qx*e2y-qy*e2x));if(DdQxE2<0)continue;
+     const DdE1xQ=sg*(dx*(e1y*qz-e1z*qy)+dy*(e1z*qx-e1x*qz)+dz*(e1x*qy-e1y*qx));if(DdE1xQ<0||DdQxE2+DdE1xQ>DdN)continue;
+     const QdN=-sg*(qx*nx+qy*ny+qz*nz);if(QdN<0)continue;const d=QdN/DdN;if(d<best){best=d;bestT=t}}}
+   else{stack[sp++]=right[id];stack[sp++]=id+1}}
+  if(bestT<0)return;
+  pt.set(ox+dx*best,oy+dy*best,oz+dz*best).applyMatrix4(this.matrixWorld);
+  const distance=raycaster.ray.origin.distanceTo(pt);if(distance<raycaster.near||distance>raycaster.far)return;
+  const a=T[bestT*3],b=T[bestT*3+1],c=T[bestT*3+2];va.fromArray(P,a*3);vb.fromArray(P,b*3);vc.fromArray(P,c*3);
+  const normal=new THREE.Vector3();THREE.Triangle.getNormal(va,vb,vc,normal);
+  intersects.push({distance,point:pt.clone(),object:this,face:{a,b,c,normal,materialIndex:0},faceIndex:bestT});
+ };
+}
 function fetchBody(kind,background){
  if(bodyAssets.has(kind))return Promise.resolve(bodyAssets.get(kind));
  if(bodyPromises.has(kind))return bodyPromises.get(kind);
@@ -706,7 +781,7 @@ function fetchBody(kind,background){
     const nextMeshes=[];
     nextModel.traverse(o=>{if(!o.isMesh)return;
      o.material=new THREE.MeshStandardMaterial({color:$('skin').value,roughness:.92,metalness:0,side:THREE.FrontSide,transparent:false,opacity:1,depthTest:true,depthWrite:true});
-     nextMeshes.push(o);
+     addBodyRaycastTree(o);nextMeshes.push(o);
     });
     if(!nextMeshes.length)throw new Error('No meshes in '+filename);
     const nextCache=new Map();
@@ -2156,6 +2231,6 @@ function render(){requestAnimationFrame(render);
  {const held=dragging||!!pinch;document.body.classList.toggle('tattooHeld',held);if(pinch)selectionHoldUntil=now+300;const want=pinch||now<selectionHoldUntil?1:0;tattooSelection.value+=(want-tattooSelection.value)*.22;if(tattooSelection.value<.002)tattooSelection.value=0}
  if(uvBlend){const k=Math.min(1,(now-uvBlend.start)/220),e=k*k*(3-2*k),a=uvBlend.attr.array,{from,to}=uvBlend;
   for(let i=0;i<a.length;i++)a[i]=from[i]+(to[i]-from[i])*e;uvBlend.attr.needsUpdate=true;if(k>=1)uvBlend=null}
- controls.update();if($('flashbook').hidden)renderer.render(scene,camera); // nothing to draw behind the open flashbook
+ stepSpin(now);controls.update();if($('flashbook').hidden)renderer.render(scene,camera); // nothing to draw behind the open flashbook
  updateConfirmButton()}render();
 </script></body></html>
