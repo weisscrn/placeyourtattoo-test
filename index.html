@@ -285,9 +285,9 @@ body:not(.landingIntro):not(.favMode) #flashbook:not(:has(#pageOverview:not([hid
 #introFigure{position:fixed;left:0;top:0;z-index:19;pointer-events:none}
 /* The intro's first frame as a small picture (intro/start_*.webp): it fades in as soon as the page opens and
    stands there until the 3D figure has loaded, which then takes over exactly where the picture is. */
-#introPlaceholder{position:fixed;inset:0;z-index:20;width:100%;height:100%;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .9s ease}
+#introPlaceholder{position:fixed;left:0;top:0;z-index:20;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .9s ease}
 #introPlaceholder[data-ok]{opacity:1} /* picture loaded: fade in */
-#introPlaceholder.gone{opacity:0;transition-duration:.3s}
+#introPlaceholder.gone{opacity:0;transition-duration:.8s} /* soft hand-over: small differences melt instead of popping */
 /* Intro: completely clean, only the turning figure and the text. The pages fade in when the motifs
    fly onto them; title, DE/EN, page count and arrows fade in when they have landed. */
 .flashTop,.flashBottom{transition:opacity .5s var(--ease)}
@@ -387,7 +387,7 @@ html.desktopFrame iframe{position:fixed;left:50%;top:50%;transform:translate(-50
  let k=null,skin=null;try{k=localStorage.getItem('bodyKind');skin=localStorage.getItem('skin')}catch(e){}
  if(k!=='male'&&k!=='female')k=Math.random()<.5?'male':'female';window.__startBody=k;
  if(skin&&skin.toLowerCase()!=='#b99480')return; // the picture shows the standard skin tone
- document.write('<img id="introPlaceholder" alt="" src="intro/start_'+k+'.webp" onload="this.dataset.ok=1">')})();
+ document.write('<img id="introPlaceholder" alt="" src="intro/start_'+k+'.webp" style="width:'+innerWidth+'px;height:'+innerHeight+'px" onload="this.dataset.ok=1">')})();
 </script>
 <script>if(/[#&]f=/.test(location.hash)&&/[#&]p=/.test(location.hash))document.write('<div id="sharedLoading" role="status" aria-label="Loading"></div>')</script>
 <div id="flashbook" aria-label="Tattoo flashbook">
@@ -1991,6 +1991,7 @@ function startLandingIntro(){
 function setLandingRect(q){
  const cv=landing.canvas,w=Math.max(1,Math.round(q.w)),h=Math.max(1,Math.round(q.h));
  cv.style.left=q.x+'px';cv.style.top=q.y+'px';cv.style.width=w+'px';cv.style.height=h+'px';
+ {const ph=$('introPlaceholder');if(ph&&!ph.classList.contains('gone'))Object.assign(ph.style,{left:q.x+'px',top:q.y+'px',width:w+'px',height:h+'px'})} // the start picture lies exactly on the figure
  if(cv.width!==Math.round(w*landing.renderer.getPixelRatio())||cv.height!==Math.round(h*landing.renderer.getPixelRatio()))landing.renderer.setSize(w,h,false);
  landing.camera.aspect=w/h;landing.camera.updateProjectionMatrix();
 }
